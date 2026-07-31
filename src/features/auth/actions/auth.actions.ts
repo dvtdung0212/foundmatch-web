@@ -1,0 +1,349 @@
+"use server";
+
+import "server-only";
+import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  magicLinkSchema,
+  signUpSchema,
+  signInWithPasswordSchema,
+  type SignUpInput,
+  type SignInWithPasswordInput,
+} from "../schemas/auth.schema";
+import type { AuthActionResult, AuthSessionUser } from "@/types/auth.types";
+import { DEMO_PERSONAS } from "@/types/auth.types";
+import { revalidatePath } from "next/cache";
+
+/**
+ * Đăng ký tài khoản mới bằng Email/Username + Password
+ */
+export async function signUpWithPassword(
+  input: SignUpInput,
+): Promise<AuthActionResult<AuthSessionUser>> {
+  try {
+    const validation = signUpSchema.safeParse(input);
+    if (!validation.success) {
+      return {
+        success: false,
+        error: {
+          code: "VALIDATION_ERROR",
+          message:
+            validation.error.errors[0]?.message ||
+            "Thông tin đăng ký không hợp lệ",
+        },
+      };
+    }
+
+    const { email, username, fullName, password } = validation.data;
+    const adminClient = createAdminClient();
+
+    // 1. Kiểm tra Username trùng lặp trong foundmatch_schema.profiles
+    const { data: existingUsername } = await adminClient
+      .schema("foundmatch_schema")
+      .from("profiles")
+      .select("id")
+      .ilike("username", username)
+      .maybeSingle();
+
+    if (existingUsername) {
+      return {
+        success: false,
+        error: {
+          code: "USERNAME_TAKEN",
+          message: "Username này đã được người khác sử dụng.",
+        },
+      };
+    }
+
+    // 2. Gọi Supabase Auth SignUp
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          username: username.toLowerCase(),
+          full_name: fullName,
+        },
+      },
+    });
+
+    if (error || !data.user) {
+      return {
+        success: false,
+        error: {
+          code: error?.code || "SIGN_UP_FAILED",
+          message: error?.message || "Đăng ký thất bại",
+        },
+      };
+    }
+
+    revalidatePath("/", "layout");
+
+    return {
+      success: true,
+      message: "Đăng ký tài khoản thành công!",
+      data: {
+        id: data.user.id,
+        email: data.user.email!,
+        role: "user",
+        fullName,
+      },
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: {
+        code: "SERVER_ERROR",
+        message: err instanceof Error ? err.message : "Đã xảy ra lỗi máy chủ",
+      },
+    };
+  }
+}
+
+/**
+ * Đăng nhập linh hoạt bằng Username hoặc Email + Password
+ */
+export async function signInWithPasswordAction(
+  input: SignInWithPasswordInput,
+): Promise<AuthActionResult<AuthSessionUser>> {
+  try {
+    const validation = signInWithPasswordSchema.safeParse(input);
+    if (!validation.success) {
+      return {
+        success: false,
+        error: {
+          code: "VALIDATION_ERROR",
+          message:
+            validation.error.errors[0]?.message ||
+            "Thông tin nhập không hợp lệ",
+        },
+      };
+    }
+
+    const { identifier, password } = validation.data;
+    let targetEmail = identifier.trim();
+
+    // Nếu identifier không phải email, tiến hành tra cứu Username -> Email
+    if (!targetEmail.includes("@")) {
+      const adminClient = createAdminClient();
+      const { data: profile } = await adminClient
+        .schema("foundmatch_schema")
+        .from("profiles")
+        .select("email")
+        .ilike("username", targetEmail)
+        .maybeSingle();
+
+      if (!profile || !profile.email) {
+        return {
+          success: false,
+          error: {
+            code: "INVALID_CREDENTIALS",
+            message: "Tên đăng nhập hoặc mật khẩu không chính xác",
+          },
+        };
+      }
+      targetEmail = profile.email;
+    }
+
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: targetEmail,
+      password,
+    });
+
+    if (error || !data.user) {
+      return {
+        success: false,
+        error: {
+          code: "INVALID_CREDENTIALS",
+          message: "Tên đăng nhập / Email hoặc mật khẩu không chính xác",
+        },
+      };
+    }
+
+    revalidatePath("/", "layout");
+
+    return {
+      success: true,
+      message: "Đăng nhập thành công!",
+      data: {
+        id: data.user.id,
+        email: data.user.email!,
+        role: (data.user.app_metadata?.role as any) || "user",
+        fullName: data.user.user_metadata?.full_name || null,
+      },
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: {
+        code: "SERVER_ERROR",
+        message: err instanceof Error ? err.message : "Đã xảy ra lỗi máy chủ",
+      },
+    };
+  }
+}
+
+/**
+ * Đăng nhập bằng Magic Link Email
+ */
+export async function signInWithMagicLink(
+  emailInput: string,
+): Promise<AuthActionResult> {
+  try {
+    const validation = magicLinkSchema.safeParse({ email: emailInput });
+    if (!validation.success) {
+      return {
+        success: false,
+        error: {
+          code: "VALIDATION_ERROR",
+          message: validation.error.errors[0]?.message || "Email không hợp lệ",
+        },
+      };
+    }
+
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signInWithOtp({
+      email: validation.data.email,
+      options: {
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      return {
+        success: false,
+        error: {
+          code: error.code || "AUTH_ERROR",
+          message: error.message,
+        },
+      };
+    }
+
+    return {
+      success: true,
+      message: "Mã OTP / Magic Link đã được gửi đến email của bạn.",
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: {
+        code: "SERVER_ERROR",
+        message: err instanceof Error ? err.message : "Đã xảy ra lỗi máy chủ",
+      },
+    };
+  }
+}
+
+/**
+ * Đăng nhập nhanh bằng Demo Persona (Phục vụ Test / Demo local 1-click)
+ */
+export async function signInWithDemoAccount(
+  personaEmail: string,
+): Promise<AuthActionResult<AuthSessionUser>> {
+  try {
+    const persona = DEMO_PERSONAS.find((p) => p.email === personaEmail);
+    if (!persona) {
+      return {
+        success: false,
+        error: {
+          code: "PERSONA_NOT_FOUND",
+          message: "Tài khoản Demo không tồn tại",
+        },
+      };
+    }
+
+    const adminClient = createAdminClient();
+    const { data: linkData, error: linkError } =
+      await adminClient.auth.admin.generateLink({
+        type: "magiclink",
+        email: persona.email,
+      });
+
+    if (linkError || !linkData.properties?.hashed_token) {
+      return {
+        success: false,
+        error: {
+          code: "DEMO_LINK_FAILED",
+          message:
+            linkError?.message ||
+            "Không thể tạo liên kết đăng nhập Demo. Đảm bảo Supabase local đã được start.",
+        },
+      };
+    }
+
+    const supabase = await createClient();
+    const { data: verifyData, error: verifyError } =
+      await supabase.auth.verifyOtp({
+        email: persona.email,
+        token_hash: linkData.properties.hashed_token,
+        type: "magiclink",
+      });
+
+    if (verifyError || !verifyData.user) {
+      return {
+        success: false,
+        error: {
+          code: "DEMO_LOGIN_FAILED",
+          message: verifyError?.message || "Đăng nhập tài khoản Demo thất bại",
+        },
+      };
+    }
+
+    revalidatePath("/", "layout");
+
+    return {
+      success: true,
+      message: `Đăng nhập thành công với vai trò ${persona.role} (${persona.name})`,
+      data: {
+        id: verifyData.user.id,
+        email: verifyData.user.email!,
+        role: persona.role,
+        fullName: persona.name,
+      },
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: {
+        code: "SERVER_ERROR",
+        message: err instanceof Error ? err.message : "Đã xảy ra lỗi máy chủ",
+      },
+    };
+  }
+}
+
+/**
+ * Đăng xuất tài khoản
+ */
+export async function signOutAction(): Promise<AuthActionResult> {
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      return {
+        success: false,
+        error: {
+          code: error.code || "SIGN_OUT_ERROR",
+          message: error.message,
+        },
+      };
+    }
+
+    revalidatePath("/", "layout");
+    return {
+      success: true,
+      message: "Đã đăng xuất thành công.",
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: {
+        code: "SERVER_ERROR",
+        message: err instanceof Error ? err.message : "Đã xảy ra lỗi máy chủ",
+      },
+    };
+  }
+}

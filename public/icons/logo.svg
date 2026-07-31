@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 145" width="500" height="145">
+  <g id="foundmatch-logo-pin">
+    <!-- Thân ghim vị trí (Map Pin) màu Đỏ mận #80144A -->
+    <path
+      d="M 60 10 
+         C 32.38 10 10 32.38 10 60 
+         C 10 82 32 105 60 135 
+         C 88 105 110 82 110 60 
+         C 110 32.38 87.62 10 60 10 Z 
+         M 60 90 
+         C 43.43 90 30 76.57 30 60 
+         C 30 43.43 43.43 30 60 30 
+         C 76.57 30 90 43.43 90 60 
+         C 90 76.57 76.57 90 60 90 Z"
+      fill="#80144A"
+    />
+
+    <!-- Mắt kính lúp ở trung tâm -->
+    <circle cx="60" cy="60" r="28" fill="#80144A" />
+
+    <!-- Điểm phản chiếu ánh sáng kính lúp (Vệt màu xanh chanh #C8EE36) -->
+    <path
+      d="M 72 40 A 20 20 0 0 1 82 52"
+      fill="none"
+      stroke="#C8EE36"
+      stroke-width="7"
+      stroke-linecap="round"
+    />
+
+    <!-- Cán kính lúp màu hồng san hô #F87171 chéo xuống góc trái có đầu móc cong -->
+    <path
+      d="M 44 76 L 22 98 C 18 102 12 102 8 98 C 4 94 4 88 8 84 L 14 78"
+      fill="none"
+      stroke="#F87171"
+      stroke-width="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </g>
+
+  <!-- Text: FoundMatch -->
+  <text x="142" y="95" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Manrope', 'Segoe UI', sans-serif" font-weight="800" font-size="92" fill="#3D051E" letter-spacing="-2.5px">FoundMatch</text>
+</svg>

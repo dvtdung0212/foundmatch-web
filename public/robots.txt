@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /workspace/
+Disallow: /api/
+
+Sitemap: https://foundmatch.example.com/sitemap.xml

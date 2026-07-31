@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 33% 97%; /* #FAF7F2 Warm Cream */
+    --foreground: 12 28% 13%; /* #2A1B17 Deep Heading */
+
+    --card: 0 0% 100%; /* #FFFFFF White Card */
+    --card-foreground: 12 28% 13%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 12 28% 13%;
+
+    --primary: 335 74% 21%; /* #5B0E2D Plum Maroon */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 36 20% 92%; /* #EFE8DF Border / Neutral */
+    --secondary-foreground: 12 28% 13%;
+
+    --muted: 36 20% 94%; /* #F5EFE6 Light Muted */
+    --muted-foreground: 20 8% 44%; /* #7A6E67 Muted Text */
+
+    --accent: 335 50% 96%;
+    --accent-foreground: 335 74% 21%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 126 37% 35%; /* #37783C Sage Green */
+    --success-foreground: 0 0% 100%;
+
+    --warning: 32 90% 47%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 36 22% 90%; /* #EFE8DF */
+    --input: 36 22% 90%;
+    --ring: 335 74% 21%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 12 28% 8%;
+    --foreground: 36 33% 97%;
+
+    --card: 12 25% 12%;
+    --card-foreground: 36 33% 97%;
+
+    --popover: 12 25% 12%;
+    --popover-foreground: 36 33% 97%;
+
+    --primary: 335 74% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 12 20% 20%;
+    --secondary-foreground: 36 33% 97%;
+
+    --muted: 12 20% 16%;
+    --muted-foreground: 36 10% 65%;
+
+    --accent: 12 20% 20%;
+    --accent-foreground: 36 33% 97%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 126 37% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 32 90% 40%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 12 20% 20%;
+    --input: 12 20% 20%;
+    --ring: 335 74% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+  }
+}
+
+.fm-card-shadow {
+  box-shadow: 0 4px 20px -2px rgba(91, 14, 45, 0.05);
+}
