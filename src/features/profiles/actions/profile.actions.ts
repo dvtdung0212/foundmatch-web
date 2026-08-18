@@ -2,6 +2,7 @@
 
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
+import { getServerApiClient } from "@/lib/api/client";
 import { updateProfileSchema } from "../schemas/profile.schema";
 import type { UserProfileDTO, UpdateProfileInput } from "@/types/profile.types";
 import type { AuthActionResult } from "@/types/auth.types";
@@ -27,14 +28,10 @@ export async function getCurrentProfile(): Promise<
       };
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .schema("foundmatch_schema")
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
+    const apiClient = await getServerApiClient();
+    const { data: profileResponse, error: profileError } = await apiClient.GET("/api/v1/public/users/me");
 
-    if (profileError || !profile) {
+    if (profileError || !profileResponse) {
       return {
         success: false,
         error: {
@@ -44,17 +41,19 @@ export async function getCurrentProfile(): Promise<
       };
     }
 
+    // backend returns CurrentUserResponseDto which extends UserResponseDto
+    // mapping it to UserProfileDTO
     const dto: UserProfileDTO = {
-      id: profile.id,
-      email: profile.email,
-      username: profile.username || null,
-      fullName: profile.full_name,
-      avatarUrl: profile.avatar_url,
-      phone: profile.phone,
-      role: profile.role,
-      relayStatus: profile.relay_status,
-      createdAt: profile.created_at,
-      updatedAt: profile.updated_at,
+      id: profileResponse.id,
+      email: profileResponse.email,
+      username: null, // Note: update backend if username is supported
+      fullName: profileResponse.fullName,
+      avatarUrl: profileResponse.avatarUrl,
+      phone: profileResponse.phone,
+      role: profileResponse.role as any,
+      relayStatus: profileResponse.relayStatus as any,
+      createdAt: profileResponse.createdAt,
+      updatedAt: profileResponse.updatedAt,
     };
 
     return {
@@ -108,34 +107,29 @@ export async function updateProfile(
       };
     }
 
-    const updateData: Record<string, unknown> = {
-      updated_at: new Date().toISOString(),
-    };
+    const updateData: Record<string, unknown> = {};
 
     if (validation.data.fullName !== undefined) {
-      updateData.full_name = validation.data.fullName;
+      updateData.fullName = validation.data.fullName;
     }
     if (validation.data.avatarUrl !== undefined) {
-      updateData.avatar_url = validation.data.avatarUrl || null;
+      updateData.avatarUrl = validation.data.avatarUrl || null;
     }
     if (validation.data.phone !== undefined) {
       updateData.phone = validation.data.phone || null;
     }
 
-    const { data: updated, error: updateError } = await supabase
-      .schema("foundmatch_schema")
-      .from("profiles")
-      .update(updateData)
-      .eq("id", user.id)
-      .select("*")
-      .single();
+    const apiClient = await getServerApiClient();
+    const { data: updated, error: updateError } = await apiClient.PATCH("/api/v1/public/users/me/profile", {
+      body: updateData as any, // Cast because openapi-fetch types might complain if fields are strictly defined
+    });
 
     if (updateError || !updated) {
       return {
         success: false,
         error: {
           code: "UPDATE_FAILED",
-          message: updateError?.message || "Cập nhật hồ sơ thất bại",
+          message: typeof updateError === "object" && updateError !== null && "message" in updateError ? (updateError.message as string) : "Cập nhật hồ sơ thất bại",
         },
       };
     }
@@ -146,14 +140,14 @@ export async function updateProfile(
     const dto: UserProfileDTO = {
       id: updated.id,
       email: updated.email,
-      username: updated.username || null,
-      fullName: updated.full_name,
-      avatarUrl: updated.avatar_url,
+      username: null,
+      fullName: updated.fullName,
+      avatarUrl: updated.avatarUrl,
       phone: updated.phone,
-      role: updated.role,
-      relayStatus: updated.relay_status,
-      createdAt: updated.created_at,
-      updatedAt: updated.updated_at,
+      role: updated.role as any,
+      relayStatus: updated.relayStatus as any,
+      createdAt: updated.createdAt,
+      updatedAt: updated.updatedAt,
     };
 
     return {

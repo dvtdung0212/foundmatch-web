@@ -1,12 +1,16 @@
+const localSupabaseUrl = new URL(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "http://127.0.0.1:55421",
+);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   images: {
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "127.0.0.1",
-        port: "54321",
+        protocol: localSupabaseUrl.protocol.slice(0, -1),
+        hostname: localSupabaseUrl.hostname,
+        port: localSupabaseUrl.port,
         pathname: "/storage/v1/object/public/**",
       },
       {
