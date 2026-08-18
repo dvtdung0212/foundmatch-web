@@ -18,24 +18,13 @@ const config: Config = {
     },
     extend: {
       colors: {
+        /* Standard HSL mapping for Shadcn primitives */
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        brand: {
-          plum: "#5B0E2D",
-          dark: "#40081E",
-          soft: "#FFF3F7",
-          border: "#EFE8DF",
-          cream: "#FAF7F2",
-          heading: "#2A1B17",
-          muted: "#7A6E67",
-          lost: "#BF403F",
-          lostBg: "#FFF4F1",
-          found: "#37783C",
-          foundBg: "#F3F9F1",
-        },
+
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -72,14 +61,70 @@ const config: Config = {
           DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
         },
+
+        /* Semantic Design Tokens (mapped to src/styles/design-tokens.css) */
+        brand: {
+          DEFAULT: "var(--fm-brand-plum)",
+          plum: "var(--fm-brand-plum)",
+          dark: "var(--fm-brand-plum-dark)",
+          light: "var(--fm-brand-plum-light)",
+          soft: "var(--fm-brand-soft)",
+          cream: "var(--fm-brand-cream)",
+          heading: "var(--fm-brand-heading)",
+          muted: "var(--fm-brand-muted)",
+          border: "var(--fm-border-default)",
+          /* Domain status */
+          lost: "var(--fm-lost)",
+          lostBg: "var(--fm-lost-subtle)",
+          lostBorder: "var(--fm-lost-border)",
+          found: "var(--fm-found)",
+          foundBg: "var(--fm-found-subtle)",
+          foundBorder: "var(--fm-found-border)",
+        },
+
+        /* Domain & semantic aliases */
+        lost: {
+          DEFAULT: "var(--fm-lost)",
+          subtle: "var(--fm-lost-subtle)",
+          border: "var(--fm-lost-border)",
+          hover: "var(--fm-lost-hover)",
+        },
+        found: {
+          DEFAULT: "var(--fm-found)",
+          subtle: "var(--fm-found-subtle)",
+          border: "var(--fm-found-border)",
+          hover: "var(--fm-found-hover)",
+        },
+        surface: {
+          page: "var(--fm-surface-page)",
+          card: "var(--fm-surface-card)",
+          muted: "var(--fm-surface-muted)",
+          popover: "var(--fm-surface-popover)",
+          overlay: "var(--fm-surface-overlay)",
+        },
+        content: {
+          primary: "var(--fm-content-primary)",
+          secondary: "var(--fm-content-secondary)",
+          muted: "var(--fm-content-muted)",
+          brand: "var(--fm-content-brand)",
+          inverse: "var(--fm-content-inverse)",
+        },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        xs: "var(--fm-radius-xs)",
+        sm: "var(--fm-radius-sm)",
+        md: "var(--fm-radius-md)",
+        lg: "var(--fm-radius-lg)",
+        xl: "var(--fm-radius-xl)",
+        "2xl": "var(--fm-radius-2xl)",
+        pill: "var(--fm-radius-pill)",
+      },
+      boxShadow: {
+        "fm-card": "0 4px 20px -2px rgba(91, 14, 45, 0.05)",
+        "fm-popover": "0 10px 30px -4px rgba(42, 27, 23, 0.08)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "Inter", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "Geologica", "Inter", "system-ui", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {

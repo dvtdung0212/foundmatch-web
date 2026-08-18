@@ -8,7 +8,7 @@ export default function ReportsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7F2]">
+    <div className="min-h-screen flex flex-col bg-brand-cream">
       {/* Global Application Header */}
       <Navbar />
 

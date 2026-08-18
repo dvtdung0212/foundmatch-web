@@ -1,0 +1,139 @@
+/**
+ * FoundMatch Web Design Tokens
+ * Canonical source of truth for color palette, surfaces, typography, and elevation.
+ */
+
+:root {
+  /* --- Brand Core Palette --- */
+  --fm-brand-plum: #5B0E2D;
+  --fm-brand-plum-dark: #40081E;
+  --fm-brand-plum-light: #7A1740;
+  --fm-brand-soft: #FFF3F7;
+  --fm-brand-cream: #FAF7F2;
+  --fm-brand-heading: #2A1B17;
+  --fm-brand-muted: #7A6E67;
+
+  /* --- Domain Specific (Lost & Found) --- */
+  --fm-lost: #BF403F;
+  --fm-lost-subtle: #FFF4F1;
+  --fm-lost-border: #FFDCD3;
+  --fm-lost-hover: #A32F2E;
+
+  --fm-found: #37783C;
+  --fm-found-subtle: #F3F9F1;
+  --fm-found-border: #CCE6C7;
+  --fm-found-hover: #2B6130;
+
+  /* --- Semantic Status --- */
+  --fm-success: #2F9E44;
+  --fm-success-subtle: #E4F7E8;
+  --fm-warning: #D97706;
+  --fm-warning-subtle: #FFFBEB;
+  --fm-danger: #E03131;
+  --fm-danger-subtle: #FDEBEC;
+  --fm-info: #2563EB;
+  --fm-info-subtle: #EFF6FF;
+
+  /* --- Surfaces & Backgrounds --- */
+  --fm-surface-page: #FAF7F2;
+  --fm-surface-card: #FFFFFF;
+  --fm-surface-muted: #F5EFE6;
+  --fm-surface-popover: #FFFFFF;
+  --fm-surface-overlay: rgba(42, 27, 23, 0.45);
+
+  /* --- Borders --- */
+  --fm-border-default: #EFE8DF;
+  --fm-border-subtle: #F5EFE6;
+  --fm-border-strong: #D5CFC7;
+  --fm-border-brand: #FFC7BA;
+  --fm-border-focus: #5B0E2D;
+
+  /* --- Content & Text --- */
+  --fm-content-primary: #2A1B17;
+  --fm-content-secondary: #596273;
+  --fm-content-muted: #7A6E67;
+  --fm-content-brand: #5B0E2D;
+  --fm-content-inverse: #FFFFFF;
+
+  /* --- Radii --- */
+  --fm-radius-xs: 4px;
+  --fm-radius-sm: 6px;
+  --fm-radius-md: 8px;
+  --fm-radius-lg: 12px;
+  --fm-radius-xl: 16px;
+  --fm-radius-2xl: 24px;
+  --fm-radius-pill: 9999px;
+
+  /* --- Shadcn UI / HSL Mapping for Compatibility --- */
+  --background: 36 33% 97%; /* #FAF7F2 Warm Cream */
+  --foreground: 12 28% 13%; /* #2A1B17 Deep Heading */
+
+  --card: 0 0% 100%;
+  --card-foreground: 12 28% 13%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 12 28% 13%;
+
+  --primary: 335 74% 21%; /* #5B0E2D Plum Maroon */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 36 20% 92%; /* #EFE8DF */
+  --secondary-foreground: 12 28% 13%;
+
+  --muted: 36 20% 94%; /* #F5EFE6 */
+  --muted-foreground: 20 8% 44%; /* #7A6E67 */
+
+  --accent: 335 50% 96%;
+  --accent-foreground: 335 74% 21%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  --success: 126 37% 35%; /* #37783C */
+  --success-foreground: 0 0% 100%;
+
+  --warning: 32 90% 47%;
+  --warning-foreground: 0 0% 100%;
+
+  --border: 36 22% 90%; /* #EFE8DF */
+  --input: 36 22% 90%;
+  --ring: 335 74% 21%;
+
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: 12 28% 8%;
+  --foreground: 36 33% 97%;
+
+  --card: 12 25% 12%;
+  --card-foreground: 36 33% 97%;
+
+  --popover: 12 25% 12%;
+  --popover-foreground: 36 33% 97%;
+
+  --primary: 335 74% 45%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 12 20% 20%;
+  --secondary-foreground: 36 33% 97%;
+
+  --muted: 12 20% 16%;
+  --muted-foreground: 36 10% 65%;
+
+  --accent: 12 20% 20%;
+  --accent-foreground: 36 33% 97%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 100%;
+
+  --success: 126 37% 45%;
+  --success-foreground: 0 0% 100%;
+
+  --warning: 32 90% 40%;
+  --warning-foreground: 0 0% 100%;
+
+  --border: 12 20% 20%;
+  --input: 12 20% 20%;
+  --ring: 335 74% 45%;
+}

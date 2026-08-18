@@ -7,11 +7,11 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        found: "bg-[#F3F9F1] text-[#37783C] border border-[#C4E1BE]",
-        lost: "bg-[#FFF4F1] text-[#BF403F] border border-[#FFC7BA]",
+        found: "bg-brand-foundBg text-brand-found border border-brand-foundBorder",
+        lost: "bg-brand-lostBg text-brand-lost border border-brand-lostBorder",
         matchSuccess:
-          "bg-[#F3F9F1] text-[#37783C] border border-[#C4E1BE] font-semibold text-xs normal-case px-3 py-1 shadow-sm",
-        neutral: "bg-[#F5EFE6] text-[#7A6E67] border border-[#EFE8DF]",
+          "bg-brand-foundBg text-brand-found border border-brand-foundBorder font-semibold text-xs normal-case px-3 py-1 shadow-xs",
+        neutral: "bg-brand-cream text-brand-muted border border-brand-border",
       },
     },
     defaultVariants: {

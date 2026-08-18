@@ -17,9 +17,9 @@ const buttonVariants = cva(
         google:
           "border border-brand-border bg-white text-brand-heading hover:bg-brand-cream shadow-sm rounded-xl",
         lostAction:
-          "bg-brand-lostBg border border-[#FFC7BA] text-brand-lost hover:bg-[#FFEBE5] rounded-2xl text-left",
+          "bg-brand-lostBg border border-brand-lostBorder text-brand-lost hover:bg-[#FFEBE5] rounded-2xl text-left",
         foundAction:
-          "bg-brand-foundBg border border-[#C4E1BE] text-brand-found hover:bg-[#E8F4E5] rounded-2xl text-left",
+          "bg-brand-foundBg border border-brand-foundBorder text-brand-found hover:bg-[#E8F4E5] rounded-2xl text-left",
       },
       size: {
         sm: "h-9 px-3.5 text-xs",

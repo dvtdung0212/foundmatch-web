@@ -12,7 +12,7 @@ interface NavbarProps {
 
 export function Navbar({ profile }: NavbarProps) {
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#EFE8DF]">
+    <header className="sticky top-0 z-50 w-full bg-brand-cream/90 backdrop-blur-md border-b border-brand-border">
       <div className="w-full max-w-[1800px] mx-auto flex h-20 items-center justify-between px-4 sm:px-8 lg:px-12">
         {/* Brand Logo PNG */}
         <Link href="/" className="flex items-center shrink-0">
@@ -20,16 +20,16 @@ export function Navbar({ profile }: NavbarProps) {
         </Link>
 
         {/* Navigation Items */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-[#2A1B17]">
-          <Link href="#workflow" className="hover:text-[#5B0E2D] transition-colors">
+        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-brand-heading">
+          <Link href="#workflow" className="hover:text-brand-plum transition-colors">
             Cách hoạt động
           </Link>
-          <Link href="#reports" className="hover:text-[#5B0E2D] transition-colors">
+          <Link href="#reports" className="hover:text-brand-plum transition-colors">
             Báo cáo
           </Link>
-          <div className="relative group cursor-pointer flex items-center gap-1 hover:text-[#5B0E2D] transition-colors">
+          <div className="relative group cursor-pointer flex items-center gap-1 hover:text-brand-plum transition-colors">
             <span>Hỗ trợ</span>
-            <ChevronDown className="h-4 w-4 text-[#7A6E67]" />
+            <ChevronDown className="h-4 w-4 text-brand-muted" />
           </div>
         </nav>
 

@@ -1,0 +1,51 @@
+@import "./design-tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Geologica";
+  src: url("/fonts/Geologica/Geologica-VariableFont_CRSV,SHRP,slnt,wght.ttf")
+    format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    background-color: var(--fm-surface-page);
+    color: var(--fm-content-primary);
+    font-family: var(--font-sans), "Geologica", system-ui, sans-serif;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans), "Geologica", system-ui, sans-serif;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    min-height: 100vh;
+  }
+
+  button,
+  a {
+    font: inherit;
+  }
+}
+
+@layer utilities {
+  .fm-card-shadow {
+    box-shadow: 0 4px 20px -2px rgba(91, 14, 45, 0.05);
+  }
+
+  .fm-popover-shadow {
+    box-shadow: 0 10px 30px -4px rgba(42, 27, 23, 0.08);
+  }
+}
