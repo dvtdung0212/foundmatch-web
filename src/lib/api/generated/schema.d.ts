@@ -62,8 +62,42 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List the code-owned permission registry */
+        /** List permissions with server-side pagination */
         get: operations["listPermissions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/permissions/all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all permissions without pagination */
+        get: operations["getAllPermissions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/permissions/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get statistics about permissions */
+        get: operations["getPermissionStats"];
         put?: never;
         post?: never;
         delete?: never;
@@ -182,11 +216,45 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List the code-owned role registry */
+        /** List roles with server-side pagination */
         get: operations["listRoles"];
         put?: never;
         /** Create a new role */
         post: operations["createRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/roles/all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all roles without pagination */
+        get: operations["getAllRoles"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/roles/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get statistics about roles */
+        get: operations["getRoleStats"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -239,7 +307,7 @@ export interface paths {
         /** List users with server-side pagination, filtering and sorting */
         get: operations["listUsers"];
         put?: never;
-        /** Create a user with a temporary password and non-admin role */
+        /** Create a force-reset user; administrators may directly create administrators */
         post: operations["createUser"];
         delete?: never;
         options?: never;
@@ -256,6 +324,23 @@ export interface paths {
         };
         /** Get the authenticated CMS actor through the private API boundary */
         get: operations["getCmsCurrentUser"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/users/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get statistics about users */
+        get: operations["getUserStats"];
         put?: never;
         post?: never;
         delete?: never;
@@ -490,6 +575,1240 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/private/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List categories (paginated) */
+        get: operations["listCmsCategories"];
+        put?: never;
+        /** Create a new category */
+        post: operations["createCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/categories/tree": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all categories for tree */
+        get: operations["getCategoryTree"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/categories/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get category stats */
+        get: operations["getCategoryStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get category by ID */
+        get: operations["getCategory"];
+        put?: never;
+        post?: never;
+        /** Soft delete a category */
+        delete: operations["deleteCategory"];
+        options?: never;
+        head?: never;
+        /** Update a category */
+        patch: operations["updateCategory"];
+        trace?: never;
+    };
+    "/api/v1/private/categories/{id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get category history */
+        get: operations["getCategoryHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/categories/bulk-order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Bulk update categories order */
+        patch: operations["bulkUpdateCategoryOrder"];
+        trace?: never;
+    };
+    "/api/v1/private/categories/{id}/attributes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get attributes assigned to a category */
+        get: operations["getCategoryAttributes"];
+        /** Assign attributes to a category (Batch Update) */
+        put: operations["assignCategoryAttributes"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List visible public categories */
+        get: operations["listPublicCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{id}/retirement-impact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Preview attribute retirement impact */
+        get: operations["getRetirementImpact"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lấy danh sách thuộc tính có phân trang */
+        get: operations["getAttributes"];
+        put?: never;
+        /** Tạo thuộc tính mới */
+        post: operations["createAttribute"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lấy chi tiết thuộc tính */
+        get: operations["getAttribute"];
+        /** Cập nhật thuộc tính */
+        put: operations["updateAttribute"];
+        post?: never;
+        /** Xóa thuộc tính */
+        delete: operations["deleteAttribute"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{id}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Discontinue an attribute while preserving history */
+        post: operations["deactivateAttribute"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attribute-values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List managed attribute values across all attributes */
+        get: operations["listCmsAttributeValueCatalog"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attribute-values/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get global attribute value management statistics */
+        get: operations["getCmsAttributeValueCatalogStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/assignable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List reusable catalog values that can be assigned */
+        get: operations["listAssignableCmsAttributeValues"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/{valueId}/assignment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Assign an existing catalog value to an attribute */
+        post: operations["attachCmsAttributeValue"];
+        /** Detach a catalog value from an attribute without deleting it */
+        delete: operations["detachCmsAttributeValue"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/{valueId}/retirement-impact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Preview attribute value retirement impact */
+        get: operations["getCmsAttributeValueRetirementImpact"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List managed values for an attribute */
+        get: operations["listCmsAttributeValues"];
+        put?: never;
+        /** Create or draft an attribute value */
+        post: operations["createCmsAttributeValue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get attribute value management statistics */
+        get: operations["getCmsAttributeValueStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/{valueId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get an attribute value */
+        get: operations["getCmsAttributeValue"];
+        put?: never;
+        post?: never;
+        /** Delete when safe or archive to preserve history */
+        delete: operations["deleteCmsAttributeValue"];
+        options?: never;
+        head?: never;
+        /** Update attribute value metadata */
+        patch: operations["updateCmsAttributeValue"];
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reorder attribute values atomically */
+        post: operations["reorderCmsAttributeValues"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/{valueId}/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Move one active attribute value up or down atomically */
+        post: operations["moveCmsAttributeValue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/{valueId}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Archive an attribute value without deleting history */
+        post: operations["archiveCmsAttributeValue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/{valueId}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Discontinue an attribute value while preserving it */
+        post: operations["deactivateCmsAttributeValue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/{valueId}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Activate a managed attribute value */
+        post: operations["activateCmsAttributeValue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/{valueId}/review/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve a pending attribute value proposal */
+        post: operations["approveCmsAttributeValue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/{valueId}/review/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject a pending attribute value proposal */
+        post: operations["rejectCmsAttributeValue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/attributes/{attributeId}/values/{valueId}/review/merge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Merge a pending proposal into an active value */
+        post: operations["mergeCmsAttributeValue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/attributes/{attributeId}/value-proposals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit a missing value while editing an owned draft report */
+        post: operations["submitAttributeValueProposal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geographies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listCmsGeographies"];
+        put?: never;
+        post: operations["createGeography"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geographies/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getGeographyDashboardStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geographies/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getCmsGeographyDetail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateGeography"];
+        trace?: never;
+    };
+    "/api/v1/private/geographies/types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listGeographyTypes"];
+        put?: never;
+        post: operations["createGeographyType"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geographies/types/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateGeographyType"];
+        trace?: never;
+    };
+    "/api/v1/private/locations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listCmsLocations"];
+        put?: never;
+        post: operations["createLocation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/locations/summaries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listCmsLocationSummaries"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/locations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateLocation"];
+        trace?: never;
+    };
+    "/api/v1/private/locations/types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listLocationTypes"];
+        put?: never;
+        post: operations["createLocationType"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/locations/types/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateLocationType"];
+        trace?: never;
+    };
+    "/api/v1/public/geography/vietnam-map": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Vietnam boundary GeoJSON (34 provinces + Hoàng Sa & Trường Sa) */
+        get: operations["getVietnamMapGeoJson"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/geography/geographies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List active geography references without exact coordinates */
+        get: operations["listPublicGeographies"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/geography/locations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List active non-sensitive locations without exact coordinates */
+        get: operations["listPublicLocations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geography-groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listGeographyGroups"];
+        put?: never;
+        post: operations["createGeographyGroup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geography-groups/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateGeographyGroup"];
+        trace?: never;
+    };
+    "/api/v1/private/geography-imports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listGeographyImports"];
+        put?: never;
+        post: operations["stageGeographyImport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geography-imports/upload": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["uploadGeographyImport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geography-imports/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getGeographyImport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geography-imports/{id}/rows": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listGeographyImportRows"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geography-imports/{id}/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["applyGeographyImport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geography-imports/{id}/rows/{rowId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["updateGeographyImportRow"];
+        trace?: never;
+    };
+    "/api/v1/private/geography-imports/{id}/artifacts/{artifactId}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["downloadGeographyImportArtifact"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/geography-imports/{id}/rollback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["rollbackGeographyImport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/spatial-statistics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createSpatialStatisticsSnapshot"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/item-declarations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List declarations using the staff-safe projection */
+        get: operations["listCmsItemDeclarations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/item-declarations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one staff-safe declaration detail */
+        get: operations["getCmsItemDeclaration"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/item-declarations/{id}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List privacy-redacted declaration revisions */
+        get: operations["listCmsItemDeclarationHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/item-declarations/{id}/sensitive-context": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read purpose-bound sensitive context and append an audit record */
+        get: operations["getCmsItemDeclarationSensitiveContext"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/item-declarations/{id}/review/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve a declaration pending risk review */
+        post: operations["approveCmsItemDeclarationReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/item-declarations/{id}/review/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject a declaration pending risk review */
+        post: operations["rejectCmsItemDeclarationReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/item-declarations/{id}/hide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Hide an eligible public declaration with an auditable reason */
+        post: operations["hideCmsItemDeclaration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/item-declarations/{id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Restore a hidden declaration when policy allows publication */
+        post: operations["restoreCmsItemDeclaration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create an owner-scoped lost or found item declaration draft */
+        post: operations["createItemDeclaration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List declarations owned by the authenticated actor */
+        get: operations["listOwnItemDeclarations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one declaration owned by the authenticated actor */
+        get: operations["getOwnItemDeclaration"];
+        put?: never;
+        post?: never;
+        /** Discard an owner draft that has not entered the workflow */
+        delete: operations["discardOwnItemDeclarationDraft"];
+        options?: never;
+        head?: never;
+        /** Update allowlisted declaration content with version control */
+        patch: operations["updateOwnItemDeclaration"];
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations/{id}/private-facts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read private verification facts for an owned declaration */
+        get: operations["getOwnItemDeclarationPrivateFacts"];
+        /** Replace private verification facts without exposing them in audit */
+        put: operations["replaceOwnItemDeclarationPrivateFacts"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations/{id}/locations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Replace owner-scoped locations with optimistic concurrency */
+        put: operations["replaceOwnItemDeclarationLocations"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations/{id}/media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload a validated private image original for processing */
+        post: operations["uploadOwnItemDeclarationMedia"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations/{id}/media/{mediaId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Soft-detach owned media and queue private-object cleanup */
+        delete: operations["detachOwnItemDeclarationMedia"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations/{id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit a complete draft and publish it when risk is clear */
+        post: operations["submitItemDeclaration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations/{id}/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Withdraw an active declaration without deleting its history */
+        post: operations["withdrawOwnItemDeclaration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations/{id}/close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Close an active declaration with an auditable reason */
+        post: operations["closeOwnItemDeclaration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-notices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List public-safe active item notices */
+        get: operations["listPublicItemNotices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-notices/{publicCode}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one public-safe item notice */
+        get: operations["getPublicItemNotice"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -526,7 +1845,7 @@ export interface components {
         };
         PermissionDefinitionResponseDto: {
             /** @enum {string} */
-            key: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.read" | "identity.roles.manage" | "identity.permissions.read";
+            key: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read";
             label: string;
             description: string;
             module: string;
@@ -539,9 +1858,20 @@ export interface components {
             actionLabel: string;
             actionOrder: number;
         };
+        PermissionListResponseDto: {
+            data: components["schemas"]["PermissionDefinitionResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        PermissionStatsResponseDto: {
+            /** @description Total number of permissions */
+            total: number;
+        };
         PermissionOverrideItemDto: {
             /** @enum {string} */
-            permissionKey: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.read" | "identity.roles.manage" | "identity.permissions.read";
+            permissionKey: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read";
             /** @enum {string} */
             effect: "allow" | "deny";
         };
@@ -685,7 +2015,7 @@ export interface components {
             label: string;
             description: string;
             rank: number;
-            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.read" | "identity.roles.manage" | "identity.permissions.read")[];
+            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
             usersCount: number;
             isSystem: boolean;
             status: string;
@@ -693,6 +2023,21 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
+        };
+        RoleListResponseDto: {
+            data: components["schemas"]["RoleDefinitionResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        RoleStatsResponseDto: {
+            /** @description Total number of roles */
+            total: number;
+            /** @description Number of system roles */
+            systemRoles: number;
+            /** @description Number of custom roles */
+            customRoles: number;
         };
         RoleDetailResponseDto: {
             id: string;
@@ -700,7 +2045,7 @@ export interface components {
             label: string;
             description: string;
             rank: number;
-            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.read" | "identity.roles.manage" | "identity.permissions.read")[];
+            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
             usersCount: number;
             isSystem: boolean;
             status: string;
@@ -708,21 +2053,20 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.read" | "identity.roles.manage" | "identity.permissions.read")[];
+            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
         };
         CreateRoleDto: {
-            key: string;
             name: string;
             description: string;
             rank: number;
-            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.read" | "identity.roles.manage" | "identity.permissions.read")[];
+            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
         };
         UpdateRoleDto: {
             name?: string;
             status?: string;
             description?: string;
             rank?: number;
-            basePermissions?: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.read" | "identity.roles.manage" | "identity.permissions.read")[];
+            basePermissions?: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
         };
         InviteUserDto: {
             /** Format: email */
@@ -817,7 +2161,8 @@ export interface components {
             devicesCount: number | null;
             activeSessions: number | null;
             avgActiveTimeMinutes: number | null;
-            effectivePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.read" | "identity.roles.manage" | "identity.permissions.read")[];
+            effectivePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
+            roleRank: number;
         };
         UserListResponseDto: {
             data: components["schemas"]["UserResponseDto"][];
@@ -825,6 +2170,16 @@ export interface components {
             pageSize: number;
             total: number;
             totalPages: number;
+        };
+        UserStatsResponseDto: {
+            /** @description Total number of users */
+            total: number;
+            /** @description Number of active users */
+            active: number;
+            /** @description Number of suspended users */
+            suspended: number;
+            /** @description Number of pending users */
+            pending: number;
         };
         UpdateUserProfileDto: {
             avatarUrl?: string | null;
@@ -920,6 +2275,1356 @@ export interface components {
             /** @example Service is temporarily unavailable. */
             message: string;
         };
+        CategoryResponseDto: {
+            id: string;
+            name: string;
+            slug: string;
+            parentId?: Record<string, never>;
+            /** @enum {string} */
+            scope: "lost" | "found" | "both";
+            /** @enum {string} */
+            status: "visible" | "hidden";
+            sortOrder: number;
+            publicDescription?: Record<string, never>;
+            internalNote?: Record<string, never>;
+            tags?: Record<string, never>;
+            iconUrl?: Record<string, never>;
+            coverImageUrl?: Record<string, never>;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            deletedAt?: Record<string, never>;
+            createdBy?: Record<string, never>;
+            updatedBy?: Record<string, never>;
+        };
+        CategoryListResponseDto: {
+            data: components["schemas"]["CategoryResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        CategoryStatsResponseDto: {
+            total: number;
+            visible: number;
+            hidden: number;
+            inUse: number;
+        };
+        CategoryHistoryResponseDto: {
+            /** @description ID of the audit log */
+            id: string;
+            /** @description Action performed (e.g. category.updated) */
+            action: string;
+            /** @description Actor ID who performed the action */
+            actorId: string;
+            /** @description Actor Name */
+            actorName: string;
+            /** @description Actor Role */
+            actorRole: string;
+            /** @description Timestamp of the action */
+            createdAt: string;
+            /** @description Summary text of the changes */
+            summary: string;
+        };
+        CreateCategoryDto: {
+            name: string;
+            slug: string;
+            parentId?: string;
+            /** @enum {string} */
+            scope: "lost" | "found" | "both";
+            /** @enum {string} */
+            status: "visible" | "hidden";
+            /** @default 0 */
+            sortOrder: number;
+            publicDescription?: string;
+            internalNote?: string;
+            tags?: string;
+            iconUrl?: string;
+            coverImageUrl?: string;
+        };
+        CategoryOrderItemDto: {
+            id: string;
+            parentId?: string;
+            sortOrder: number;
+        };
+        BulkUpdateCategoryOrderDto: {
+            items: components["schemas"]["CategoryOrderItemDto"][];
+        };
+        UpdateCategoryDto: {
+            name?: string;
+            slug?: string;
+            parentId?: string;
+            /** @enum {string} */
+            scope?: "lost" | "found" | "both";
+            /** @enum {string} */
+            status?: "visible" | "hidden";
+            /** @default 0 */
+            sortOrder: number;
+            publicDescription?: string;
+            internalNote?: string;
+            tags?: string;
+            iconUrl?: string;
+            coverImageUrl?: string;
+        };
+        CategoryAttributeAssignmentResponseDto: {
+            attributeId: string;
+            displayOrder: number;
+            isRequired: boolean;
+            isPublic: boolean;
+            isForVerification: boolean;
+            isForMatch: boolean;
+            weight: number;
+            categoryId: string;
+            /** Format: date-time */
+            createdAt: string;
+            attributeName: string;
+            attributeDataType: string;
+        };
+        AssignCategoryAttributeItemDto: {
+            attributeId: string;
+            displayOrder: number;
+            isRequired: boolean;
+            isPublic: boolean;
+            isForVerification: boolean;
+            isForMatch: boolean;
+            weight: number;
+        };
+        AssignCategoryAttributesDto: {
+            attributes: components["schemas"]["AssignCategoryAttributeItemDto"][];
+        };
+        AttributeRetirementImpactResponseDto: {
+            attributeId: string;
+            categoryCount: number;
+            valueCount: number;
+            reportUsageCount: number | null;
+            reportUsageTracked: boolean;
+            canHardDelete: boolean;
+        };
+        AttributeOptionResponseDto: {
+            id: string;
+            label: string;
+            value: string;
+            displayOrder: number;
+            isDefault: boolean;
+        };
+        CategoryConfigDto: {
+            categoryId: string;
+            categoryName: string;
+            categoryStatus: string;
+            categoryIconUrl?: Record<string, never>;
+            displayOrder: number;
+            isRequired: boolean;
+            isPublic: boolean;
+            isForVerification: boolean;
+            isForMatch: boolean;
+            weight: number;
+        };
+        AttributeDetailResponseDto: {
+            id: string;
+            name: string;
+            slug: string;
+            /** @enum {string} */
+            dataType: "SHORT_TEXT" | "LONG_TEXT" | "SINGLE_SELECT" | "MULTI_SELECT" | "NUMBER" | "BOOLEAN" | "DATE";
+            description?: Record<string, never>;
+            placeholder?: Record<string, never>;
+            helpText?: Record<string, never>;
+            defaultValue?: Record<string, never>;
+            displayOrder: number;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE";
+            isPublic: boolean;
+            isRequired: boolean;
+            isForMatch: boolean;
+            isForVerification: boolean;
+            isFilterable: boolean;
+            isSearchable: boolean;
+            maxLength?: Record<string, never>;
+            regex?: Record<string, never>;
+            categoryIds: string[];
+            options: components["schemas"]["AttributeOptionResponseDto"][];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            createdBy?: Record<string, never>;
+            updatedBy?: Record<string, never>;
+            reportsCount: number | null;
+            totalCategoryConfigs: number;
+            categoryConfigs: components["schemas"]["CategoryConfigDto"][];
+        };
+        CreateAttributeDto: {
+            name: string;
+            slug: string;
+            /** @enum {string} */
+            dataType: "SHORT_TEXT" | "LONG_TEXT" | "SINGLE_SELECT" | "MULTI_SELECT" | "NUMBER" | "BOOLEAN" | "DATE";
+            description?: string;
+            placeholder?: string;
+            helpText?: string;
+            defaultValue?: string;
+            displayOrder?: number;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+            isPublic?: boolean;
+            isRequired?: boolean;
+            isForMatch?: boolean;
+            isForVerification?: boolean;
+            isFilterable?: boolean;
+            isSearchable?: boolean;
+            maxLength?: number;
+            regex?: string;
+            categoryIds?: string[];
+        };
+        AttributeResponseDto: {
+            id: string;
+            name: string;
+            slug: string;
+            /** @enum {string} */
+            dataType: "SHORT_TEXT" | "LONG_TEXT" | "SINGLE_SELECT" | "MULTI_SELECT" | "NUMBER" | "BOOLEAN" | "DATE";
+            description?: Record<string, never>;
+            placeholder?: Record<string, never>;
+            helpText?: Record<string, never>;
+            defaultValue?: Record<string, never>;
+            displayOrder: number;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE";
+            isPublic: boolean;
+            isRequired: boolean;
+            isForMatch: boolean;
+            isForVerification: boolean;
+            isFilterable: boolean;
+            isSearchable: boolean;
+            maxLength?: Record<string, never>;
+            regex?: Record<string, never>;
+            categoryIds: string[];
+            options: components["schemas"]["AttributeOptionResponseDto"][];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            createdBy?: Record<string, never>;
+            updatedBy?: Record<string, never>;
+        };
+        UpdateAttributeDto: {
+            name?: string;
+            slug?: string;
+            /** @enum {string} */
+            dataType?: "SHORT_TEXT" | "LONG_TEXT" | "SINGLE_SELECT" | "MULTI_SELECT" | "NUMBER" | "BOOLEAN" | "DATE";
+            description?: string;
+            placeholder?: string;
+            helpText?: string;
+            defaultValue?: string;
+            displayOrder?: number;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+            isPublic?: boolean;
+            isRequired?: boolean;
+            isForMatch?: boolean;
+            isForVerification?: boolean;
+            isFilterable?: boolean;
+            isSearchable?: boolean;
+            maxLength?: number;
+            regex?: string;
+            categoryIds?: string[];
+        };
+        RetireAttributeDto: {
+            reason: string;
+        };
+        AttributeValueCatalogAssignmentResponseDto: {
+            id: string;
+            name: string;
+            slug: string;
+            dataType: string;
+        };
+        AttributeValueCatalogItemResponseDto: {
+            id: string;
+            attributeId: string;
+            attributeName: string;
+            attributeSlug: string;
+            attributeDataType: string;
+            label: string;
+            value: string;
+            colorHex: string | null;
+            iconKey: string | null;
+            displayOrder: number | null;
+            /** @enum {string} */
+            status: "DRAFT" | "ACTIVE" | "INACTIVE" | "ARCHIVED";
+            /** @enum {string} */
+            reviewStatus: "NOT_REQUIRED" | "PENDING" | "APPROVED" | "REJECTED" | "MERGED";
+            /** @enum {string} */
+            source: "SYSTEM" | "USER_SUBMITTED";
+            /** Format: date-time */
+            updatedAt: string;
+            usageCount: number | null;
+            assignedAttributes: components["schemas"]["AttributeValueCatalogAssignmentResponseDto"][];
+        };
+        AttributeValueCatalogResponseDto: {
+            items: components["schemas"]["AttributeValueCatalogItemResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        AttributeValueResponseDto: {
+            id: string;
+            attributeId: string;
+            label: string;
+            value: string;
+            description: string | null;
+            colorHex: string | null;
+            iconKey: string | null;
+            displayOrder: number | null;
+            isDefault: boolean;
+            /** @enum {string} */
+            status: "DRAFT" | "ACTIVE" | "INACTIVE" | "ARCHIVED";
+            /** @enum {string} */
+            reviewStatus: "NOT_REQUIRED" | "PENDING" | "APPROVED" | "REJECTED" | "MERGED";
+            /** @enum {string} */
+            source: "SYSTEM" | "USER_SUBMITTED";
+            submittedBy: string | null;
+            sourceReportId: string | null;
+            reviewedBy: string | null;
+            /** Format: date-time */
+            reviewedAt: string | null;
+            reviewNote: string | null;
+            mergedIntoId: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            createdBy: string | null;
+            updatedBy: string | null;
+            /** Format: date-time */
+            archivedAt: string | null;
+            version: number;
+            assignmentId: string;
+            assignmentVersion: number;
+            assignmentAttached: boolean;
+            usageCount: number | null;
+        };
+        AttributeValueStatsResponseDto: {
+            total: number;
+            active: number;
+            pendingReview: number;
+            inactive: number;
+            archived: number;
+            mostUsed: components["schemas"]["AttributeValueResponseDto"] | null;
+            usageAvailable: boolean;
+        };
+        AssignableAttributeValueResponseDto: {
+            id: string;
+            label: string;
+            value: string;
+            description: string | null;
+            colorHex: string | null;
+            iconKey: string | null;
+            /** @enum {string} */
+            source: "SYSTEM" | "USER_SUBMITTED";
+            originAttributeId: string;
+            detachedAssignmentVersion: number | null;
+        };
+        AssignableAttributeValueListResponseDto: {
+            items: components["schemas"]["AssignableAttributeValueResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        AttachAttributeValueDto: {
+            /** @description Required when restoring a previously detached assignment. */
+            expectedAssignmentVersion?: number;
+        };
+        AttributeValueAssignmentResponseDto: {
+            id: string;
+            attributeId: string;
+            valueId: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE";
+            displayOrder: number | null;
+            isDefault: boolean;
+            /** Format: date-time */
+            detachedAt: string | null;
+            version: number;
+        };
+        DetachAttributeValueDto: {
+            expectedAssignmentVersion: number;
+            reason: string;
+        };
+        AttributeValueRetirementImpactResponseDto: {
+            attributeId: string;
+            valueId: string;
+            usageCount: number | null;
+            usageTracked: boolean;
+            incomingMergeReferenceCount: number;
+            assignmentCount: number;
+            hasSourceReport: boolean;
+            canHardDelete: boolean;
+        };
+        AttributeValueListResponseDto: {
+            items: components["schemas"]["AttributeValueResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        CreateAttributeValueDto: {
+            /** @example Đỏ */
+            label: string;
+            /** @example red */
+            value: string;
+            description?: string;
+            /** @example #D94A4A */
+            colorHex?: string;
+            /** @description Key from the approved icon registry. */
+            iconKey?: string;
+            /** @description Optional one-based position when creating an ACTIVE value. Defaults to the end. */
+            displayOrder?: number;
+            /** @default false */
+            isDefault: boolean;
+            /** @enum {string} */
+            status: "DRAFT" | "ACTIVE";
+        };
+        UpdateAttributeValueDto: {
+            label?: string;
+            value?: string;
+            description?: string | null;
+            colorHex?: string | null;
+            iconKey?: string | null;
+            displayOrder?: number;
+            isDefault?: boolean;
+            /** @enum {string} */
+            status?: "DRAFT" | "ACTIVE" | "INACTIVE";
+            expectedVersion: number;
+            expectedAssignmentVersion: number;
+        };
+        AttributeValueOrderItemDto: {
+            id: string;
+            displayOrder: number;
+            expectedVersion: number;
+        };
+        ReorderAttributeValuesDto: {
+            items: components["schemas"]["AttributeValueOrderItemDto"][];
+        };
+        MoveAttributeValueDto: {
+            /** @enum {string} */
+            direction: "UP" | "DOWN";
+            expectedAssignmentVersion: number;
+        };
+        ArchiveAttributeValueDto: {
+            reason: string;
+            expectedVersion: number;
+        };
+        UpdateAttributeValueAssignmentLifecycleDto: {
+            expectedAssignmentVersion: number;
+            reason: string;
+        };
+        RetireAttributeValueDto: {
+            reason: string;
+            expectedVersion: number;
+            expectedAssignmentVersion: number;
+        };
+        RetireAttributeValueResponseDto: {
+            /** @enum {string} */
+            outcome: "DELETED" | "ARCHIVED";
+            value: components["schemas"]["AttributeValueResponseDto"] | null;
+        };
+        ReviewAttributeValueDto: {
+            note?: string;
+        };
+        RejectAttributeValueDto: {
+            reason: string;
+        };
+        MergeAttributeValueDto: {
+            reason: string;
+            targetValueId: string;
+        };
+        SubmitAttributeValueProposalDto: {
+            reportId: string;
+            /** @example Xanh ngọc */
+            label: string;
+        };
+        AttributeValueProposalResponseDto: {
+            id: string;
+            label: string;
+            /** @enum {string} */
+            status: "INACTIVE";
+            /** @enum {string} */
+            reviewStatus: "PENDING";
+        };
+        GeographyResponseDto: {
+            id: string;
+            parentId?: string | null;
+            parentName?: string | null;
+            geographyTypeId: string;
+            geographyTypeCode: string;
+            geographyTypeName: string;
+            hierarchyLevel: number;
+            code: string;
+            name: string;
+            slug: string;
+            countryCode: string;
+            latitude?: number | null;
+            longitude?: number | null;
+            timezone?: string | null;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            sortOrder: number;
+            /** @enum {string} */
+            source: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            externalId?: string | null;
+            dataVersion?: string | null;
+            replacedById?: string | null;
+            /** Format: date */
+            validFrom?: string | null;
+            /** Format: date */
+            validTo?: string | null;
+            childCount: number;
+            groupNames: string[];
+            internalNote?: string | null;
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        GeographyListResponseDto: {
+            data: components["schemas"]["GeographyResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        GeographyTypeDistributionResponseDto: {
+            typeCode: string;
+            typeName: string;
+            total: number;
+        };
+        GeographyDataQualityResponseDto: {
+            missingCode: number;
+            missingCenter: number;
+            missingEffectiveDate: number;
+            deprecatedWithoutSuccessor: number;
+        };
+        GeographyDashboardStatsResponseDto: {
+            countryCode: string;
+            total: number;
+            active: number;
+            inactive: number;
+            deprecated: number;
+            byType: components["schemas"]["GeographyTypeDistributionResponseDto"][];
+            dataQuality: components["schemas"]["GeographyDataQualityResponseDto"];
+        };
+        CreateGeographyDto: {
+            parentId?: string;
+            geographyTypeId: string;
+            code: string;
+            name: string;
+            slug: string;
+            countryCode: string;
+            latitude?: number;
+            longitude?: number;
+            timezone?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            sortOrder?: number;
+            /** @enum {string} */
+            source?: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            externalId?: string;
+            dataVersion?: string;
+            internalNote?: string;
+            replacedById?: string;
+            /** Format: date */
+            validFrom?: string;
+            /** Format: date */
+            validTo?: string;
+        };
+        UpdateGeographyDto: {
+            parentId?: string;
+            geographyTypeId?: string;
+            code?: string;
+            name?: string;
+            slug?: string;
+            countryCode?: string;
+            latitude?: number;
+            longitude?: number;
+            timezone?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            sortOrder?: number;
+            /** @enum {string} */
+            source?: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            externalId?: string;
+            dataVersion?: string;
+            internalNote?: string;
+            replacedById?: string;
+            /** Format: date */
+            validFrom?: string;
+            /** Format: date */
+            validTo?: string;
+            version: number;
+        };
+        GeographyHierarchyNodeResponseDto: {
+            id: string;
+            parentId?: string | null;
+            name: string;
+            code: string;
+            typeCode: string;
+            typeName: string;
+        };
+        SpatialStatisticsResponseDto: {
+            id: string;
+            geographyId?: string | null;
+            geographyGroupId?: string | null;
+            locationId?: string | null;
+            populationEstimate?: number | null;
+            areaKm2?: number | null;
+            /** Format: date */
+            effectiveDate: string;
+            sourceName: string;
+            sourceReference?: string | null;
+            notes?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        GeographyActivityResponseDto: {
+            id: string;
+            action: string;
+            actorId?: string | null;
+            actorName: string;
+            summary: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        GeographyDetailResponseDto: {
+            geography: components["schemas"]["GeographyResponseDto"];
+            ancestors: components["schemas"]["GeographyHierarchyNodeResponseDto"][];
+            children: components["schemas"]["GeographyResponseDto"][];
+            descendantCount: number;
+            latestStatistics?: components["schemas"]["SpatialStatisticsResponseDto"] | null;
+            recentActivities: components["schemas"]["GeographyActivityResponseDto"][];
+        };
+        CreateGeographyTypeDto: {
+            code: string;
+            name: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+            hierarchyLevel: number;
+        };
+        UpdateGeographyTypeDto: {
+            code?: string;
+            name?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+            hierarchyLevel?: number;
+            version: number;
+        };
+        LocationResponseDto: {
+            id: string;
+            locationTypeId: string;
+            locationTypeCode: string;
+            locationTypeName: string;
+            geographyId: string;
+            geographyName: string;
+            name: string;
+            slug: string;
+            formattedAddress: string;
+            latitude: number;
+            longitude: number;
+            /** @enum {string} */
+            coordinatePrecision: "EXACT" | "APPROXIMATE";
+            isSensitive: boolean;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            /** @enum {string} */
+            source: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            externalId?: string | null;
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        LocationListResponseDto: {
+            data: components["schemas"]["LocationResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        CmsLocationSummaryResponseDto: {
+            id: string;
+            locationTypeId: string;
+            locationTypeCode: string;
+            locationTypeName: string;
+            geographyId: string;
+            geographyName: string;
+            name: string;
+            slug: string;
+            formattedAddress: string;
+            /** @enum {string} */
+            coordinatePrecision: "EXACT" | "APPROXIMATE";
+            isSensitive: boolean;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            /** @enum {string} */
+            source: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CmsLocationSummaryListResponseDto: {
+            data: components["schemas"]["CmsLocationSummaryResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        CreateLocationDto: {
+            locationTypeId: string;
+            geographyId: string;
+            name: string;
+            slug: string;
+            formattedAddress: string;
+            latitude: number;
+            longitude: number;
+            /** @enum {string} */
+            coordinatePrecision?: "EXACT" | "APPROXIMATE";
+            isSensitive?: boolean;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            /** @enum {string} */
+            source?: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            externalId?: string;
+        };
+        UpdateLocationDto: {
+            locationTypeId?: string;
+            geographyId?: string;
+            name?: string;
+            slug?: string;
+            formattedAddress?: string;
+            latitude?: number;
+            longitude?: number;
+            /** @enum {string} */
+            coordinatePrecision?: "EXACT" | "APPROXIMATE";
+            isSensitive?: boolean;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            /** @enum {string} */
+            source?: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            externalId?: string;
+            version: number;
+        };
+        CreateLocationTypeDto: {
+            code: string;
+            name: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+        };
+        UpdateLocationTypeDto: {
+            code?: string;
+            name?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE";
+            version: number;
+        };
+        PublicGeographyResponseDto: {
+            id: string;
+            parentId?: string | null;
+            parentName?: string | null;
+            geographyTypeId: string;
+            geographyTypeCode: string;
+            geographyTypeName: string;
+            hierarchyLevel: number;
+            code: string;
+            name: string;
+            slug: string;
+            countryCode: string;
+            timezone?: string | null;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            sortOrder: number;
+            /** @enum {string} */
+            source: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            replacedById?: string | null;
+            /** Format: date */
+            validFrom?: string | null;
+            /** Format: date */
+            validTo?: string | null;
+            childCount: number;
+            groupNames: string[];
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        PublicGeographyListResponseDto: {
+            data: components["schemas"]["PublicGeographyResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        PublicLocationResponseDto: {
+            id: string;
+            locationTypeId: string;
+            locationTypeCode: string;
+            locationTypeName: string;
+            geographyId: string;
+            geographyName: string;
+            name: string;
+            slug: string;
+            formattedAddress: string;
+            /** @enum {string} */
+            coordinatePrecision: "EXACT" | "APPROXIMATE";
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            /** @enum {string} */
+            source: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        PublicLocationListResponseDto: {
+            data: components["schemas"]["PublicLocationResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        GeographyGroupResponseDto: {
+            id: string;
+            countryCode: string;
+            code: string;
+            name: string;
+            slug: string;
+            groupType: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            /** @enum {string} */
+            source: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            dataVersion?: string | null;
+            geographyCount: number;
+            locationCount: number;
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        GeographyGroupListResponseDto: {
+            data: components["schemas"]["GeographyGroupResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        CreateGeographyGroupDto: {
+            countryCode: string;
+            code: string;
+            name: string;
+            slug: string;
+            /** @enum {string} */
+            groupType: "REGION" | "SUBREGION" | "OPERATIONAL_AREA" | "CUSTOM";
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            /** @enum {string} */
+            source?: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            geographyIds?: string[];
+        };
+        UpdateGeographyGroupDto: {
+            countryCode?: string;
+            code?: string;
+            name?: string;
+            slug?: string;
+            /** @enum {string} */
+            groupType?: "REGION" | "SUBREGION" | "OPERATIONAL_AREA" | "CUSTOM";
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+            /** @enum {string} */
+            source?: "SYSTEM" | "MANUAL" | "IMPORT" | "EXTERNAL";
+            geographyIds?: string[];
+            version: number;
+        };
+        GeographyImportBatchResponseDto: {
+            id: string;
+            countryCode: string;
+            source: string;
+            sourceVersion: string;
+            status: string;
+            /** @enum {string} */
+            importKind: "GEOGRAPHY" | "LOCATION";
+            schemaVersion: string;
+            validationRevision: number;
+            totalRows: number;
+            validRows: number;
+            invalidRows: number;
+            warningRows: number;
+            noOpRows: number;
+            excludedRows: number;
+            validationSummary: {
+                [key: string]: number;
+            };
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            appliedAt?: string | null;
+        };
+        GeographyImportListResponseDto: {
+            data: components["schemas"]["GeographyImportBatchResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        GeographyImportDetailResponseDto: {
+            id: string;
+            countryCode: string;
+            source: string;
+            sourceVersion: string;
+            status: string;
+            /** @enum {string} */
+            importKind: "GEOGRAPHY" | "LOCATION";
+            schemaVersion: string;
+            validationRevision: number;
+            totalRows: number;
+            validRows: number;
+            invalidRows: number;
+            warningRows: number;
+            noOpRows: number;
+            excludedRows: number;
+            validationSummary: {
+                [key: string]: number;
+            };
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            appliedAt?: string | null;
+            artifacts: Record<string, never>[];
+        };
+        GeographyImportRowResponseDto: {
+            id: string;
+            rowNumber: number;
+            operation: string;
+            sourceCode: string;
+            parentSourceCode?: string | null;
+            typeCode: string;
+            name: string;
+            slug: string;
+            validationStatus: string;
+            validationErrors: string[];
+            validationDetails: {
+                code: string;
+                conflict?: {
+                    /** @enum {string} */
+                    source?: "DATABASE" | "BATCH";
+                    resourceId?: string | null;
+                    rowNumber?: number | null;
+                    sourceCode?: string;
+                    parentSourceCode?: string | null;
+                    name?: string;
+                    slug?: string;
+                } | null;
+            }[];
+            validationWarnings: string[];
+            plannedAction?: string | null;
+            revision: number;
+            geographyCode?: string | null;
+            formattedAddress?: string | null;
+            latitude?: number | null;
+            longitude?: number | null;
+        };
+        GeographyImportRowListResponseDto: {
+            data: components["schemas"]["GeographyImportRowResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        GeographyImportRowDto: {
+            rowNumber: number;
+            /** @enum {string} */
+            operation: "UPSERT" | "DEPRECATE";
+            sourceCode: string;
+            parentSourceCode?: string | null;
+            typeCode: string;
+            name: string;
+            slug: string;
+            /** Format: date */
+            validFrom?: string | null;
+            /** Format: date */
+            validTo?: string | null;
+            geographyCode?: string | null;
+            formattedAddress?: string | null;
+            latitude?: number | null;
+            longitude?: number | null;
+        };
+        StageGeographyImportDto: {
+            /**
+             * @default GEOGRAPHY
+             * @enum {string}
+             */
+            importKind: "GEOGRAPHY" | "LOCATION";
+            /** @default geography-v1 */
+            schemaVersion: Record<string, never>;
+            countryCode: string;
+            source: string;
+            sourceVersion: string;
+            idempotencyKey: string;
+            rows: components["schemas"]["GeographyImportRowDto"][];
+        };
+        ApplyGeographyImportDto: {
+            expectedVersion: number;
+            expectedValidationRevision: number;
+            includedRowIds?: string[];
+            /** @default false */
+            acknowledgeWarnings: boolean;
+        };
+        UpdateGeographyImportRowDto: {
+            rowNumber?: number;
+            /** @enum {string} */
+            operation?: "UPSERT" | "DEPRECATE";
+            sourceCode?: string;
+            parentSourceCode?: string | null;
+            typeCode?: string;
+            name?: string;
+            slug?: string;
+            /** Format: date */
+            validFrom?: string | null;
+            /** Format: date */
+            validTo?: string | null;
+            geographyCode?: string | null;
+            formattedAddress?: string | null;
+            latitude?: number | null;
+            longitude?: number | null;
+            expectedRevision: number;
+            reason: string;
+        };
+        RollbackGeographyImportDto: {
+            expectedVersion: number;
+            idempotencyKey: string;
+        };
+        GeographyImportRollbackConflictResponseDto: {
+            effectId: string;
+            code: string;
+            expectedVersion: number;
+            actualVersion?: number | null;
+        };
+        RollbackGeographyImportResponseDto: {
+            /** @enum {string} */
+            outcome: "ROLLED_BACK" | "ROLLBACK_CONFLICT";
+            batch: components["schemas"]["GeographyImportBatchResponseDto"];
+            conflicts?: components["schemas"]["GeographyImportRollbackConflictResponseDto"][];
+        };
+        CreateSpatialStatisticsDto: {
+            geographyId?: string;
+            geographyGroupId?: string;
+            locationId?: string;
+            populationEstimate?: number;
+            areaKm2?: number;
+            /** Format: date */
+            effectiveDate: string;
+            sourceName: string;
+            sourceReference?: string;
+            notes?: string;
+        };
+        ItemDeclarationCategoryResponseDto: {
+            /** Format: uuid */
+            id?: Record<string, never> | null;
+            name?: Record<string, never> | null;
+        };
+        StaffOwnerSummaryResponseDto: {
+            displayName?: Record<string, never> | null;
+            /** Format: uuid */
+            id: string;
+        };
+        StaffItemDeclarationLocationResponseDto: {
+            /** Format: uuid */
+            geographyId?: Record<string, never> | null;
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            precision: "EXACT" | "APPROXIMATE" | "AREA_ONLY" | "UNKNOWN";
+            publicAreaLabel: string;
+            /** @enum {string} */
+            purpose: "LAST_SEEN" | "LOST" | "SUSPECTED_LOST" | "FOUND";
+            uncertaintyRadiusMeters?: number | null;
+            /** @enum {string} */
+            visibility: "PRIVATE" | "MATCH_ONLY" | "APPROXIMATE";
+        };
+        PublicItemDeclarationMediaResponseDto: {
+            /** Format: uuid */
+            id: string;
+            url: string;
+        };
+        StaffItemDeclarationResponseDto: {
+            brand?: Record<string, never> | null;
+            category: components["schemas"]["ItemDeclarationCategoryResponseDto"];
+            color?: Record<string, never> | null;
+            /** Format: date-time */
+            createdAt: string;
+            description?: Record<string, never> | null;
+            /** Format: date-time */
+            eventEndedAt?: Record<string, never> | null;
+            /** Format: date-time */
+            eventStartedAt?: Record<string, never> | null;
+            eventTimezone: string;
+            /** Format: uuid */
+            id: string;
+            publicAreaLabel?: Record<string, never> | null;
+            publicCode: string;
+            /** Format: date-time */
+            publishedAt?: Record<string, never> | null;
+            /** @enum {string} */
+            reviewStatus: "NOT_REQUIRED" | "PENDING_REVIEW" | "APPROVED" | "REJECTED";
+            /** Format: date-time */
+            submittedAt?: Record<string, never> | null;
+            title?: Record<string, never> | null;
+            /** @enum {string} */
+            type: "LOST" | "FOUND";
+            /** Format: date-time */
+            updatedAt: string;
+            version: number;
+            /** @enum {string} */
+            visibilityStatus: "PRIVATE" | "PUBLIC" | "HIDDEN";
+            /** @enum {string} */
+            workflowStatus: "DRAFT" | "SUBMITTED" | "ACTIVE" | "RESOLVED" | "CLOSED" | "WITHDRAWN" | "EXPIRED" | "ARCHIVED";
+            owner: components["schemas"]["StaffOwnerSummaryResponseDto"];
+            locations: components["schemas"]["StaffItemDeclarationLocationResponseDto"][];
+            media: components["schemas"]["PublicItemDeclarationMediaResponseDto"][];
+        };
+        StaffItemDeclarationPageResponseDto: {
+            items: components["schemas"]["StaffItemDeclarationResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        ItemDeclarationHistoryEntryResponseDto: {
+            /** Format: uuid */
+            actorId?: Record<string, never> | null;
+            changedFields: string[];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: uuid */
+            id: string;
+            safeSnapshot: {
+                [key: string]: unknown;
+            };
+            version: number;
+        };
+        ItemDeclarationHistoryPageResponseDto: {
+            items: components["schemas"]["ItemDeclarationHistoryEntryResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        SensitiveExactLocationResponseDto: {
+            latitude: number;
+            longitude: number;
+            /** @enum {string} */
+            purpose: "LAST_SEEN" | "LOST" | "SUSPECTED_LOST" | "FOUND";
+        };
+        SensitivePrivateFactResponseDto: {
+            /** Format: uuid */
+            id: string;
+            kind: string;
+            value: string;
+        };
+        SensitiveDeclarationContextResponseDto: {
+            /** Format: uuid */
+            declarationId: string;
+            exactLocations: components["schemas"]["SensitiveExactLocationResponseDto"][];
+            privateFacts: components["schemas"]["SensitivePrivateFactResponseDto"][];
+        };
+        ModerationItemDeclarationCommandDto: {
+            /** Format: int32 */
+            expectedVersion: number;
+            reason?: string;
+        };
+        CreateItemDeclarationDto: {
+            brand?: string;
+            /** Format: uuid */
+            categoryId?: string;
+            categoryName?: string;
+            color?: string;
+            description?: string;
+            /** Format: date-time */
+            eventEndedAt?: string;
+            /** Format: date-time */
+            eventStartedAt?: string;
+            /** @default Asia/Ho_Chi_Minh */
+            eventTimezone: string;
+            publicAreaLabel?: string;
+            title?: string;
+            /** @enum {string} */
+            type: "FOUND" | "LOST";
+        };
+        OwnerItemDeclarationLocationResponseDto: {
+            exactLatitude?: number | null;
+            exactLongitude?: number | null;
+            /** Format: uuid */
+            geographyId?: Record<string, never> | null;
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            precision: "EXACT" | "APPROXIMATE" | "AREA_ONLY" | "UNKNOWN";
+            publicAreaLabel: string;
+            /** @enum {string} */
+            purpose: "LAST_SEEN" | "LOST" | "SUSPECTED_LOST" | "FOUND";
+            uncertaintyRadiusMeters?: number | null;
+            /** @enum {string} */
+            visibility: "PRIVATE" | "MATCH_ONLY" | "APPROXIMATE";
+        };
+        OwnerItemDeclarationMediaResponseDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            processingStatus: "PENDING" | "READY" | "REJECTED" | "FAILED";
+            url?: Record<string, never> | null;
+        };
+        OwnerItemDeclarationResponseDto: {
+            brand?: Record<string, never> | null;
+            category: components["schemas"]["ItemDeclarationCategoryResponseDto"];
+            color?: Record<string, never> | null;
+            /** Format: date-time */
+            createdAt: string;
+            description?: Record<string, never> | null;
+            /** Format: date-time */
+            eventEndedAt?: Record<string, never> | null;
+            /** Format: date-time */
+            eventStartedAt?: Record<string, never> | null;
+            eventTimezone: string;
+            /** Format: uuid */
+            id: string;
+            locations: components["schemas"]["OwnerItemDeclarationLocationResponseDto"][];
+            media: components["schemas"]["OwnerItemDeclarationMediaResponseDto"][];
+            publicAreaLabel?: Record<string, never> | null;
+            publicCode: string;
+            /** Format: date-time */
+            publishedAt?: Record<string, never> | null;
+            /** @enum {string} */
+            reviewStatus: "NOT_REQUIRED" | "PENDING_REVIEW" | "APPROVED" | "REJECTED";
+            /** Format: date-time */
+            submittedAt?: Record<string, never> | null;
+            title?: Record<string, never> | null;
+            /** @enum {string} */
+            type: "LOST" | "FOUND";
+            /** Format: date-time */
+            updatedAt: string;
+            version: number;
+            /** @enum {string} */
+            visibilityStatus: "PRIVATE" | "PUBLIC" | "HIDDEN";
+            /** @enum {string} */
+            workflowStatus: "DRAFT" | "SUBMITTED" | "ACTIVE" | "RESOLVED" | "CLOSED" | "WITHDRAWN" | "EXPIRED" | "ARCHIVED";
+        };
+        OwnerItemDeclarationPageResponseDto: {
+            items: components["schemas"]["OwnerItemDeclarationResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        OwnerPrivateFactsResponseDto: {
+            /** Format: uuid */
+            declarationId: string;
+            facts: components["schemas"]["SensitivePrivateFactResponseDto"][];
+            version: number;
+        };
+        PrivateFactInputDto: {
+            kind: string;
+            value: string;
+        };
+        ReplacePrivateFactsDto: {
+            /** Format: int32 */
+            expectedVersion: number;
+            facts: components["schemas"]["PrivateFactInputDto"][];
+        };
+        ItemDeclarationLocationInputDto: {
+            exactLatitude?: number | null;
+            exactLongitude?: number | null;
+            /** Format: uuid */
+            geographyId?: Record<string, never> | null;
+            /** @enum {string} */
+            precision: "EXACT" | "APPROXIMATE" | "AREA_ONLY" | "UNKNOWN";
+            publicAreaLabel: string;
+            /** @enum {string} */
+            purpose: "LAST_SEEN" | "LOST" | "SUSPECTED_LOST" | "FOUND";
+            uncertaintyRadiusMeters?: Record<string, never> | null;
+            /** @enum {string} */
+            visibility: "PRIVATE" | "MATCH_ONLY" | "APPROXIMATE";
+        };
+        ReplaceItemDeclarationLocationsDto: {
+            /** Format: int32 */
+            expectedVersion: number;
+            locations: components["schemas"]["ItemDeclarationLocationInputDto"][];
+        };
+        ItemDeclarationMediaUploadResponseDto: {
+            /** Format: uuid */
+            mediaId: string;
+            /** @enum {string} */
+            processingStatus: "PENDING";
+            version: number;
+        };
+        ItemDeclarationMediaDetachResponseDto: {
+            version: number;
+        };
+        UpdateItemDeclarationDto: {
+            brand?: string;
+            /** Format: uuid */
+            categoryId?: string;
+            categoryName?: string;
+            color?: string;
+            description?: string;
+            /** Format: date-time */
+            eventEndedAt?: string;
+            /** Format: date-time */
+            eventStartedAt?: string;
+            /** @default Asia/Ho_Chi_Minh */
+            eventTimezone: string;
+            publicAreaLabel?: string;
+            title?: string;
+            /** @enum {string} */
+            type?: "FOUND" | "LOST";
+            expectedVersion: number;
+        };
+        VersionedItemDeclarationCommandDto: {
+            /** Format: int32 */
+            expectedVersion: number;
+        };
+        ReasonedItemDeclarationCommandDto: {
+            /** Format: int32 */
+            expectedVersion: number;
+            reason: string;
+        };
+        PublicItemNoticeResponseDto: {
+            brand?: Record<string, never> | null;
+            category: components["schemas"]["ItemDeclarationCategoryResponseDto"];
+            color?: Record<string, never> | null;
+            description: string;
+            /** Format: date-time */
+            eventEndedAt?: Record<string, never> | null;
+            /** Format: date-time */
+            eventStartedAt: string;
+            media: components["schemas"]["PublicItemDeclarationMediaResponseDto"][];
+            publicAreaLabel: string;
+            publicCode: string;
+            /** Format: date-time */
+            publishedAt?: Record<string, never> | null;
+            title: string;
+            /** @enum {string} */
+            type: "LOST" | "FOUND";
+        };
+        PublicItemNoticePageResponseDto: {
+            items: components["schemas"]["PublicItemNoticeResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
     };
     responses: never;
     parameters: never;
@@ -998,6 +3703,29 @@ export interface operations {
     };
     listPermissions: {
         parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PermissionListResponseDto"];
+                };
+            };
+        };
+    };
+    getAllPermissions: {
+        parameters: {
             query?: never;
             header?: never;
             path?: never;
@@ -1011,6 +3739,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PermissionDefinitionResponseDto"][];
+                };
+            };
+        };
+    };
+    getPermissionStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PermissionStatsResponseDto"];
                 };
             };
         };
@@ -1308,7 +4055,12 @@ export interface operations {
     };
     listRoles: {
         parameters: {
-            query?: never;
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                status?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1320,7 +4072,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["RoleDefinitionResponseDto"][];
+                    "application/json": components["schemas"]["RoleListResponseDto"];
                 };
             };
         };
@@ -1343,6 +4095,44 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    getAllRoles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleDefinitionResponseDto"][];
+                };
+            };
+        };
+    };
+    getRoleStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleStatsResponseDto"];
+                };
             };
         };
     };
@@ -1609,6 +4399,43 @@ export interface operations {
             };
             /** @description Authentication is required. */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getUserStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserStatsResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            /** @description User directory permission is missing. */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2226,6 +5053,3020 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ReadinessUnavailableResponseDto"];
+                };
+            };
+        };
+    };
+    listCmsCategories: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                status?: "visible" | "hidden";
+                scope?: "lost" | "found" | "both";
+                search?: string;
+                sortBy?: "sortOrder" | "createdAt" | "name";
+                sortDirection?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryListResponseDto"];
+                };
+            };
+        };
+    };
+    createCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCategoryDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryResponseDto"];
+                };
+            };
+        };
+    };
+    getCategoryTree: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryResponseDto"][];
+                };
+            };
+        };
+    };
+    getCategoryStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryStatsResponseDto"];
+                };
+            };
+        };
+    };
+    getCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryResponseDto"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteCategory: {
+        parameters: {
+            query: {
+                reason: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCategoryDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryResponseDto"];
+                };
+            };
+        };
+    };
+    getCategoryHistory: {
+        parameters: {
+            query?: {
+                /** @description Filter history from date (ISO 8601 string or Date) */
+                fromDate?: string;
+                /** @description Filter history to date (ISO 8601 string or Date) */
+                toDate?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryHistoryResponseDto"][];
+                };
+            };
+        };
+    };
+    bulkUpdateCategoryOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkUpdateCategoryOrderDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getCategoryAttributes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryAttributeAssignmentResponseDto"][];
+                };
+            };
+        };
+    };
+    assignCategoryAttributes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssignCategoryAttributesDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listPublicCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryResponseDto"][];
+                };
+            };
+        };
+    };
+    getRetirementImpact: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeRetirementImpactResponseDto"];
+                };
+            };
+        };
+    };
+    getAttributes: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                status?: "ACTIVE" | "INACTIVE";
+                dataType?: "SHORT_TEXT" | "LONG_TEXT" | "SINGLE_SELECT" | "MULTI_SELECT" | "NUMBER" | "BOOLEAN" | "DATE";
+                sortBy?: "displayOrder" | "createdAt" | "name";
+                sortDirection?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAttributeDto"];
+            };
+        };
+        responses: {
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeResponseDto"];
+                };
+            };
+        };
+    };
+    getAttribute: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeDetailResponseDto"];
+                };
+            };
+        };
+    };
+    updateAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAttributeDto"];
+            };
+        };
+        responses: {
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeResponseDto"];
+                };
+            };
+        };
+    };
+    deleteAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RetireAttributeDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deactivateAttribute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RetireAttributeDto"];
+            };
+        };
+        responses: {
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeResponseDto"];
+                };
+            };
+        };
+    };
+    listCmsAttributeValueCatalog: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                status?: "DRAFT" | "ACTIVE" | "INACTIVE" | "ARCHIVED";
+                reviewStatus?: "NOT_REQUIRED" | "PENDING" | "APPROVED" | "REJECTED" | "MERGED";
+                source?: "SYSTEM" | "USER_SUBMITTED";
+                sortBy?: "displayOrder" | "createdAt" | "updatedAt" | "label";
+                sortDirection?: "asc" | "desc";
+                attributeId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueCatalogResponseDto"];
+                };
+            };
+        };
+    };
+    getCmsAttributeValueCatalogStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueStatsResponseDto"];
+                };
+            };
+        };
+    };
+    listAssignableCmsAttributeValues: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+            };
+            header?: never;
+            path: {
+                attributeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssignableAttributeValueListResponseDto"];
+                };
+            };
+        };
+    };
+    attachCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttachAttributeValueDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueAssignmentResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    detachCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DetachAttributeValueDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueAssignmentResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getCmsAttributeValueRetirementImpact: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueRetirementImpactResponseDto"];
+                };
+            };
+        };
+    };
+    listCmsAttributeValues: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                status?: "DRAFT" | "ACTIVE" | "INACTIVE" | "ARCHIVED";
+                reviewStatus?: "NOT_REQUIRED" | "PENDING" | "APPROVED" | "REJECTED" | "MERGED";
+                source?: "SYSTEM" | "USER_SUBMITTED";
+                sortBy?: "displayOrder" | "createdAt" | "updatedAt" | "label";
+                sortDirection?: "asc" | "desc";
+            };
+            header?: never;
+            path: {
+                attributeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueListResponseDto"];
+                };
+            };
+        };
+    };
+    createCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAttributeValueDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getCmsAttributeValueStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueStatsResponseDto"];
+                };
+            };
+        };
+    };
+    getCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueResponseDto"];
+                };
+            };
+        };
+    };
+    deleteCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RetireAttributeValueDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetireAttributeValueResponseDto"];
+                };
+            };
+        };
+    };
+    updateCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAttributeValueDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    reorderCmsAttributeValues: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderAttributeValuesDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    moveCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MoveAttributeValueDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    archiveCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ArchiveAttributeValueDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueResponseDto"];
+                };
+            };
+        };
+    };
+    deactivateCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAttributeValueAssignmentLifecycleDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueResponseDto"];
+                };
+            };
+        };
+    };
+    activateCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAttributeValueAssignmentLifecycleDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueResponseDto"];
+                };
+            };
+        };
+    };
+    approveCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewAttributeValueDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueResponseDto"];
+                };
+            };
+        };
+    };
+    rejectCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectAttributeValueDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueResponseDto"];
+                };
+            };
+        };
+    };
+    mergeCmsAttributeValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+                valueId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MergeAttributeValueDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueResponseDto"];
+                };
+            };
+        };
+    };
+    submitAttributeValueProposal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attributeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitAttributeValueProposalDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributeValueProposalResponseDto"];
+                };
+            };
+        };
+    };
+    listCmsGeographies: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                status?: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+                countryCode?: string;
+                typeCode?: string;
+                typeCodes?: string[];
+                parentId?: string;
+                geographyId?: string;
+                sortBy?: "name" | "code" | "sortOrder" | "updatedAt";
+                sortOrder?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyListResponseDto"];
+                };
+            };
+        };
+    };
+    createGeography: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateGeographyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyResponseDto"];
+                };
+            };
+        };
+    };
+    getGeographyDashboardStats: {
+        parameters: {
+            query?: {
+                countryCode?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyDashboardStatsResponseDto"];
+                };
+            };
+        };
+    };
+    getCmsGeographyDetail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyDetailResponseDto"];
+                };
+            };
+        };
+    };
+    updateGeography: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateGeographyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyResponseDto"];
+                };
+            };
+        };
+    };
+    listGeographyTypes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createGeographyType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateGeographyTypeDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateGeographyType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateGeographyTypeDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listCmsLocations: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                status?: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+                countryCode?: string;
+                typeCode?: string;
+                typeCodes?: string[];
+                parentId?: string;
+                geographyId?: string;
+                sortBy?: "name" | "code" | "sortOrder" | "updatedAt";
+                sortOrder?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LocationListResponseDto"];
+                };
+            };
+        };
+    };
+    createLocation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLocationDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LocationResponseDto"];
+                };
+            };
+        };
+    };
+    listCmsLocationSummaries: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                status?: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+                countryCode?: string;
+                typeCode?: string;
+                typeCodes?: string[];
+                parentId?: string;
+                geographyId?: string;
+                sortBy?: "name" | "code" | "sortOrder" | "updatedAt";
+                sortOrder?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CmsLocationSummaryListResponseDto"];
+                };
+            };
+        };
+    };
+    updateLocation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLocationDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LocationResponseDto"];
+                };
+            };
+        };
+    };
+    listLocationTypes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createLocationType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateLocationTypeDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateLocationType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateLocationTypeDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getVietnamMapGeoJson: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description GeoJSON FeatureCollection representing Vietnam 34 provinces, Hoàng Sa and Trường Sa */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listPublicGeographies: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                countryCode?: string;
+                typeCode?: string;
+                typeCodes?: string[];
+                parentId?: string;
+                geographyId?: string;
+                sortBy?: "name" | "code" | "sortOrder" | "updatedAt";
+                sortOrder?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicGeographyListResponseDto"];
+                };
+            };
+        };
+    };
+    listPublicLocations: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                countryCode?: string;
+                typeCode?: string;
+                typeCodes?: string[];
+                parentId?: string;
+                geographyId?: string;
+                sortBy?: "name" | "code" | "sortOrder" | "updatedAt";
+                sortOrder?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicLocationListResponseDto"];
+                };
+            };
+        };
+    };
+    listGeographyGroups: {
+        parameters: {
+            query?: {
+                countryCode?: string;
+                page?: number;
+                pageSize?: number;
+                search?: string;
+                status?: "ACTIVE" | "INACTIVE" | "DEPRECATED";
+                groupType?: "REGION" | "SUBREGION" | "OPERATIONAL_AREA" | "CUSTOM";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyGroupListResponseDto"];
+                };
+            };
+        };
+    };
+    createGeographyGroup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateGeographyGroupDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyGroupResponseDto"];
+                };
+            };
+        };
+    };
+    updateGeographyGroup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateGeographyGroupDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyGroupResponseDto"];
+                };
+            };
+        };
+    };
+    listGeographyImports: {
+        parameters: {
+            query?: {
+                importKind?: "GEOGRAPHY" | "LOCATION";
+                status?: string;
+                search?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyImportListResponseDto"];
+                };
+            };
+        };
+    };
+    stageGeographyImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StageGeographyImportDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyImportBatchResponseDto"];
+                };
+            };
+        };
+    };
+    uploadGeographyImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                    /** @enum {string} */
+                    importKind: "GEOGRAPHY" | "LOCATION";
+                    countryCode: string;
+                    source: string;
+                    sourceVersion: string;
+                    idempotencyKey: string;
+                    schemaVersion?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyImportDetailResponseDto"];
+                };
+            };
+        };
+    };
+    getGeographyImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyImportDetailResponseDto"];
+                };
+            };
+        };
+    };
+    listGeographyImportRows: {
+        parameters: {
+            query?: {
+                validationStatus?: "VALID" | "WARNING" | "ERROR" | "NO_OP";
+                search?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyImportRowListResponseDto"];
+                };
+            };
+        };
+    };
+    applyGeographyImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplyGeographyImportDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyImportBatchResponseDto"];
+                };
+            };
+        };
+    };
+    updateGeographyImportRow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                rowId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateGeographyImportRowDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GeographyImportDetailResponseDto"];
+                };
+            };
+        };
+    };
+    downloadGeographyImportArtifact: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                artifactId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        url?: string;
+                        expiresInSeconds?: number;
+                    };
+                };
+            };
+        };
+    };
+    rollbackGeographyImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RollbackGeographyImportDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RollbackGeographyImportResponseDto"];
+                };
+            };
+        };
+    };
+    createSpatialStatisticsSnapshot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSpatialStatisticsDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpatialStatisticsResponseDto"];
+                };
+            };
+        };
+    };
+    listCmsItemDeclarations: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                workflowStatus?: "DRAFT" | "SUBMITTED" | "ACTIVE" | "RESOLVED" | "CLOSED" | "WITHDRAWN" | "EXPIRED" | "ARCHIVED";
+                reviewStatus?: "NOT_REQUIRED" | "PENDING_REVIEW" | "APPROVED" | "REJECTED";
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffItemDeclarationPageResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getCmsItemDeclaration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffItemDeclarationResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    listCmsItemDeclarationHistory: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemDeclarationHistoryPageResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getCmsItemDeclarationSensitiveContext: {
+        parameters: {
+            query: {
+                purpose: "CLAIM_VERIFICATION" | "MODERATION_INVESTIGATION" | "SECURITY_INCIDENT";
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SensitiveDeclarationContextResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    approveCmsItemDeclarationReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModerationItemDeclarationCommandDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffItemDeclarationResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    rejectCmsItemDeclarationReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModerationItemDeclarationCommandDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffItemDeclarationResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    hideCmsItemDeclaration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModerationItemDeclarationCommandDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffItemDeclarationResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    restoreCmsItemDeclaration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModerationItemDeclarationCommandDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffItemDeclarationResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    createItemDeclaration: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateItemDeclarationDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerItemDeclarationResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    listOwnItemDeclarations: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                workflowStatus?: "DRAFT" | "SUBMITTED" | "ACTIVE" | "RESOLVED" | "CLOSED" | "WITHDRAWN" | "EXPIRED" | "ARCHIVED";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerItemDeclarationPageResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getOwnItemDeclaration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerItemDeclarationResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    discardOwnItemDeclarationDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    updateOwnItemDeclaration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateItemDeclarationDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerItemDeclarationResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getOwnItemDeclarationPrivateFacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerPrivateFactsResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    replaceOwnItemDeclarationPrivateFacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReplacePrivateFactsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerPrivateFactsResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    replaceOwnItemDeclarationLocations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReplaceItemDeclarationLocationsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerItemDeclarationResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    uploadOwnItemDeclarationMedia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    expectedVersion: number;
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemDeclarationMediaUploadResponseDto"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            /** @description The uploaded file exceeds the configured hard limit. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            /** @description The authenticated actor exceeded the upload rate limit. */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            /** @description Private object storage is temporarily unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    detachOwnItemDeclarationMedia: {
+        parameters: {
+            query: {
+                expectedVersion: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+                mediaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemDeclarationMediaDetachResponseDto"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    submitItemDeclaration: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VersionedItemDeclarationCommandDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerItemDeclarationResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    withdrawOwnItemDeclaration: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonedItemDeclarationCommandDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerItemDeclarationResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    closeOwnItemDeclaration: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonedItemDeclarationCommandDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerItemDeclarationResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    listPublicItemNotices: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                categoryId?: string;
+                type?: "LOST" | "FOUND";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicItemNoticePageResponseDto"];
+                };
+            };
+        };
+    };
+    getPublicItemNotice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                publicCode: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicItemNoticeResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
                 };
             };
         };
