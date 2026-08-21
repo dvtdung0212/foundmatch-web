@@ -30,6 +30,9 @@ export function useReportComposer(type: ReportSubmissionInput["type"]) {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<ReportApiError | null>(null);
   const imagesRef = useRef<SelectedReportImage[]>([]);
+  const inFlightRef = useRef(false);
+  const intentKeysRef = useRef<{ create: string; submit: string } | null>(null);
+  const uploadedFileKeysRef = useRef(new Set<string>());
 
   useEffect(() => {
     let active = true;
@@ -104,17 +107,31 @@ export function useReportComposer(type: ReportSubmissionInput["type"]) {
 
   const persist = useCallback(
     async (input: Omit<ReportSubmissionInput, "files">, submit: boolean) => {
+      if (inFlightRef.current) {
+        throw new ReportApiError({
+          code: "REPORT_SUBMISSION_IN_PROGRESS",
+          message: "Báo cáo đang được gửi. Vui lòng chờ yêu cầu hiện tại hoàn tất.",
+        });
+      }
+
+      inFlightRef.current = true;
       setError(null);
       setIsSaving(true);
       try {
+        intentKeysRef.current ??= {
+          create: crypto.randomUUID(),
+          submit: crypto.randomUUID(),
+        };
         const api = await createAuthenticatedOwnerReportApi();
         return await persistReport(
           api,
           { ...input, files: images.map(({ file }) => file) },
           {
-            idempotencyKey: crypto.randomUUID(),
+            idempotencyKey: intentKeysRef.current.create,
+            onMediaUploaded: (fileKey) => uploadedFileKeysRef.current.add(fileKey),
             submit,
-            submitIdempotencyKey: submit ? crypto.randomUUID() : undefined,
+            submitIdempotencyKey: submit ? intentKeysRef.current.submit : undefined,
+            uploadedFileKeys: uploadedFileKeysRef.current,
           },
         );
       } catch (cause) {
@@ -130,6 +147,7 @@ export function useReportComposer(type: ReportSubmissionInput["type"]) {
         setError(normalized);
         throw normalized;
       } finally {
+        inFlightRef.current = false;
         setIsSaving(false);
       }
     },

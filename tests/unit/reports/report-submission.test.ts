@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import {
   persistReport,
+  reportFileKey,
   type OwnerReportApi,
   type ReportSubmissionInput,
 } from "@/features/reports/api/report-submission";
@@ -120,5 +121,19 @@ describe("persistReport", () => {
       1,
       [input.location],
     );
+  });
+
+  it("skips media already acknowledged during a retry", async () => {
+    const api = createApi();
+    const uploadedFileKeys = new Set([reportFileKey(input.files[0])]);
+
+    await persistReport(api, input, {
+      idempotencyKey: "stable-create-key",
+      submit: true,
+      submitIdempotencyKey: "stable-submit-key",
+      uploadedFileKeys,
+    });
+
+    expect(api.uploadMedia).not.toHaveBeenCalled();
   });
 });

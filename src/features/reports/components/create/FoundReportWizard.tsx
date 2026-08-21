@@ -14,9 +14,7 @@ import {
   CheckCircle2,
   Building2,
   Shield,
-  ShieldCheck,
   UserCheck,
-  HelpCircle,
   Eye,
   EyeOff,
 } from "lucide-react";
@@ -39,18 +37,6 @@ const foundSteps: StepItem[] = [
   { id: 2, title: "Tình trạng & vị trí", description: "Nơi và thời gian nhặt được" },
   { id: 3, title: "Lưu giữ & quyền riêng tư", description: "Cách lưu giữ & chia sẻ" },
   { id: 4, title: "Xác nhận", description: "Kiểm tra và gửi báo cáo" },
-];
-
-const categoryOptions = [
-  { label: "Túi ví / Balo / Cặp xách", value: "Túi ví / Balo" },
-  { label: "Điện thoại / Tablet", value: "Điện thoại / Tablet" },
-  { label: "Laptop / Thiết bị công nghệ", value: "Thiết bị công nghệ" },
-  { label: "Ví tiền / Giấy tờ tùy thân", value: "Giấy tờ tùy thân" },
-  { label: "Chìa khóa / Móc khóa", value: "Chìa khóa" },
-  { label: "Trang sức / Đồng hồ", value: "Trang sức / Đồng hồ" },
-  { label: "Quần áo / Phụ kiện thời trang", value: "Phụ kiện thời trang" },
-  { label: "Thú cưng", value: "Thú cưng" },
-  { label: "Khác", value: "Khác" },
 ];
 
 const conditionOptions = [

@@ -6,18 +6,13 @@ import { useRouter } from "next/navigation";
 import {
   UploadCloud,
   X,
-  Plus,
   MapPin,
-  Calendar,
   Clock,
   Lock,
   ArrowRight,
   ArrowLeft,
   Save,
   CheckCircle2,
-  AlertCircle,
-  HelpCircle,
-  Eye,
 } from "lucide-react";
 import { ReportStepper, StepItem } from "./ReportStepper";
 import { ReportTipsCard } from "./ReportTipsCard";
@@ -37,18 +32,6 @@ const lostSteps: StepItem[] = [
   { id: 2, title: "Thời gian & địa điểm", description: "Khi nào và ở đâu bị mất" },
   { id: 3, title: "Bảo mật & xác minh", description: "Minh chứng và đối chiếu" },
   { id: 4, title: "Xác nhận", description: "Kiểm tra và gửi báo cáo" },
-];
-
-const categoryOptions = [
-  { label: "Túi ví / Balo / Cặp xách", value: "Túi ví / Balo" },
-  { label: "Điện thoại / Tablet", value: "Điện thoại / Tablet" },
-  { label: "Laptop / Thiết bị công nghệ", value: "Thiết bị công nghệ" },
-  { label: "Ví tiền / Giấy tờ tùy thân", value: "Giấy tờ tùy thân" },
-  { label: "Chìa khóa / Móc khóa", value: "Chìa khóa" },
-  { label: "Trang sức / Đồng hồ", value: "Trang sức / Đồng hồ" },
-  { label: "Quần áo / Phụ kiện thời trang", value: "Phụ kiện thời trang" },
-  { label: "Thú cưng", value: "Thú cưng" },
-  { label: "Khác", value: "Khác" },
 ];
 
 const colorOptions = [

@@ -68,9 +68,15 @@ export interface OwnerReportApi {
 
 type PersistReportOptions = {
   idempotencyKey: string;
+  onMediaUploaded?: (fileKey: string) => void;
   submit: boolean;
   submitIdempotencyKey?: string;
+  uploadedFileKeys?: ReadonlySet<string>;
 };
+
+export function reportFileKey(file: File): string {
+  return `${file.name}:${file.size}:${file.lastModified}:${file.type}`;
+}
 
 export async function persistReport(
   api: OwnerReportApi,
@@ -94,8 +100,11 @@ export async function persistReport(
   }
 
   for (const file of files) {
+    const fileKey = reportFileKey(file);
+    if (options.uploadedFileKeys?.has(fileKey)) continue;
     const uploadResult = await api.uploadMedia(draft.id, version, file);
     version = uploadResult.version;
+    options.onMediaUploaded?.(fileKey);
   }
 
   if (!options.submit) {

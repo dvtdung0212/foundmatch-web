@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  Calendar,
   MapPin,
   Clock,
   Lock,
@@ -12,17 +11,10 @@ import {
   Edit,
   EyeOff,
   CheckCircle2,
-  AlertCircle,
-  ChevronRight,
-  Shield,
   ShieldCheck,
   Users,
-  Eye,
-  ArrowUpRight,
 } from "lucide-react";
-import { PotentialMatchesDrawer } from "../modals/PotentialMatchesDrawer";
 import { ShareReportDialog } from "../modals/ShareReportDialog";
-import { CloseReportDialog } from "../modals/CloseReportDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,74 +25,11 @@ interface ReportDetailViewProps {
   report: OwnerReportView;
 }
 
-const mockReportData = {
-  id: "FM-240520-8F3A7C",
-  code: "FM-240520-8F3A7C",
-  title: "Balo Kanken màu tím mận",
-  type: "lost" as const,
-  typeText: "Tôi bị mất đồ",
-  category: "Túi ví / Balo",
-  status: "active" as const,
-  statusText: "Đang hoạt động",
-  time: "20/05/2024 (14:00 - 16:00)",
-  location: "Vincom Center Bà Triệu, Hai Bà Trưng, Hà Nội",
-  locationDetail: "Khu vực sảnh tầng 1, cạnh cửa hàng The Coffee House.",
-  description: "Balo vải Kanken màu đỏ mận/tím, quai đeo màu nâu đậm. Bên ngoài có một số vết xước nhẹ ở góc đáy phải. Khóa kéo màu vàng đồng có logo hình con cáo dập nổi.",
-  
-  // Private Facts
-  distinctiveFeatures: "Một trong các ngăn phụ có kẹp móc khóa hình gấu bông nhỏ màu nâu và thẻ xe buýt.",
-  secretVerificationAnswers: "Bên trong ngăn khóa kéo bí mật có 1 tai nghe có dây màu trắng và 1 chìa khóa phòng có thẻ tên Minh Đức.",
-  
-  // Images
-  images: [
-    "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
-    "https://images.unsplash.com/photo-1546938576-6e6a64f317cc?w=400&q=80",
-    "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=400&q=80",
-  ],
-  
-  // Stats
-  potentialMatchesCount: 2,
-  verificationRequestsCount: 1,
-  
-  // Recent Activities
-  activities: [
-    {
-      id: "act-1",
-      title: "Báo cáo đã được đăng",
-      description: "Báo cáo của bạn đã được hiển thị công khai trên hệ thống.",
-      time: "20/05/2024 • 16:05",
-      icon: "success",
-    },
-    {
-      id: "act-2",
-      title: "Có 2 lượt xem báo cáo",
-      description: "Người dùng trong khu vực Hai Bà Trưng đã xem tin của bạn.",
-      time: "20/05/2024 • 18:20",
-      icon: "view",
-    },
-    {
-      id: "act-3",
-      title: "Có 1 yêu cầu xác minh",
-      description: "Một người đã gửi yêu cầu đối chiếu thông tin vật phẩm.",
-      time: "21/05/2024 • 09:15",
-      icon: "message",
-    },
-  ],
-};
-
 export function ReportDetailView({ report: initialReport }: ReportDetailViewProps) {
   const [report, setReport] = useState(initialReport);
   const [mediaPollAttempt, setMediaPollAttempt] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [isMatchesDrawerOpen, setIsMatchesDrawerOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [closeModalConfig, setCloseModalConfig] = useState<{
-    open: boolean;
-    type: "hide" | "close";
-  }>({
-    open: false,
-    type: "close",
-  });
 
   useEffect(() => {
     if (report.pendingMediaCount === 0 || mediaPollAttempt >= 12) return;
@@ -231,6 +160,11 @@ export function ReportDetailView({ report: initialReport }: ReportDetailViewProp
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-2 border-b border-brand-border/40">
                   <span className="text-brand-muted font-medium">Loại báo cáo:</span>
                   <span className="sm:col-span-2 font-bold text-brand-heading">{report.typeText}</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-2 border-b border-brand-border/40">
+                  <span className="text-brand-muted font-medium">Tên đồ vật:</span>
+                  <span className="sm:col-span-2 font-bold text-brand-heading">{report.title}</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-2 border-b border-brand-border/40">
@@ -431,12 +365,6 @@ export function ReportDetailView({ report: initialReport }: ReportDetailViewProp
       </div>
 
       {/* Modals & Drawers */}
-      <PotentialMatchesDrawer
-        open={isMatchesDrawerOpen}
-        onOpenChange={setIsMatchesDrawerOpen}
-        reportTitle={report.title}
-      />
-
       <ShareReportDialog
         open={isShareModalOpen}
         onOpenChange={setIsShareModalOpen}
@@ -444,15 +372,6 @@ export function ReportDetailView({ report: initialReport }: ReportDetailViewProp
         reportTitle={report.title}
       />
 
-      <CloseReportDialog
-        open={closeModalConfig.open}
-        onOpenChange={(open) => setCloseModalConfig((prev) => ({ ...prev, open }))}
-        reportTitle={report.title}
-        actionType={closeModalConfig.type}
-        onConfirm={(reason) => {
-          // Confirm action
-        }}
-      />
     </div>
   );
 }
