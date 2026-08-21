@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Calendar,
@@ -26,9 +26,11 @@ import { CloseReportDialog } from "../modals/CloseReportDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import type { OwnerReportView } from "../../api/owner-report-view";
+import { getAuthenticatedOwnerReportView } from "../../api/owner-report-api";
 
 interface ReportDetailViewProps {
-  id: string;
+  report: OwnerReportView;
 }
 
 const mockReportData = {
@@ -86,7 +88,9 @@ const mockReportData = {
   ],
 };
 
-export function ReportDetailView({ id }: ReportDetailViewProps) {
+export function ReportDetailView({ report: initialReport }: ReportDetailViewProps) {
+  const [report, setReport] = useState(initialReport);
+  const [mediaPollAttempt, setMediaPollAttempt] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isMatchesDrawerOpen, setIsMatchesDrawerOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -98,7 +102,22 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
     type: "close",
   });
 
-  const report = mockReportData;
+  useEffect(() => {
+    if (report.pendingMediaCount === 0 || mediaPollAttempt >= 12) return;
+
+    const timeout = window.setTimeout(async () => {
+      try {
+        const refreshed = await getAuthenticatedOwnerReportView(report.id);
+        setReport(refreshed);
+      } catch {
+        // Keep the last authoritative snapshot; the next page refresh can retry.
+      } finally {
+        setMediaPollAttempt((attempt) => attempt + 1);
+      }
+    }, 5000);
+
+    return () => window.clearTimeout(timeout);
+  }, [mediaPollAttempt, report.id, report.pendingMediaCount]);
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-8 py-6 px-4 sm:px-6">
@@ -122,7 +141,9 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
             <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-heading">
               Chi tiết báo cáo
             </h1>
-            <Badge variant="lost">Báo cáo mất đồ</Badge>
+            <Badge variant={report.type === "lost" ? "lost" : "found"}>
+              {report.type === "lost" ? "Báo cáo mất đồ" : "Báo cáo nhặt được"}
+            </Badge>
           </div>
           <div className="flex items-center gap-3 text-xs text-brand-muted">
             <span className="font-mono font-bold text-brand-plum">{report.code}</span>
@@ -159,16 +180,24 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
           {/* Image Gallery Card */}
           <Card className="border-brand-border overflow-hidden">
             <CardContent className="p-5 space-y-4">
-              <div className="relative w-full h-80 sm:h-96 rounded-2xl overflow-hidden bg-brand-cream/40 border border-brand-border">
-                <img
-                  src={report.images[selectedImageIndex]}
-                  alt={report.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-3 right-3 bg-brand-dark/70 text-white text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-xs">
-                  {selectedImageIndex + 1} / {report.images.length}
+              {report.images.length > 0 ? (
+                <div className="relative w-full h-80 sm:h-96 rounded-2xl overflow-hidden bg-brand-cream/40 border border-brand-border">
+                  <img
+                    src={report.images[selectedImageIndex]}
+                    alt={report.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-3 right-3 bg-brand-dark/70 text-white text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-xs">
+                    {selectedImageIndex + 1} / {report.images.length}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="flex h-64 items-center justify-center rounded-2xl border border-dashed border-brand-border bg-brand-cream/40 px-6 text-center text-sm text-brand-muted">
+                  {report.pendingMediaCount > 0
+                    ? `${report.pendingMediaCount} ảnh đang được xử lý an toàn.`
+                    : "Báo cáo chưa có ảnh sẵn sàng hiển thị."}
+                </div>
+              )}
 
               {/* Thumbnails */}
               <div className="flex gap-3 overflow-x-auto pb-1">
@@ -236,6 +265,7 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
           </Card>
 
           {/* Private Verification Fact Card (Zero-Knowledge Privacy Alert) */}
+          {(report.distinctiveFeatures || report.secretVerificationAnswers || report.locationDetail) && (
           <div className="p-6 sm:p-8 rounded-2xl bg-amber-50/80 border border-amber-200 space-y-4">
             <div className="flex items-center gap-2 text-amber-900 font-bold text-base">
               <Lock className="w-5 h-5 text-amber-700" />
@@ -246,14 +276,14 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
               <div className="space-y-1.5">
                 <strong className="block text-amber-950 font-bold">Đặc điểm nhận dạng nổi bật:</strong>
                 <p className="bg-white/80 p-4 rounded-xl border border-amber-200/80 text-amber-900 leading-relaxed">
-                  {report.distinctiveFeatures}
+                  {report.distinctiveFeatures ?? "Chưa cung cấp"}
                 </p>
               </div>
 
               <div className="space-y-1.5">
                 <strong className="block text-amber-950 font-bold">Thông tin bí mật đối chiếu:</strong>
                 <p className="bg-white/80 p-4 rounded-xl border border-amber-200/80 text-amber-900 leading-relaxed">
-                  {report.secretVerificationAnswers}
+                  {report.secretVerificationAnswers ?? "Chưa cung cấp"}
                 </p>
               </div>
             </div>
@@ -262,6 +292,7 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
               * Thông tin này được bảo mật nghiêm ngặt. Người nhặt chỉ có thể đối chiếu khi cung cấp đúng thông tin qua quy trình bàn giao.
             </p>
           </div>
+          )}
 
           {/* Recent Activity Timeline */}
           <Card className="border-brand-border">
@@ -296,40 +327,21 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
                 <span className="text-xs font-bold text-brand-muted">Trạng thái báo cáo</span>
                 <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  Đang hoạt động
+                  {report.statusText}
                 </span>
               </div>
 
               <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 text-xs text-emerald-900 flex items-center gap-2.5">
                 <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
                 <p className="text-[11px] leading-relaxed">
-                  Báo cáo của bạn đang được hiển thị công khai trên bảng tin và AI đang rà soát kết quả.
+                  {report.isPublic
+                    ? "Báo cáo đang được hiển thị công khai với dữ liệu đã được giới hạn theo chính sách riêng tư."
+                    : "Báo cáo hiện chưa được hiển thị công khai. Dữ liệu riêng tư vẫn chỉ dành cho chủ báo cáo và quy trình xác minh được phép."}
                 </p>
               </div>
 
-              {/* Progress Stepper */}
-              <div className="space-y-3 pt-2">
-                <span className="text-xs font-bold text-brand-heading block">Tiến trình xử lý</span>
-                <div className="space-y-3 relative pl-4 border-l-2 border-brand-border text-xs">
-                  <div className="relative">
-                    <div className="w-2 h-2 rounded-full bg-emerald-600 absolute -left-[19px] top-1 ring-2 ring-emerald-200" />
-                    <span className="font-bold text-brand-heading block">Đã đăng báo cáo</span>
-                    <span className="text-[10px] text-brand-muted font-mono">20/05/2024 • 16:05</span>
-                  </div>
-                  <div className="relative">
-                    <div className="w-2 h-2 rounded-full bg-brand-plum absolute -left-[19px] top-1 ring-2 ring-brand-soft" />
-                    <span className="font-bold text-brand-plum block">Đang chờ khớp & rà soát</span>
-                    <span className="text-[10px] text-brand-muted">AI đang tìm kiếm...</span>
-                  </div>
-                  <div className="relative opacity-50">
-                    <div className="w-2 h-2 rounded-full bg-brand-border absolute -left-[19px] top-1" />
-                    <span className="font-medium text-brand-muted block">Đang xác minh</span>
-                  </div>
-                  <div className="relative opacity-50">
-                    <div className="w-2 h-2 rounded-full bg-brand-border absolute -left-[19px] top-1" />
-                    <span className="font-medium text-brand-muted block">Bàn giao & Hoàn tất</span>
-                  </div>
-                </div>
+              <div className="rounded-xl border border-brand-border bg-brand-cream/40 p-3 text-xs text-brand-muted">
+                Trạng thái workflow: <strong className="text-brand-heading">{report.workflowStatus}</strong>
               </div>
             </CardContent>
           </Card>
@@ -337,10 +349,7 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
           {/* Interactive Match Stats Card */}
           <div className="grid grid-cols-2 gap-3">
             {/* Potential Matches Box */}
-            <div
-              onClick={() => setIsMatchesDrawerOpen(true)}
-              className="p-4 rounded-2xl bg-gradient-to-br from-white to-brand-soft/60 border border-brand-plum/30 hover:border-brand-plum shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
-            >
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-white to-brand-soft/60 border border-brand-plum/30 flex flex-col justify-between">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold text-brand-muted">Khớp tiềm năng</span>
                 <Sparkles className="w-4 h-4 text-brand-plum group-hover:scale-110 transition-transform" />
@@ -348,8 +357,8 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
               <div className="my-2">
                 <span className="text-3xl font-extrabold text-brand-plum">{report.potentialMatchesCount}</span>
               </div>
-              <span className="text-[11px] font-bold text-brand-plum flex items-center gap-0.5 group-hover:underline">
-                Xem kết quả <ArrowUpRight className="w-3 h-3" />
+              <span className="text-[11px] font-medium text-brand-muted">
+                Chưa có API thống kê khớp
               </span>
             </div>
 
@@ -377,6 +386,7 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
                 variant="secondary"
                 size="sm"
                 fullWidth
+                disabled
                 className="justify-start gap-2 text-xs font-semibold h-10"
               >
                 <Edit className="w-4 h-4 text-brand-plum" />
@@ -387,7 +397,7 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
                 variant="secondary"
                 size="sm"
                 fullWidth
-                onClick={() => setCloseModalConfig({ open: true, type: "hide" })}
+                disabled
                 className="justify-start gap-2 text-xs font-semibold h-10 text-brand-muted hover:text-brand-heading"
               >
                 <EyeOff className="w-4 h-4" />
@@ -398,7 +408,7 @@ export function ReportDetailView({ id }: ReportDetailViewProps) {
                 variant="secondary"
                 size="sm"
                 fullWidth
-                onClick={() => setCloseModalConfig({ open: true, type: "close" })}
+                disabled
                 className="justify-start gap-2 text-xs font-semibold h-10 text-brand-lost hover:bg-brand-lostBg hover:border-brand-lost/40"
               >
                 <Lock className="w-4 h-4 text-brand-lost" />

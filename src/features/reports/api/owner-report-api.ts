@@ -7,6 +7,7 @@ import type {
   ReportLocationInput,
   ReportSubmissionInput,
 } from "./report-submission";
+import { mapOwnerReportView, type OwnerReportView } from "./owner-report-view";
 
 type ApiClient = ReturnType<typeof getApiClient>;
 
@@ -141,6 +142,11 @@ export function createOwnerReportApi(client: ApiClient): OwnerReportApi {
 }
 
 export async function createAuthenticatedOwnerReportApi(): Promise<OwnerReportApi> {
+  const client = await getAuthenticatedApiClient();
+  return createOwnerReportApi(client);
+}
+
+async function getAuthenticatedApiClient(): Promise<ApiClient> {
   const supabase = createSupabaseBrowserClient();
   const {
     data: { session },
@@ -154,7 +160,27 @@ export async function createAuthenticatedOwnerReportApi(): Promise<OwnerReportAp
     });
   }
 
-  return createOwnerReportApi(getApiClient(session.access_token));
+  return getApiClient(session.access_token);
+}
+
+export async function getAuthenticatedOwnerReportView(
+  declarationId: string,
+): Promise<OwnerReportView> {
+  const client = await getAuthenticatedApiClient();
+  const [report, privateFacts] = await Promise.all([
+    call(() =>
+      client.GET("/api/v1/public/item-declarations/{id}", {
+        params: { path: { id: declarationId } },
+      }),
+    ),
+    call(() =>
+      client.GET("/api/v1/public/item-declarations/{id}/private-facts", {
+        params: { path: { id: declarationId } },
+      }),
+    ),
+  ]);
+
+  return mapOwnerReportView(report, privateFacts);
 }
 
 export type ReportCategoryOption = {
