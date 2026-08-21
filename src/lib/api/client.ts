@@ -1,6 +1,5 @@
 import createClient from "openapi-fetch";
 import type { paths } from "./generated/schema";
-import { createClient as createSupabaseServerClient } from "@/lib/supabase/server";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -58,8 +57,3 @@ export function getApiClient(accessToken?: string) {
  * Hàm hỗ trợ lấy API Client kèm token của session hiện tại trên Server.
  * Hàm này dùng trong Server Actions hoặc Server Components.
  */
-export async function getServerApiClient() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  return getApiClient(session?.access_token);
-}

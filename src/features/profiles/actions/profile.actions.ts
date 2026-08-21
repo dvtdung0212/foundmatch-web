@@ -2,7 +2,7 @@
 
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
-import { getServerApiClient } from "@/lib/api/client";
+import { getServerApiClient } from "@/lib/api/server-client";
 import { updateProfileSchema } from "../schemas/profile.schema";
 import type { UserProfileDTO, UpdateProfileInput } from "@/types/profile.types";
 import type { AuthActionResult } from "@/types/auth.types";
