@@ -10,6 +10,7 @@ type CookieToSet = {
 // Các tuyến đường yêu cầu đăng nhập
 const PROTECTED_ROUTES = [
   "/profile",
+  "/reports/create",
   "/reports/new",
   "/claims",
   "/workspace",

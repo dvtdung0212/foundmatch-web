@@ -26,6 +26,7 @@ import { Badge } from "@/components/ui/badge";
 export function ReportSuccessCard() {
   const searchParams = useSearchParams();
   const code = searchParams.get("code") || "FM240520-8X7K2";
+  const reportId = searchParams.get("reportId");
   const type = (searchParams.get("type") || "lost") as "lost" | "found";
   const title = searchParams.get("title") || "Ví da nam màu đen";
 
@@ -119,7 +120,7 @@ export function ReportSuccessCard() {
                   <div className="text-[10px] uppercase tracking-wider font-bold text-brand-muted">Trạng thái</div>
                   <div className="text-xs font-bold text-emerald-700 flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5" />
-                    Đang hoạt động
+                    Đã tiếp nhận
                   </div>
                 </div>
               </div>
@@ -256,7 +257,7 @@ export function ReportSuccessCard() {
       {/* Bottom Actions Bar */}
       <div className="p-4 rounded-2xl bg-white border border-brand-border flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <Link href={`/reports/${code}`}>
+          <Link href={reportId ? `/reports/${reportId}` : `/reports/${code}`}>
             <Button variant="primary" className="gap-1.5 font-bold text-xs sm:text-sm">
               <Eye className="w-4 h-4" />
               Xem chi tiết báo cáo

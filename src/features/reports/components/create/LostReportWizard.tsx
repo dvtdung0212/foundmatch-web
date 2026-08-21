@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -29,6 +29,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { buildReportSubmission } from "../../api/report-form-mapper";
+import { useReportComposer } from "../../hooks/use-report-composer";
 
 const lostSteps: StepItem[] = [
   { id: 1, title: "Thông tin đồ vật", description: "Mô tả chi tiết món đồ" },
@@ -73,38 +75,43 @@ const timeSlotOptions = [
 
 export function LostReportWizard() {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [saveDraftMessage, setSaveDraftMessage] = useState("");
+  const {
+    addImages,
+    categories,
+    error: submissionError,
+    images,
+    isLoadingCategories,
+    isSaving,
+    persist,
+    removeImage,
+  } = useReportComposer("LOST");
 
   // Form State
   const [formData, setFormData] = useState({
-    title: "Ví da nam màu đen",
-    category: "Túi ví / Balo",
-    brand: "Pedro",
-    material: "Da thật",
-    color: "Đen",
-    size: "11 x 8 x 2 cm (gập)",
-    style: "Ví gập đôi ngang",
-    genderTarget: "Nam",
-    description: "Ví da nam màu đen, kiểu gập đôi. Bên trong có nhiều ngăn thẻ và ngăn đựng tiền. Góc phải mặt ngoài có logo Pedro dập chìm.",
+    title: "",
+    category: "",
+    brand: "",
+    material: "",
+    color: "",
+    size: "",
+    style: "",
+    genderTarget: "",
+    description: "",
     
     // Time & Location
-    date: "2024-05-20",
-    timeSlot: "14:00 - 16:00",
-    locationName: "Vincom Center Bà Triệu",
-    locationArea: "Hai Bà Trưng, Hà Nội",
-    locationDetail: "Khu vực sảnh tầng 1, gần cửa ra vào số 3, cạnh cửa hàng The Coffee House.",
-    
-    // Media
-    images: [
-      "https://images.unsplash.com/photo-1627123424574-724758594e93?w=400&q=80",
-      "https://images.unsplash.com/photo-1554415707-9e49fe83083f?w=400&q=80",
-    ],
+    date: "",
+    timeSlot: "",
+    locationName: "",
+    locationArea: "",
+    locationDetail: "",
     
     // Security & Verification
-    distinctiveFeatures: "Một trong ngăn cái có in tên viết tắt 'M.D' màu bạc. Đường chỉ may màu đen.",
-    secretVerificationAnswers: "Bên trong ngăn khóa kéo bí mật có 1 đồng xu kỷ niệm và 1 thẻ sinh viên trường Bách Khoa.",
+    distinctiveFeatures: "",
+    secretVerificationAnswers: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -137,14 +144,52 @@ export function LostReportWizard() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (validateStep(currentStep)) {
       if (currentStep < 4) {
         setCurrentStep((prev) => prev + 1);
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
-        // Submit
-        router.push(`/reports/create/success?code=FM240520-8X7K2&type=lost&title=${encodeURIComponent(formData.title)}`);
+        const category = categories.find(({ id }) => id === formData.category);
+        if (!category) {
+          setErrors({ category: "Vui lòng chọn danh mục hợp lệ" });
+          setCurrentStep(1);
+          return;
+        }
+
+        try {
+          const result = await persist(
+            buildReportSubmission({
+              additionalPublicFacts: [
+                { label: "Chất liệu", value: formData.material },
+                { label: "Kích thước", value: formData.size },
+                { label: "Kiểu dáng", value: formData.style },
+                { label: "Đối tượng", value: formData.genderTarget },
+              ],
+              brand: formData.brand,
+              categoryId: category.id,
+              categoryName: category.name,
+              color: formData.color,
+              date: formData.date,
+              description: formData.description,
+              distinctiveFeatures: formData.distinctiveFeatures,
+              files: [],
+              locationArea: formData.locationArea,
+              locationDetail: formData.locationDetail,
+              locationName: formData.locationName,
+              secretVerificationAnswers: formData.secretVerificationAnswers,
+              timeSlot: formData.timeSlot,
+              title: formData.title,
+              type: "LOST",
+            }),
+            true,
+          );
+          router.push(
+            `/reports/create/success?code=${encodeURIComponent(result.publicCode ?? "")}&reportId=${encodeURIComponent(result.id ?? "")}&type=lost&title=${encodeURIComponent(formData.title)}`,
+          );
+        } catch {
+          // A safe request-correlated error is rendered below the form.
+        }
       }
     }
   };
@@ -157,19 +202,11 @@ export function LostReportWizard() {
   };
 
   const handleAddSampleImage = () => {
-    if (formData.images.length < 5) {
-      setFormData((prev) => ({
-        ...prev,
-        images: [...prev.images, "https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&q=80"],
-      }));
-    }
+    fileInputRef.current?.click();
   };
 
   const handleRemoveImage = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index),
-    }));
+    removeImage(index);
   };
 
   return (
@@ -204,7 +241,9 @@ export function LostReportWizard() {
       <ReportStepper
         steps={lostSteps}
         currentStep={currentStep}
-        onStepClick={(step) => setCurrentStep(step)}
+        onStepClick={(step) => {
+          if (step < currentStep) setCurrentStep(step);
+        }}
         variant="lost"
       />
 
@@ -231,10 +270,12 @@ export function LostReportWizard() {
                     <Select
                       label="Danh mục đồ vật"
                       required
-                      options={categoryOptions}
+                      options={categories.map(({ id, name }) => ({ label: name, value: id }))}
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       error={errors.category}
+                      disabled={isLoadingCategories || isSaving}
+                      placeholder={isLoadingCategories ? "Đang tải danh mục..." : "Chọn danh mục"}
                     />
                     <div>
                       <label className="block text-sm font-bold text-brand-heading mb-1.5 text-left">
@@ -334,17 +375,29 @@ export function LostReportWizard() {
                       <button
                         type="button"
                         onClick={handleAddSampleImage}
+                        disabled={images.length >= 5 || isSaving}
                         className="h-28 rounded-2xl border-2 border-dashed border-brand-border bg-brand-cream/40 hover:bg-brand-cream hover:border-brand-plum/40 transition-all flex flex-col items-center justify-center p-3 text-center gap-1.5 group cursor-pointer"
                       >
                         <UploadCloud className="w-6 h-6 text-brand-plum group-hover:scale-110 transition-transform" />
                         <span className="text-xs font-bold text-brand-heading">Tải ảnh lên</span>
                         <span className="text-[10px] text-brand-muted">JPG, PNG, WEBP</span>
                       </button>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        multiple
+                        className="sr-only"
+                        onChange={(event) => {
+                          addImages(Array.from(event.target.files ?? []));
+                          event.target.value = "";
+                        }}
+                      />
 
                       {/* Uploaded Images List */}
-                      {formData.images.map((imgUrl, idx) => (
-                        <div key={idx} className="relative h-28 rounded-2xl overflow-hidden border border-brand-border group">
-                          <img src={imgUrl} alt={`Ảnh ${idx + 1}`} className="w-full h-full object-cover" />
+                      {images.map((image, idx) => (
+                        <div key={image.previewUrl} className="relative h-28 rounded-2xl overflow-hidden border border-brand-border group">
+                          <img src={image.previewUrl} alt={`Ảnh ${idx + 1}`} className="w-full h-full object-cover" />
                           <button
                             type="button"
                             onClick={() => handleRemoveImage(idx)}
@@ -515,9 +568,9 @@ export function LostReportWizard() {
                 {/* Review Summary Card */}
                 <div className="p-5 rounded-2xl bg-brand-cream/50 border border-brand-border space-y-4">
                   <div className="flex gap-4 items-start">
-                    {formData.images[0] && (
+                    {images[0] && (
                       <div className="w-28 h-28 rounded-xl overflow-hidden bg-white shrink-0 border border-brand-border">
-                        <img src={formData.images[0]} alt={formData.title} className="w-full h-full object-cover" />
+                        <img src={images[0].previewUrl} alt={formData.title} className="w-full h-full object-cover" />
                       </div>
                     )}
                     <div className="flex-1 min-w-0 space-y-1.5 text-sm">
@@ -555,6 +608,14 @@ export function LostReportWizard() {
           )}
 
           {/* Form Actions Footer */}
+          {submissionError && (
+            <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <strong>Không thể lưu báo cáo.</strong> {submissionError.message}
+              {submissionError.requestId && (
+                <span className="mt-1 block text-xs">Mã yêu cầu: {submissionError.requestId}</span>
+              )}
+            </div>
+          )}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3">
             <div className="flex items-center gap-2 w-full sm:w-auto">
               {currentStep > 1 && (
@@ -583,9 +644,12 @@ export function LostReportWizard() {
               variant="primary"
               type="button"
               onClick={handleNext}
+              disabled={isSaving}
               className="w-full sm:w-auto gap-2 bg-brand-plum hover:bg-brand-dark px-8 h-12 font-bold text-sm sm:text-base shadow-xs"
             >
-              {currentStep === 4 ? (
+              {isSaving ? (
+                <>Đang gửi báo cáo...</>
+              ) : currentStep === 4 ? (
                 <>
                   Gửi báo cáo mất đồ
                   <CheckCircle2 className="w-5 h-5" />
