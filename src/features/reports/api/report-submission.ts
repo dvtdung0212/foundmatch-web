@@ -16,8 +16,6 @@ export type ReportAttributeAnswerInput = {
   assignmentId?: string;
   customKey?: string;
   exposure?: "PUBLIC" | "PRIVATE";
-  isForMatch?: boolean;
-  isForVerification?: boolean;
   value: ReportAttributeValueInput;
 };
 
@@ -53,7 +51,12 @@ export type ReportFormAttribute = {
 
 export type ReportFormConfiguration = {
   attributes: ReportFormAttribute[];
-  category: { id: string; inputMode: "STANDARD" | "CUSTOM"; name: string };
+  category: {
+    allowsPrivateCustomAnswers: boolean;
+    id: string;
+    inputMode: "STANDARD" | "CUSTOM";
+    name: string;
+  };
   reportType: ReportType;
 };
 

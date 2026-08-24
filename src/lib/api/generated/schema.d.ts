@@ -1079,6 +1079,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/private/report-attribute-proposals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List pending custom report attribute proposals with private values redacted */
+        get: operations["listReportAttributeProposals"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/report-attribute-proposals/{id}/normalize-key": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create and link a catalog attribute from a proposal key */
+        post: operations["normalizeReportAttributeProposalKey"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/report-attribute-proposals/{id}/normalize-public-key-and-value": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a selectable catalog attribute and value from a public proposal */
+        post: operations["normalizePublicReportAttributeProposalKeyAndValue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/report-attribute-proposals/{id}/merge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Merge a proposal into an existing catalog attribute/value */
+        post: operations["mergeReportAttributeProposal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/report-attribute-proposals/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject a pending report attribute proposal with a reason */
+        post: operations["rejectReportAttributeProposal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/private/geographies": {
         parameters: {
             query?: never;
@@ -2795,6 +2880,74 @@ export interface components {
             /** @enum {string} */
             reviewStatus: "PENDING";
         };
+        ReportAttributeProposalResponseDto: {
+            /** Format: uuid */
+            id: string;
+            version: number;
+            key: string;
+            /** @enum {string} */
+            exposure: "PUBLIC" | "PRIVATE";
+            /** @description Only present for public proposals. */
+            proposedValue?: string;
+            hasPrivateValue: boolean;
+            /** @enum {string} */
+            reportType: "LOST" | "FOUND";
+            reportPublicCode: string;
+            /** Format: uuid */
+            sourceCategoryId?: string | null;
+            sourceCategoryName?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        ReportAttributeProposalPageResponseDto: {
+            items: components["schemas"]["ReportAttributeProposalResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        NormalizeReportAttributeKeyDto: {
+            expectedVersion: number;
+            name: string;
+            slug: string;
+            /** Format: uuid */
+            targetCategoryId: string;
+            reason?: string;
+        };
+        ReportAttributeProposalReviewResponseDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "NORMALIZED" | "MERGED" | "REJECTED";
+            version: number;
+            /** Format: uuid */
+            normalizedAttributeId?: string;
+            /** Format: uuid */
+            normalizedValueId?: string;
+        };
+        NormalizePublicReportAttributeKeyAndValueDto: {
+            expectedVersion: number;
+            name: string;
+            slug: string;
+            /** Format: uuid */
+            targetCategoryId: string;
+            reason?: string;
+            valueLabel?: string;
+            value?: string;
+        };
+        MergeReportAttributeProposalDto: {
+            expectedVersion: number;
+            /** Format: uuid */
+            targetAttributeId: string;
+            /** Format: uuid */
+            targetCategoryId: string;
+            /** Format: uuid */
+            targetValueAssignmentId?: string;
+            reason?: string;
+        };
+        RejectReportAttributeProposalDto: {
+            expectedVersion: number;
+            reason: string;
+        };
         GeographyResponseDto: {
             id: string;
             parentId?: string | null;
@@ -3402,7 +3555,7 @@ export interface components {
             proposalStatus?: Record<string, never> | null;
             selections: components["schemas"]["ItemDeclarationAttributeSelectionResponseDto"][];
             /** @enum {string} */
-            source: "CATALOG" | "USER_PROPOSED" | "TYPED";
+            source: "CATALOG" | "PRIVATE_CUSTOM" | "USER_PROPOSED" | "TYPED";
             value: {
                 [key: string]: unknown;
             };
@@ -3514,6 +3667,7 @@ export interface components {
             /** Format: uuid */
             declarationId: string;
             exactLocations: components["schemas"]["SensitiveExactLocationResponseDto"][];
+            privateAttributes: components["schemas"]["ItemDeclarationAttributeAnswerResponseDto"][];
             privateFacts: components["schemas"]["SensitivePrivateFactResponseDto"][];
         };
         ModerationItemDeclarationCommandDto: {
@@ -3551,6 +3705,7 @@ export interface components {
             regex?: string | null;
         };
         ReportFormCategoryResponseDto: {
+            allowsPrivateCustomAnswers: boolean;
             /** Format: uuid */
             id: string;
             /** @enum {string} */
@@ -3696,8 +3851,6 @@ export interface components {
             customKey?: string;
             /** @enum {string} */
             exposure?: "PRIVATE" | "PUBLIC";
-            isForMatch?: boolean;
-            isForVerification?: boolean;
             value: components["schemas"]["ReportAttributeValueInputDto"];
         };
         ReplaceItemDeclarationAttributesDto: {
@@ -6191,6 +6344,129 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AttributeValueProposalResponseDto"];
+                };
+            };
+        };
+    };
+    listReportAttributeProposals: {
+        parameters: {
+            query?: {
+                exposure?: "PUBLIC" | "PRIVATE";
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportAttributeProposalPageResponseDto"];
+                };
+            };
+        };
+    };
+    normalizeReportAttributeProposalKey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NormalizeReportAttributeKeyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportAttributeProposalReviewResponseDto"];
+                };
+            };
+        };
+    };
+    normalizePublicReportAttributeProposalKeyAndValue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NormalizePublicReportAttributeKeyAndValueDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportAttributeProposalReviewResponseDto"];
+                };
+            };
+        };
+    };
+    mergeReportAttributeProposal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MergeReportAttributeProposalDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportAttributeProposalReviewResponseDto"];
+                };
+            };
+        };
+    };
+    rejectReportAttributeProposal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectReportAttributeProposalDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportAttributeProposalReviewResponseDto"];
                 };
             };
         };

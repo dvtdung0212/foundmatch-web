@@ -4,7 +4,12 @@ import { validateReportAttributeAnswers } from "@/features/reports/components/cr
 import type { ReportFormConfiguration } from "@/features/reports/api/report-submission";
 
 const configuration: ReportFormConfiguration = {
-  category: { id: "category-id", inputMode: "STANDARD", name: "Wallet" },
+  category: {
+    allowsPrivateCustomAnswers: true,
+    id: "category-id",
+    inputMode: "STANDARD",
+    name: "Wallet",
+  },
   reportType: "LOST",
   attributes: [
     {
@@ -60,15 +65,11 @@ describe("validateReportAttributeAnswers", () => {
       {
         customKey: "",
         exposure: "PUBLIC" as const,
-        isForMatch: true,
-        isForVerification: false,
         value: { kind: "TEXT" as const, textValue: "red" },
       },
       {
         customKey: "serial suffix",
         exposure: "PRIVATE" as const,
-        isForMatch: true,
-        isForVerification: true,
         value: { kind: "TEXT" as const, textValue: "" },
       },
     ];
@@ -78,6 +79,20 @@ describe("validateReportAttributeAnswers", () => {
     ).toHaveProperty("custom.PUBLIC.0.key");
     expect(
       validateReportAttributeAnswers(customConfiguration, answers, "PRIVATE"),
+    ).toHaveProperty("custom.PRIVATE.0.value");
+  });
+
+  it("validates private custom rows in a standard category", () => {
+    const answers = [
+      {
+        customKey: "serial suffix",
+        exposure: "PRIVATE" as const,
+        value: { kind: "TEXT" as const, textValue: "" },
+      },
+    ];
+
+    expect(
+      validateReportAttributeAnswers(configuration, answers, "PRIVATE"),
     ).toHaveProperty("custom.PRIVATE.0.value");
   });
 });

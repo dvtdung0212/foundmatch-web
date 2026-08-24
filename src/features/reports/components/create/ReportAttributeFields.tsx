@@ -15,6 +15,7 @@ type Props = {
   answers: ReportAttributeAnswerInput[];
   configuration: ReportFormConfiguration | null;
   disabled?: boolean;
+  embedded?: boolean;
   errors?: Record<string, string>;
   exposure: "PUBLIC" | "PRIVATE";
   onChange: (answers: ReportAttributeAnswerInput[]) => void;
@@ -27,7 +28,11 @@ export function validateReportAttributeAnswers(
 ): Record<string, string> {
   if (!configuration) return {};
   const errors: Record<string, string> = {};
-  if (configuration.category.inputMode === "CUSTOM") {
+  if (
+    configuration.category.inputMode === "CUSTOM" ||
+    (exposure === "PRIVATE" &&
+      configuration.category.allowsPrivateCustomAnswers)
+  ) {
     answers
       .filter((answer) => !answer.assignmentId && answer.exposure === exposure)
       .forEach((answer, index) => {
@@ -71,6 +76,7 @@ export function ReportAttributeFields({
   answers,
   configuration,
   disabled,
+  embedded = false,
   errors = {},
   exposure,
   onChange,
@@ -90,12 +96,16 @@ export function ReportAttributeFields({
       >
         <div>
           <h4 className="text-sm font-bold text-brand-heading">
-            {exposure === "PUBLIC"
+            {embedded
+              ? "Thông tin xác minh bổ sung"
+              : exposure === "PUBLIC"
               ? "Thông tin nhận dạng công khai"
               : "Thông tin riêng để đối chiếu"}
           </h4>
           <p className="mt-1 text-xs text-brand-muted">
-            {exposure === "PUBLIC"
+            {embedded
+              ? "Thêm đặc điểm riêng chưa có trong danh mục; dữ liệu này chỉ dùng khi cần xác minh quyền sở hữu."
+              : exposure === "PUBLIC"
               ? "Thông tin này có thể xuất hiện trên báo cáo công khai và được gửi duyệt để chuẩn hóa danh mục."
               : "Chỉ bạn và quy trình xác minh được phép sử dụng; giá trị riêng tư không được đưa sang hàng chờ duyệt."}
           </p>
@@ -172,8 +182,6 @@ export function ReportAttributeFields({
               {
                 customKey: "",
                 exposure,
-                isForMatch: true,
-                isForVerification: exposure === "PRIVATE",
                 value: { kind: "TEXT", textValue: "" },
               },
             ])
@@ -189,7 +197,28 @@ export function ReportAttributeFields({
   const attributes = configuration.attributes.filter(
     (attribute) => attribute.exposure === exposure,
   );
-  if (attributes.length === 0) return null;
+  if (attributes.length === 0) {
+    if (
+      exposure === "PRIVATE" &&
+      configuration.category.allowsPrivateCustomAnswers
+    ) {
+      return (
+        <ReportAttributeFields
+          answers={answers}
+          configuration={{
+            ...configuration,
+            attributes: [],
+            category: { ...configuration.category, inputMode: "CUSTOM" },
+          }}
+          disabled={disabled}
+          errors={errors}
+          exposure="PRIVATE"
+          onChange={onChange}
+        />
+      );
+    }
+    return null;
+  }
 
   return (
     <section
@@ -207,7 +236,7 @@ export function ReportAttributeFields({
         <p className="mt-1 text-xs text-brand-muted">
           {exposure === "PUBLIC"
             ? "Các trường được cấu hình riêng cho danh mục và loại báo cáo này."
-            : "Không hiển thị công khai; chỉ dùng cho matching và xác minh theo chính sách."}
+            : "Không hiển thị công khai và không dùng để tính điểm matching; chỉ dùng để xác minh quyền sở hữu."}
         </p>
       </div>
       <div data-report-attribute-layout className="flex flex-wrap gap-4">
@@ -245,6 +274,22 @@ export function ReportAttributeFields({
           </div>
         ))}
       </div>
+      {exposure === "PRIVATE" &&
+      configuration.category.allowsPrivateCustomAnswers ? (
+        <ReportAttributeFields
+          answers={answers}
+          configuration={{
+            ...configuration,
+            attributes: [],
+            category: { ...configuration.category, inputMode: "CUSTOM" },
+          }}
+          disabled={disabled}
+          embedded
+          errors={errors}
+          exposure="PRIVATE"
+          onChange={onChange}
+        />
+      ) : null}
     </section>
   );
 }
