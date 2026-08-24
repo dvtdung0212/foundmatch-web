@@ -1602,6 +1602,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/public/categories/{id}/report-form": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the safe active attribute form for a category and report type */
+        get: operations["getReportFormConfiguration"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/public/item-declarations": {
         parameters: {
             query?: never;
@@ -1683,6 +1700,23 @@ export interface paths {
         get?: never;
         /** Replace owner-scoped locations with optimistic concurrency */
         put: operations["replaceOwnItemDeclarationLocations"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations/{id}/attributes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Replace normalized attributes for an owned draft declaration */
+        put: operations["replaceOwnItemDeclarationAttributes"];
         post?: never;
         delete?: never;
         options?: never;
@@ -2374,6 +2408,11 @@ export interface components {
             isPublic: boolean;
             isForVerification: boolean;
             isForMatch: boolean;
+            /**
+             * @default BOTH
+             * @enum {string}
+             */
+            reportScope: "LOST" | "FOUND" | "BOTH";
             weight: number;
             categoryId: string;
             /** Format: date-time */
@@ -2388,6 +2427,11 @@ export interface components {
             isPublic: boolean;
             isForVerification: boolean;
             isForMatch: boolean;
+            /**
+             * @default BOTH
+             * @enum {string}
+             */
+            reportScope: "LOST" | "FOUND" | "BOTH";
             weight: number;
         };
         AssignCategoryAttributesDto: {
@@ -3334,6 +3378,35 @@ export interface components {
             sourceReference?: string;
             notes?: string;
         };
+        ItemDeclarationAttributeSelectionResponseDto: {
+            label: string;
+            /** Format: uuid */
+            valueAssignmentId: string;
+            /** Format: uuid */
+            valueId: string;
+        };
+        ItemDeclarationAttributeAnswerResponseDto: {
+            /** Format: uuid */
+            assignmentId?: Record<string, never> | null;
+            /** Format: uuid */
+            attributeId?: Record<string, never> | null;
+            dataType: string;
+            /** @enum {string} */
+            exposure: "PUBLIC" | "PRIVATE";
+            /** Format: uuid */
+            id: string;
+            isForMatch: boolean;
+            isForVerification: boolean;
+            key: string;
+            name: string;
+            proposalStatus?: Record<string, never> | null;
+            selections: components["schemas"]["ItemDeclarationAttributeSelectionResponseDto"][];
+            /** @enum {string} */
+            source: "CATALOG" | "USER_PROPOSED" | "TYPED";
+            value: {
+                [key: string]: unknown;
+            };
+        };
         ItemDeclarationCategoryResponseDto: {
             /** Format: uuid */
             id?: Record<string, never> | null;
@@ -3364,6 +3437,7 @@ export interface components {
             url: string;
         };
         StaffItemDeclarationResponseDto: {
+            attributes: components["schemas"]["ItemDeclarationAttributeAnswerResponseDto"][];
             brand?: Record<string, never> | null;
             category: components["schemas"]["ItemDeclarationCategoryResponseDto"];
             color?: Record<string, never> | null;
@@ -3447,6 +3521,48 @@ export interface components {
             expectedVersion: number;
             reason?: string;
         };
+        ReportFormOptionResponseDto: {
+            label: string;
+            value: string;
+            /** Format: uuid */
+            valueAssignmentId: string;
+            /** Format: uuid */
+            valueId: string;
+        };
+        ReportFormAttributeResponseDto: {
+            /** Format: uuid */
+            assignmentId: string;
+            /** Format: uuid */
+            attributeId: string;
+            /** @enum {string} */
+            dataType: "SHORT_TEXT" | "LONG_TEXT" | "SINGLE_SELECT" | "MULTI_SELECT" | "NUMBER" | "BOOLEAN" | "DATE";
+            displayOrder: number;
+            /** @enum {string} */
+            exposure: "PUBLIC" | "PRIVATE";
+            helpText?: string | null;
+            isForMatch: boolean;
+            isForVerification: boolean;
+            isRequired: boolean;
+            key: string;
+            maxLength?: number | null;
+            name: string;
+            options: components["schemas"]["ReportFormOptionResponseDto"][];
+            placeholder?: string | null;
+            regex?: string | null;
+        };
+        ReportFormCategoryResponseDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            inputMode: "STANDARD" | "CUSTOM";
+            name: string;
+        };
+        ReportFormConfigurationResponseDto: {
+            attributes: components["schemas"]["ReportFormAttributeResponseDto"][];
+            category: components["schemas"]["ReportFormCategoryResponseDto"];
+            /** @enum {string} */
+            reportType: "LOST" | "FOUND";
+        };
         CreateItemDeclarationDto: {
             brand?: string;
             /** Format: uuid */
@@ -3489,6 +3605,7 @@ export interface components {
             url?: Record<string, never> | null;
         };
         OwnerItemDeclarationResponseDto: {
+            attributes: components["schemas"]["ItemDeclarationAttributeAnswerResponseDto"][];
             brand?: Record<string, never> | null;
             category: components["schemas"]["ItemDeclarationCategoryResponseDto"];
             color?: Record<string, never> | null;
@@ -3563,6 +3680,31 @@ export interface components {
             expectedVersion: number;
             locations: components["schemas"]["ItemDeclarationLocationInputDto"][];
         };
+        ReportAttributeValueInputDto: {
+            /** @enum {string} */
+            kind: "BOOLEAN" | "DATE" | "NUMBER" | "SELECTION" | "TEXT";
+            textValue?: string;
+            numberValue?: number;
+            booleanValue?: boolean;
+            /** Format: date */
+            dateValue?: string;
+            valueAssignmentIds?: string[];
+        };
+        ReportAttributeAnswerInputDto: {
+            /** Format: uuid */
+            assignmentId?: string;
+            customKey?: string;
+            /** @enum {string} */
+            exposure?: "PRIVATE" | "PUBLIC";
+            isForMatch?: boolean;
+            isForVerification?: boolean;
+            value: components["schemas"]["ReportAttributeValueInputDto"];
+        };
+        ReplaceItemDeclarationAttributesDto: {
+            /** Format: int32 */
+            expectedVersion: number;
+            answers: components["schemas"]["ReportAttributeAnswerInputDto"][];
+        };
         ItemDeclarationMediaUploadResponseDto: {
             /** Format: uuid */
             mediaId: string;
@@ -3602,6 +3744,7 @@ export interface components {
             reason: string;
         };
         PublicItemNoticeResponseDto: {
+            attributes: components["schemas"]["ItemDeclarationAttributeAnswerResponseDto"][];
             brand?: Record<string, never> | null;
             category: components["schemas"]["ItemDeclarationCategoryResponseDto"];
             color?: Record<string, never> | null;
@@ -7274,6 +7417,37 @@ export interface operations {
             };
         };
     };
+    getReportFormConfiguration: {
+        parameters: {
+            query: {
+                reportType: "FOUND" | "LOST";
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportFormConfigurationResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
     createItemDeclaration: {
         parameters: {
             query?: never;
@@ -7630,6 +7804,64 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ReplaceItemDeclarationLocationsDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerItemDeclarationResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    replaceOwnItemDeclarationAttributes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReplaceItemDeclarationAttributesDto"];
             };
         };
         responses: {

@@ -5,6 +5,58 @@ export type PrivateFactInput = {
   value: string;
 };
 
+export type ReportAttributeValueInput =
+  | { kind: "TEXT"; textValue: string }
+  | { kind: "NUMBER"; numberValue: number }
+  | { kind: "BOOLEAN"; booleanValue: boolean }
+  | { kind: "DATE"; dateValue: string }
+  | { kind: "SELECTION"; valueAssignmentIds: string[] };
+
+export type ReportAttributeAnswerInput = {
+  assignmentId?: string;
+  customKey?: string;
+  exposure?: "PUBLIC" | "PRIVATE";
+  isForMatch?: boolean;
+  isForVerification?: boolean;
+  value: ReportAttributeValueInput;
+};
+
+export type ReportFormAttribute = {
+  assignmentId: string;
+  attributeId: string;
+  dataType:
+    | "SHORT_TEXT"
+    | "LONG_TEXT"
+    | "SINGLE_SELECT"
+    | "MULTI_SELECT"
+    | "NUMBER"
+    | "BOOLEAN"
+    | "DATE";
+  displayOrder: number;
+  exposure: "PUBLIC" | "PRIVATE";
+  helpText?: string | null;
+  isForMatch: boolean;
+  isForVerification: boolean;
+  isRequired: boolean;
+  key: string;
+  maxLength?: number | null;
+  name: string;
+  options: Array<{
+    label: string;
+    value: string;
+    valueAssignmentId: string;
+    valueId: string;
+  }>;
+  placeholder?: string | null;
+  regex?: string | null;
+};
+
+export type ReportFormConfiguration = {
+  attributes: ReportFormAttribute[];
+  category: { id: string; inputMode: "STANDARD" | "CUSTOM"; name: string };
+  reportType: ReportType;
+};
+
 export type ReportLocationInput = {
   exactLatitude?: number | null;
   exactLongitude?: number | null;
@@ -17,6 +69,7 @@ export type ReportLocationInput = {
 };
 
 export type ReportSubmissionInput = {
+  attributes: ReportAttributeAnswerInput[];
   brand?: string;
   categoryId: string;
   categoryName: string;
@@ -40,14 +93,28 @@ export type ReportMutationResult = {
 };
 
 export interface OwnerReportApi {
+  getFormConfiguration(
+    categoryId: string,
+    type: ReportType,
+  ): Promise<ReportFormConfiguration>;
   createDraft(
-    input: Omit<ReportSubmissionInput, "files" | "location" | "privateFacts">,
+    input: Omit<
+      ReportSubmissionInput,
+      "attributes" | "files" | "location" | "privateFacts"
+    >,
     idempotencyKey: string,
-  ): Promise<Required<Pick<ReportMutationResult, "id" | "publicCode" | "version">>>;
+  ): Promise<
+    Required<Pick<ReportMutationResult, "id" | "publicCode" | "version">>
+  >;
   replaceLocations(
     declarationId: string,
     expectedVersion: number,
     locations: ReportLocationInput[],
+  ): Promise<ReportMutationResult>;
+  replaceAttributes(
+    declarationId: string,
+    expectedVersion: number,
+    answers: ReportAttributeAnswerInput[],
   ): Promise<ReportMutationResult>;
   replacePrivateFacts(
     declarationId: string,
@@ -63,7 +130,10 @@ export interface OwnerReportApi {
     declarationId: string,
     expectedVersion: number,
     idempotencyKey: string,
-  ): Promise<ReportMutationResult & Required<Pick<ReportMutationResult, "id" | "publicCode">>>;
+  ): Promise<
+    ReportMutationResult &
+      Required<Pick<ReportMutationResult, "id" | "publicCode">>
+  >;
 }
 
 type PersistReportOptions = {
@@ -82,13 +152,25 @@ export async function persistReport(
   api: OwnerReportApi,
   input: ReportSubmissionInput,
   options: PersistReportOptions,
-): Promise<Required<Pick<ReportMutationResult, "id" | "publicCode" | "version">> & ReportMutationResult> {
-  const { files, location, privateFacts, ...draftInput } = input;
+): Promise<
+  Required<Pick<ReportMutationResult, "id" | "publicCode" | "version">> &
+    ReportMutationResult
+> {
+  const { attributes, files, location, privateFacts, ...draftInput } = input;
   const draft = await api.createDraft(draftInput, options.idempotencyKey);
   let version = draft.version;
 
-  const locationResult = await api.replaceLocations(draft.id, version, [location]);
+  const locationResult = await api.replaceLocations(draft.id, version, [
+    location,
+  ]);
   version = locationResult.version;
+
+  const attributeResult = await api.replaceAttributes(
+    draft.id,
+    version,
+    attributes,
+  );
+  version = attributeResult.version;
 
   if (privateFacts.length > 0) {
     const privateFactsResult = await api.replacePrivateFacts(
@@ -115,9 +197,5 @@ export async function persistReport(
     throw new Error("A submit idempotency key is required.");
   }
 
-  return api.submit(
-    draft.id,
-    version,
-    options.submitIdempotencyKey,
-  );
+  return api.submit(draft.id, version, options.submitIdempotencyKey);
 }

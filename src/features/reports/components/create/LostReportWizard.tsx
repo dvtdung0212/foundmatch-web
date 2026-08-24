@@ -26,23 +26,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buildReportSubmission } from "../../api/report-form-mapper";
 import { useReportComposer } from "../../hooks/use-report-composer";
+import type { ReportAttributeAnswerInput } from "../../api/report-submission";
+import { ReportAttributeFields, validateReportAttributeAnswers } from "./ReportAttributeFields";
+import { ReportCategorySelect } from "./ReportCategorySelect";
 
 const lostSteps: StepItem[] = [
   { id: 1, title: "Thông tin đồ vật", description: "Mô tả chi tiết món đồ" },
   { id: 2, title: "Thời gian & địa điểm", description: "Khi nào và ở đâu bị mất" },
   { id: 3, title: "Bảo mật & xác minh", description: "Minh chứng và đối chiếu" },
   { id: 4, title: "Xác nhận", description: "Kiểm tra và gửi báo cáo" },
-];
-
-const colorOptions = [
-  { label: "Đen", value: "Đen" },
-  { label: "Nâu / Be", value: "Nâu" },
-  { label: "Xanh dương / Navy", value: "Xanh dương" },
-  { label: "Đỏ / Mận", value: "Đỏ" },
-  { label: "Trắng / Bạc", value: "Trắng" },
-  { label: "Xám / Ghi", value: "Xám" },
-  { label: "Vàng / Gold", value: "Vàng" },
-  { label: "Nhiều màu / Họa tiết", value: "Nhiều màu" },
 ];
 
 const timeSlotOptions = [
@@ -66,9 +58,12 @@ export function LostReportWizard() {
     addImages,
     categories,
     error: submissionError,
+    formConfiguration,
     images,
     isLoadingCategories,
+    isLoadingFormConfiguration,
     isSaving,
+    loadFormConfiguration,
     persist,
     removeImage,
   } = useReportComposer("LOST");
@@ -78,11 +73,6 @@ export function LostReportWizard() {
     title: "",
     category: "",
     brand: "",
-    material: "",
-    color: "",
-    size: "",
-    style: "",
-    genderTarget: "",
     description: "",
     
     // Time & Location
@@ -96,13 +86,17 @@ export function LostReportWizard() {
     distinctiveFeatures: "",
     secretVerificationAnswers: "",
   });
+  const [attributeAnswers, setAttributeAnswers] = useState<ReportAttributeAnswerInput[]>([]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Auto-save draft
   const handleSaveDraft = () => {
     try {
-      localStorage.setItem("foundmatch_lost_draft", JSON.stringify(formData));
+      localStorage.setItem(
+        "foundmatch_lost_draft",
+        JSON.stringify({ ...formData, attributeAnswers }),
+      );
       setSaveDraftMessage("Đã lưu bản nháp thành công!");
       setTimeout(() => setSaveDraftMessage(""), 3000);
     } catch {
@@ -115,13 +109,17 @@ export function LostReportWizard() {
     if (step === 1) {
       if (!formData.title.trim()) newErrors.title = "Vui lòng nhập tên đồ vật";
       if (!formData.category) newErrors.category = "Vui lòng chọn danh mục";
-      if (!formData.color) newErrors.color = "Vui lòng chọn màu sắc";
+      else if (!formConfiguration) newErrors.category = "Vui lòng đợi tải cấu hình danh mục";
       if (!formData.description.trim()) newErrors.description = "Vui lòng nhập mô tả chi tiết";
+      Object.assign(newErrors, validateReportAttributeAnswers(formConfiguration, attributeAnswers, "PUBLIC"));
     }
     if (step === 2) {
       if (!formData.date) newErrors.date = "Vui lòng chọn ngày bị mất";
       if (!formData.timeSlot) newErrors.timeSlot = "Vui lòng chọn khung thời gian";
       if (!formData.locationName.trim()) newErrors.locationName = "Vui lòng chọn hoặc nhập địa điểm bị mất";
+    }
+    if (step === 3) {
+      Object.assign(newErrors, validateReportAttributeAnswers(formConfiguration, attributeAnswers, "PRIVATE"));
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -143,16 +141,10 @@ export function LostReportWizard() {
         try {
           const result = await persist(
             buildReportSubmission({
-              additionalPublicFacts: [
-                { label: "Chất liệu", value: formData.material },
-                { label: "Kích thước", value: formData.size },
-                { label: "Kiểu dáng", value: formData.style },
-                { label: "Đối tượng", value: formData.genderTarget },
-              ],
+              attributes: attributeAnswers.filter((answer) => !isEmptyCustomAnswer(answer)),
               brand: formData.brand,
               categoryId: category.id,
               categoryName: category.name,
-              color: formData.color,
               date: formData.date,
               description: formData.description,
               distinctiveFeatures: formData.distinctiveFeatures,
@@ -250,15 +242,19 @@ export function LostReportWizard() {
                 <div className="space-y-5">
                   {/* Category & Title */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <Select
+                    <ReportCategorySelect
                       label="Danh mục đồ vật"
-                      required
-                      options={categories.map(({ id, name }) => ({ label: name, value: id }))}
+                      categories={categories}
                       value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       error={errors.category}
-                      disabled={isLoadingCategories || isSaving}
-                      placeholder={isLoadingCategories ? "Đang tải danh mục..." : "Chọn danh mục"}
+                      hasAnswers={attributeAnswers.length > 0}
+                      isLoading={isLoadingCategories}
+                      disabled={isSaving}
+                      onChange={(categoryId) => {
+                        setFormData((current) => ({ ...current, category: categoryId }));
+                        setAttributeAnswers([]);
+                        void loadFormConfiguration(categoryId);
+                      }}
                     />
                     <div>
                       <label className="block text-sm font-bold text-brand-heading mb-1.5 text-left">
@@ -274,8 +270,7 @@ export function LostReportWizard() {
                     </div>
                   </div>
 
-                  {/* Brand & Material */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 gap-5">
                     <div>
                       <label className="block text-sm font-bold text-brand-heading mb-1.5 text-left">
                         Thương hiệu / Hãng sản xuất
@@ -287,52 +282,19 @@ export function LostReportWizard() {
                         className="h-11 text-sm font-medium"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-bold text-brand-heading mb-1.5 text-left">
-                        Chất liệu
-                      </label>
-                      <Input
-                        placeholder="Ví dụ: Da thật, Kim loại, Vải Canvas..."
-                        value={formData.material}
-                        onChange={(e) => setFormData({ ...formData, material: e.target.value })}
-                        className="h-11 text-sm font-medium"
-                      />
-                    </div>
                   </div>
 
-                  {/* Color, Size & Style */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                    <Select
-                      label="Màu sắc chủ đạo"
-                      required
-                      options={colorOptions}
-                      value={formData.color}
-                      onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                      error={errors.color}
-                    />
-                    <div>
-                      <label className="block text-sm font-bold text-brand-heading mb-1.5 text-left">
-                        Kích thước (nếu biết)
-                      </label>
-                      <Input
-                        placeholder="Ví dụ: 11 x 8 cm, Size M..."
-                        value={formData.size}
-                        onChange={(e) => setFormData({ ...formData, size: e.target.value })}
-                        className="h-11 text-sm font-medium"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-bold text-brand-heading mb-1.5 text-left">
-                        Kiểu dáng
-                      </label>
-                      <Input
-                        placeholder="Ví dụ: Ví gấp đôi, Dáng đứng..."
-                        value={formData.style}
-                        onChange={(e) => setFormData({ ...formData, style: e.target.value })}
-                        className="h-11 text-sm font-medium"
-                      />
-                    </div>
-                  </div>
+                  {isLoadingFormConfiguration && (
+                    <p role="status" className="text-sm text-brand-muted">Đang tải bộ thuộc tính của danh mục...</p>
+                  )}
+                  <ReportAttributeFields
+                    answers={attributeAnswers}
+                    configuration={formConfiguration}
+                    disabled={isSaving || isLoadingFormConfiguration}
+                    errors={errors}
+                    exposure="PUBLIC"
+                    onChange={setAttributeAnswers}
+                  />
 
                   {/* Description */}
                   <Textarea
@@ -502,6 +464,14 @@ export function LostReportWizard() {
                 </div>
 
                 <div className="space-y-5">
+                  <ReportAttributeFields
+                    answers={attributeAnswers}
+                    configuration={formConfiguration}
+                    disabled={isSaving || isLoadingFormConfiguration}
+                    errors={errors}
+                    exposure="PRIVATE"
+                    onChange={setAttributeAnswers}
+                  />
                   {/* Distinctive Features */}
                   <Textarea
                     label="Đặc điểm nhận dạng nổi bật (Hiển thị có kiểm soát)"
@@ -561,7 +531,7 @@ export function LostReportWizard() {
                         <Badge variant="lost">Báo cáo mất đồ</Badge>
                         <span className="font-bold text-base text-brand-heading truncate">{formData.title}</span>
                       </div>
-                      <p className="text-brand-muted">Danh mục: <strong className="text-brand-heading">{formData.category}</strong> • Màu: <strong className="text-brand-heading">{formData.color}</strong></p>
+                      <p className="text-brand-muted">Danh mục: <strong className="text-brand-heading">{categories.find(({ id }) => id === formData.category)?.name ?? "Chưa chọn"}</strong></p>
                       <p className="text-brand-muted flex items-center gap-1.5">
                         <MapPin className="w-4 h-4 text-brand-plum shrink-0" />
                         {formData.locationName} ({formData.locationArea})
@@ -667,5 +637,13 @@ export function LostReportWizard() {
         }}
       />
     </div>
+  );
+}
+
+function isEmptyCustomAnswer(answer: ReportAttributeAnswerInput): boolean {
+  return !answer.assignmentId && (
+    !answer.customKey?.trim() ||
+    answer.value.kind !== "TEXT" ||
+    !answer.value.textValue.trim()
   );
 }

@@ -101,4 +101,46 @@ describe("createOwnerReportApi", () => {
       status: 409,
     });
   });
+
+  it("loads form configuration and replaces normalized answers", async () => {
+    const client = {
+      GET: vi.fn().mockResolvedValue({
+        data: {
+          attributes: [],
+          category: {
+            id: "category-id",
+            inputMode: "STANDARD",
+            name: "Wallet",
+          },
+          reportType: "LOST",
+        },
+      }),
+      POST: vi.fn(),
+      PUT: vi.fn().mockResolvedValue({ data: { version: 2 } }),
+    };
+    const api = createOwnerReportApi(client as never);
+    const answers = [
+      {
+        assignmentId: "33333333-3333-4333-8333-333333333333",
+        value: { kind: "TEXT" as const, textValue: "genuine leather" },
+      },
+    ];
+
+    await api.getFormConfiguration("category-id", "LOST");
+    await api.replaceAttributes("report-id", 1, answers);
+
+    expect(client.GET).toHaveBeenCalledWith(
+      "/api/v1/public/categories/{id}/report-form",
+      {
+        params: { path: { id: "category-id" }, query: { reportType: "LOST" } },
+      },
+    );
+    expect(client.PUT).toHaveBeenCalledWith(
+      "/api/v1/public/item-declarations/{id}/attributes",
+      {
+        body: { expectedVersion: 1, answers },
+        params: { path: { id: "report-id" } },
+      },
+    );
+  });
 });

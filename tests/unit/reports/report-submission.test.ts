@@ -24,26 +24,32 @@ const input: ReportSubmissionInput = {
     purpose: "LOST",
     visibility: "APPROXIMATE",
   },
-  privateFacts: [
-    { kind: "verification_secret", value: "Có đồng xu kỷ niệm" },
+  privateFacts: [{ kind: "verification_secret", value: "Có đồng xu kỷ niệm" }],
+  attributes: [
+    {
+      assignmentId: "33333333-3333-4333-8333-333333333333",
+      value: { kind: "TEXT", textValue: "genuine leather" },
+    },
   ],
   files: [new File(["image"], "wallet.jpg", { type: "image/jpeg" })],
 };
 
 function createApi(): OwnerReportApi {
   return {
+    getFormConfiguration: vi.fn(),
     createDraft: vi.fn().mockResolvedValue({
       id: "22222222-2222-4222-8222-222222222222",
       publicCode: "FM-ABC123",
       version: 1,
     }),
     replaceLocations: vi.fn().mockResolvedValue({ version: 2 }),
-    replacePrivateFacts: vi.fn().mockResolvedValue({ version: 3 }),
-    uploadMedia: vi.fn().mockResolvedValue({ version: 4 }),
+    replaceAttributes: vi.fn().mockResolvedValue({ version: 3 }),
+    replacePrivateFacts: vi.fn().mockResolvedValue({ version: 4 }),
+    uploadMedia: vi.fn().mockResolvedValue({ version: 5 }),
     submit: vi.fn().mockResolvedValue({
       id: "22222222-2222-4222-8222-222222222222",
       publicCode: "FM-ABC123",
-      version: 5,
+      version: 6,
       workflowStatus: "ACTIVE",
     }),
   };
@@ -73,36 +79,45 @@ describe("persistReport", () => {
     );
     expect(api.replacePrivateFacts).toHaveBeenCalledWith(
       "22222222-2222-4222-8222-222222222222",
-      2,
+      3,
       input.privateFacts,
+    );
+    expect(api.replaceAttributes).toHaveBeenCalledWith(
+      "22222222-2222-4222-8222-222222222222",
+      2,
+      input.attributes,
     );
     expect(api.uploadMedia).toHaveBeenCalledWith(
       "22222222-2222-4222-8222-222222222222",
-      3,
+      4,
       input.files[0],
     );
     expect(api.submit).toHaveBeenCalledWith(
       "22222222-2222-4222-8222-222222222222",
-      4,
+      5,
       "report-submit-key",
     );
-    expect(result.version).toBe(5);
+    expect(result.version).toBe(6);
   });
 
   it("keeps a complete server draft without submitting", async () => {
     const api = createApi();
 
-    const result = await persistReport(api, { ...input, files: [] }, {
-      idempotencyKey: "report-draft-key",
-      submit: false,
-    });
+    const result = await persistReport(
+      api,
+      { ...input, files: [] },
+      {
+        idempotencyKey: "report-draft-key",
+        submit: false,
+      },
+    );
 
     expect(api.uploadMedia).not.toHaveBeenCalled();
     expect(api.submit).not.toHaveBeenCalled();
     expect(result).toMatchObject({
       id: "22222222-2222-4222-8222-222222222222",
       publicCode: "FM-ABC123",
-      version: 3,
+      version: 4,
     });
   });
 
@@ -116,11 +131,14 @@ describe("persistReport", () => {
     );
 
     expect(api.replacePrivateFacts).not.toHaveBeenCalled();
-    expect(api.replaceLocations).toHaveBeenCalledWith(
+    expect(api.replaceAttributes).toHaveBeenCalledWith(
       expect.any(String),
-      1,
-      [input.location],
+      2,
+      input.attributes,
     );
+    expect(api.replaceLocations).toHaveBeenCalledWith(expect.any(String), 1, [
+      input.location,
+    ]);
   });
 
   it("skips media already acknowledged during a retry", async () => {

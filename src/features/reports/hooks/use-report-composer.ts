@@ -10,6 +10,7 @@ import {
 } from "../api/owner-report-api";
 import {
   persistReport,
+  type ReportFormConfiguration,
   type ReportSubmissionInput,
   type ReportMutationResult,
 } from "../api/report-submission";
@@ -27,12 +28,17 @@ export function useReportComposer(type: ReportSubmissionInput["type"]) {
   const [categories, setCategories] = useState<ReportCategoryOption[]>([]);
   const [images, setImages] = useState<SelectedReportImage[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const [isLoadingFormConfiguration, setIsLoadingFormConfiguration] =
+    useState(false);
+  const [formConfiguration, setFormConfiguration] =
+    useState<ReportFormConfiguration | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<ReportApiError | null>(null);
   const imagesRef = useRef<SelectedReportImage[]>([]);
   const inFlightRef = useRef(false);
   const intentKeysRef = useRef<{ create: string; submit: string } | null>(null);
   const uploadedFileKeysRef = useRef(new Set<string>());
+  const formConfigurationRequestRef = useRef(0);
 
   useEffect(() => {
     let active = true;
@@ -65,7 +71,8 @@ export function useReportComposer(type: ReportSubmissionInput["type"]) {
 
   useEffect(
     () => () => {
-      for (const image of imagesRef.current) URL.revokeObjectURL(image.previewUrl);
+      for (const image of imagesRef.current)
+        URL.revokeObjectURL(image.previewUrl);
     },
     [],
   );
@@ -73,7 +80,8 @@ export function useReportComposer(type: ReportSubmissionInput["type"]) {
   const addImages = useCallback((incoming: File[]) => {
     setError(null);
     const invalid = incoming.find(
-      (file) => !ALLOWED_IMAGE_TYPES.has(file.type) || file.size > MAX_IMAGE_BYTES,
+      (file) =>
+        !ALLOWED_IMAGE_TYPES.has(file.type) || file.size > MAX_IMAGE_BYTES,
     );
     if (invalid) {
       setError(
@@ -105,12 +113,51 @@ export function useReportComposer(type: ReportSubmissionInput["type"]) {
     });
   }, []);
 
+  const loadFormConfiguration = useCallback(
+    async (categoryId: string) => {
+      const requestNumber = ++formConfigurationRequestRef.current;
+      if (!categoryId) {
+        setFormConfiguration(null);
+        return null;
+      }
+      setError(null);
+      setFormConfiguration(null);
+      setIsLoadingFormConfiguration(true);
+      try {
+        const api = await createAuthenticatedOwnerReportApi();
+        const configuration = await api.getFormConfiguration(categoryId, type);
+        if (requestNumber === formConfigurationRequestRef.current) {
+          setFormConfiguration(configuration);
+        }
+        return configuration;
+      } catch (cause) {
+        const normalized =
+          cause instanceof ReportApiError
+            ? cause
+            : new ReportApiError({
+                message: "Không thể tải cấu hình thuộc tính.",
+              });
+        if (requestNumber === formConfigurationRequestRef.current) {
+          setError(normalized);
+          setFormConfiguration(null);
+        }
+        return null;
+      } finally {
+        if (requestNumber === formConfigurationRequestRef.current) {
+          setIsLoadingFormConfiguration(false);
+        }
+      }
+    },
+    [type],
+  );
+
   const persist = useCallback(
     async (input: Omit<ReportSubmissionInput, "files">, submit: boolean) => {
       if (inFlightRef.current) {
         throw new ReportApiError({
           code: "REPORT_SUBMISSION_IN_PROGRESS",
-          message: "Báo cáo đang được gửi. Vui lòng chờ yêu cầu hiện tại hoàn tất.",
+          message:
+            "Báo cáo đang được gửi. Vui lòng chờ yêu cầu hiện tại hoàn tất.",
         });
       }
 
@@ -128,9 +175,12 @@ export function useReportComposer(type: ReportSubmissionInput["type"]) {
           { ...input, files: images.map(({ file }) => file) },
           {
             idempotencyKey: intentKeysRef.current.create,
-            onMediaUploaded: (fileKey) => uploadedFileKeysRef.current.add(fileKey),
+            onMediaUploaded: (fileKey) =>
+              uploadedFileKeysRef.current.add(fileKey),
             submit,
-            submitIdempotencyKey: submit ? intentKeysRef.current.submit : undefined,
+            submitIdempotencyKey: submit
+              ? intentKeysRef.current.submit
+              : undefined,
             uploadedFileKeys: uploadedFileKeysRef.current,
           },
         );
@@ -158,9 +208,12 @@ export function useReportComposer(type: ReportSubmissionInput["type"]) {
     addImages,
     categories,
     error,
+    formConfiguration,
     images,
     isLoadingCategories,
+    isLoadingFormConfiguration,
     isSaving,
+    loadFormConfiguration,
     persist,
     removeImage,
     setError,

@@ -4,6 +4,7 @@ import { createClient as createSupabaseBrowserClient } from "@/lib/supabase/clie
 import type {
   OwnerReportApi,
   PrivateFactInput,
+  ReportAttributeAnswerInput,
   ReportLocationInput,
   ReportSubmissionInput,
 } from "./report-submission";
@@ -81,6 +82,13 @@ async function call<T>(operation: () => Promise<{ data?: T }>): Promise<T> {
 
 export function createOwnerReportApi(client: ApiClient): OwnerReportApi {
   return {
+    async getFormConfiguration(categoryId, type) {
+      return call(() =>
+        client.GET("/api/v1/public/categories/{id}/report-form", {
+          params: { path: { id: categoryId }, query: { reportType: type } },
+        }),
+      );
+    },
     async createDraft(input, idempotencyKey) {
       return call(() =>
         client.POST("/api/v1/public/item-declarations", {
@@ -99,6 +107,15 @@ export function createOwnerReportApi(client: ApiClient): OwnerReportApi {
       return call(() =>
         client.PUT("/api/v1/public/item-declarations/{id}/locations", {
           body: { expectedVersion, locations } as never,
+          params: { path: { id: declarationId } },
+        }),
+      );
+    },
+
+    async replaceAttributes(declarationId, expectedVersion, answers) {
+      return call(() =>
+        client.PUT("/api/v1/public/item-declarations/{id}/attributes", {
+          body: { expectedVersion, answers },
           params: { path: { id: declarationId } },
         }),
       );
@@ -205,4 +222,8 @@ export async function listReportCategories(
     }));
 }
 
-export type { PrivateFactInput, ReportLocationInput };
+export type {
+  PrivateFactInput,
+  ReportAttributeAnswerInput,
+  ReportLocationInput,
+};

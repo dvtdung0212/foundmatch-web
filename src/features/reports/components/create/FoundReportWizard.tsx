@@ -31,30 +31,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buildReportSubmission } from "../../api/report-form-mapper";
 import { useReportComposer } from "../../hooks/use-report-composer";
+import type { ReportAttributeAnswerInput } from "../../api/report-submission";
+import { ReportAttributeFields, validateReportAttributeAnswers } from "./ReportAttributeFields";
+import { ReportCategorySelect } from "./ReportCategorySelect";
 
 const foundSteps: StepItem[] = [
   { id: 1, title: "Thông tin vật phẩm", description: "Mô tả chi tiết vật phẩm" },
   { id: 2, title: "Tình trạng & vị trí", description: "Nơi và thời gian nhặt được" },
   { id: 3, title: "Lưu giữ & quyền riêng tư", description: "Cách lưu giữ & chia sẻ" },
   { id: 4, title: "Xác nhận", description: "Kiểm tra và gửi báo cáo" },
-];
-
-const conditionOptions = [
-  { label: "Còn mới, nguyên vẹn", value: "Còn mới nguyên vẹn" },
-  { label: "Có trầy xước nhẹ", value: "Trầy xước nhẹ" },
-  { label: "Đã qua sử dụng nhiều", value: "Đã qua sử dụng" },
-  { label: "Bị hỏng hóc / vỡ màn hình", value: "Bị hỏng" },
-];
-
-const colorOptions = [
-  { label: "Đen", value: "Đen" },
-  { label: "Nâu / Be", value: "Nâu" },
-  { label: "Xanh dương / Navy", value: "Xanh dương" },
-  { label: "Đỏ / Mận", value: "Đỏ" },
-  { label: "Trắng / Bạc", value: "Trắng" },
-  { label: "Xám / Ghi", value: "Xám" },
-  { label: "Vàng / Gold", value: "Vàng" },
-  { label: "Nhiều màu / Họa tiết", value: "Nhiều màu" },
 ];
 
 const timeSlotOptions = [
@@ -79,9 +64,12 @@ export function FoundReportWizard() {
     addImages,
     categories,
     error: submissionError,
+    formConfiguration,
     images,
     isLoadingCategories,
+    isLoadingFormConfiguration,
     isSaving,
+    loadFormConfiguration,
     persist,
     removeImage,
   } = useReportComposer("FOUND");
@@ -90,8 +78,6 @@ export function FoundReportWizard() {
   const [formData, setFormData] = useState({
     title: "",
     category: "",
-    condition: "",
-    color: "",
     description: "",
     
     // Time & Location
@@ -106,12 +92,16 @@ export function FoundReportWizard() {
     holdingPointAddress: "",
     privacySetting: "partial" as "partial" | "minimal" | "full",
   });
+  const [attributeAnswers, setAttributeAnswers] = useState<ReportAttributeAnswerInput[]>([]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSaveDraft = () => {
     try {
-      localStorage.setItem("foundmatch_found_draft", JSON.stringify(formData));
+      localStorage.setItem(
+        "foundmatch_found_draft",
+        JSON.stringify({ ...formData, attributeAnswers }),
+      );
       setSaveDraftMessage("Đã lưu bản nháp trên thiết bị!");
       setTimeout(() => setSaveDraftMessage(""), 3000);
     } catch {
@@ -124,14 +114,17 @@ export function FoundReportWizard() {
     if (step === 1) {
       if (!formData.title.trim()) newErrors.title = "Vui lòng nhập tên vật phẩm";
       if (!formData.category) newErrors.category = "Vui lòng chọn danh mục";
-      if (!formData.color) newErrors.color = "Vui lòng chọn màu sắc";
-      if (!formData.condition) newErrors.condition = "Vui lòng chọn tình trạng";
+      else if (!formConfiguration) newErrors.category = "Vui lòng đợi tải cấu hình danh mục";
       if (!formData.description.trim()) newErrors.description = "Vui lòng nhập mô tả ngắn";
+      Object.assign(newErrors, validateReportAttributeAnswers(formConfiguration, attributeAnswers, "PUBLIC"));
     }
     if (step === 2) {
       if (!formData.date) newErrors.date = "Vui lòng chọn ngày nhặt được";
       if (!formData.timeSlot) newErrors.timeSlot = "Vui lòng chọn khung thời gian";
       if (!formData.locationName.trim()) newErrors.locationName = "Vui lòng chọn địa điểm nhặt được";
+    }
+    if (step === 3) {
+      Object.assign(newErrors, validateReportAttributeAnswers(formConfiguration, attributeAnswers, "PRIVATE"));
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -153,12 +146,9 @@ export function FoundReportWizard() {
         try {
           const result = await persist(
             buildReportSubmission({
-              additionalPublicFacts: [
-                { label: "Tình trạng", value: formData.condition },
-              ],
+              attributes: attributeAnswers.filter((answer) => !isEmptyCustomAnswer(answer)),
               categoryId: category.id,
               categoryName: category.name,
-              color: formData.color,
               date: formData.date,
               description: formData.description,
               files: [],
@@ -274,36 +264,33 @@ export function FoundReportWizard() {
                       {errors.title && <p className="text-xs text-brand-lost font-medium mt-1 text-left">{errors.title}</p>}
                     </div>
 
-                    <Select
+                    <ReportCategorySelect
                       label="Danh mục vật phẩm"
-                      required
-                      options={categories.map(({ id, name }) => ({ label: name, value: id }))}
+                      categories={categories}
                       value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       error={errors.category}
-                      disabled={isLoadingCategories || isSaving}
-                      placeholder={isLoadingCategories ? "Đang tải danh mục..." : "Chọn danh mục"}
+                      hasAnswers={attributeAnswers.length > 0}
+                      isLoading={isLoadingCategories}
+                      disabled={isSaving}
+                      onChange={(categoryId) => {
+                        setFormData((current) => ({ ...current, category: categoryId }));
+                        setAttributeAnswers([]);
+                        void loadFormConfiguration(categoryId);
+                      }}
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <Select
-                      label="Màu sắc chủ đạo"
-                      required
-                      options={colorOptions}
-                      value={formData.color}
-                      onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                      error={errors.color}
-                    />
-                    <Select
-                      label="Tình trạng vật phẩm"
-                      required
-                      options={conditionOptions}
-                      value={formData.condition}
-                      onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
-                      error={errors.condition}
-                    />
-                  </div>
+                  {isLoadingFormConfiguration && (
+                    <p role="status" className="text-sm text-brand-muted">Đang tải bộ thuộc tính của danh mục...</p>
+                  )}
+                  <ReportAttributeFields
+                    answers={attributeAnswers}
+                    configuration={formConfiguration}
+                    disabled={isSaving || isLoadingFormConfiguration}
+                    errors={errors}
+                    exposure="PUBLIC"
+                    onChange={setAttributeAnswers}
+                  />
 
                   <Textarea
                     label="Mô tả ngắn về vật phẩm"
@@ -440,6 +427,18 @@ export function FoundReportWizard() {
           {/* STEP 3: LƯU GIỮ & QUYỀN RIÊNG TƯ */}
           {currentStep === 3 && (
             <div className="space-y-6">
+              <Card className="border-brand-border text-left shadow-xs">
+                <CardContent className="p-6 sm:p-8">
+                  <ReportAttributeFields
+                    answers={attributeAnswers}
+                    configuration={formConfiguration}
+                    disabled={isSaving || isLoadingFormConfiguration}
+                    errors={errors}
+                    exposure="PRIVATE"
+                    onChange={setAttributeAnswers}
+                  />
+                </CardContent>
+              </Card>
               {/* Custody Method Card */}
               <Card className="border-brand-border text-left shadow-xs">
                 <CardContent className="p-6 sm:p-8 space-y-4">
@@ -610,7 +609,7 @@ export function FoundReportWizard() {
                         <Badge variant="found">Báo cáo nhặt được</Badge>
                         <span className="font-bold text-base text-brand-heading truncate">{formData.title}</span>
                       </div>
-                      <p className="text-brand-muted">Danh mục: <strong className="text-brand-heading">{formData.category}</strong> • Tình trạng: <strong className="text-brand-heading">{formData.condition}</strong></p>
+                      <p className="text-brand-muted">Danh mục: <strong className="text-brand-heading">{categories.find(({ id }) => id === formData.category)?.name ?? "Chưa chọn"}</strong></p>
                       <p className="text-brand-muted flex items-center gap-1.5">
                         <MapPin className="w-4 h-4 text-brand-found shrink-0" />
                         {formData.locationName} ({formData.locationArea})
@@ -770,5 +769,13 @@ export function FoundReportWizard() {
         onSelectBranch={handleSelectHoldingPoint}
       />
     </div>
+  );
+}
+
+function isEmptyCustomAnswer(answer: ReportAttributeAnswerInput): boolean {
+  return !answer.assignmentId && (
+    !answer.customKey?.trim() ||
+    answer.value.kind !== "TEXT" ||
+    !answer.value.textValue.trim()
   );
 }

@@ -1,12 +1,11 @@
-import type { ReportSubmissionInput, ReportType } from "./report-submission";
-
-type PublicFact = {
-  label: string;
-  value?: string;
-};
+import type {
+  ReportAttributeAnswerInput,
+  ReportSubmissionInput,
+  ReportType,
+} from "./report-submission";
 
 export type ReportFormMappingInput = {
-  additionalPublicFacts?: PublicFact[];
+  attributes: ReportAttributeAnswerInput[];
   brand?: string;
   categoryId: string;
   categoryName: string;
@@ -29,52 +28,52 @@ function optional(value?: string): string | undefined {
   return normalized ? normalized : undefined;
 }
 
-function eventRange(date: string, timeSlot: string): {
+function eventRange(
+  date: string,
+  timeSlot: string,
+): {
   eventEndedAt?: string;
   eventStartedAt: string;
 } {
   const times = timeSlot.match(/^(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})$/);
   const startTime = times?.[1] ?? "00:00";
-  const eventStartedAt = new Date(`${date}T${startTime}:00+07:00`).toISOString();
+  const eventStartedAt = new Date(
+    `${date}T${startTime}:00+07:00`,
+  ).toISOString();
 
   if (!times?.[2]) return { eventStartedAt };
 
-  const endDate = times[2] === "00:00"
-    ? new Date(`${date}T24:00:00+07:00`)
-    : new Date(`${date}T${times[2]}:00+07:00`);
+  const endDate =
+    times[2] === "00:00"
+      ? new Date(`${date}T24:00:00+07:00`)
+      : new Date(`${date}T${times[2]}:00+07:00`);
 
   return { eventEndedAt: endDate.toISOString(), eventStartedAt };
-}
-
-function publicDescription(
-  description: string,
-  facts: PublicFact[] = [],
-): string {
-  const detailLines = facts
-    .map(({ label, value }) => ({ label, value: optional(value) }))
-    .filter((fact): fact is { label: string; value: string } => Boolean(fact.value))
-    .map(({ label, value }) => `${label}: ${value}`);
-
-  return [description.trim(), ...detailLines].filter(Boolean).join("\n");
 }
 
 export function buildReportSubmission(
   input: ReportFormMappingInput,
 ): ReportSubmissionInput {
-  const publicAreaLabel = optional(input.locationArea) ?? input.locationName.trim();
+  const publicAreaLabel =
+    optional(input.locationArea) ?? input.locationName.trim();
   const privateFacts = [
     { kind: "distinctive_feature", value: optional(input.distinctiveFeatures) },
-    { kind: "verification_secret", value: optional(input.secretVerificationAnswers) },
+    {
+      kind: "verification_secret",
+      value: optional(input.secretVerificationAnswers),
+    },
     { kind: "exact_location_context", value: optional(input.locationDetail) },
-  ]
-    .filter((fact): fact is { kind: string; value: string } => Boolean(fact.value));
+  ].filter((fact): fact is { kind: string; value: string } =>
+    Boolean(fact.value),
+  );
 
   return {
+    attributes: input.attributes,
     brand: optional(input.brand),
     categoryId: input.categoryId,
     categoryName: input.categoryName,
     color: optional(input.color),
-    description: publicDescription(input.description, input.additionalPublicFacts),
+    description: input.description.trim(),
     ...eventRange(input.date, input.timeSlot),
     files: input.files,
     location: {

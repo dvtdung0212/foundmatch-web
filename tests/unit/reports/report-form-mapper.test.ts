@@ -5,9 +5,11 @@ import { buildReportSubmission } from "@/features/reports/api/report-form-mapper
 describe("buildReportSubmission", () => {
   it("separates public details from private verification and exact location context", () => {
     const result = buildReportSubmission({
-      additionalPublicFacts: [
-        { label: "Chất liệu", value: "Da thật" },
-        { label: "Kích thước", value: "11 x 8 cm" },
+      attributes: [
+        {
+          assignmentId: "33333333-3333-4333-8333-333333333333",
+          value: { kind: "TEXT", textValue: "Da thật" },
+        },
       ],
       brand: "Pedro",
       categoryId: "11111111-1111-4111-8111-111111111111",
@@ -26,7 +28,8 @@ describe("buildReportSubmission", () => {
       type: "LOST",
     });
 
-    expect(result.description).toContain("Chất liệu: Da thật");
+    expect(result.description).toBe("Ví gập đôi màu đen.");
+    expect(result.attributes).toHaveLength(1);
     expect(result.description).not.toContain("Bàn sát quầy");
     expect(result.description).not.toContain("đồng xu");
     expect(result.privateFacts).toEqual([
@@ -46,7 +49,7 @@ describe("buildReportSubmission", () => {
 
   it("maps a found report and omits blank optional facts", () => {
     const result = buildReportSubmission({
-      additionalPublicFacts: [{ label: "Tình trạng", value: "Còn nguyên vẹn" }],
+      attributes: [],
       categoryId: "11111111-1111-4111-8111-111111111111",
       categoryName: "Điện thoại",
       date: "2026-08-20",
