@@ -210,29 +210,39 @@ export function ReportAttributeFields({
             : "Không hiển thị công khai; chỉ dùng cho matching và xác minh theo chính sách."}
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div data-report-attribute-layout className="flex flex-wrap gap-4">
         {attributes.map((attribute) => (
-          <ReportAttributeControl
+          <div
             key={attribute.assignmentId}
-            answer={answers.find(
-              ({ assignmentId }) => assignmentId === attribute.assignmentId,
-            )}
-            attribute={attribute}
-            disabled={disabled}
-            error={errors[attribute.assignmentId]}
-            onChange={(answer) => {
-              const currentIndex = answers.findIndex(
+            className={
+              attribute.dataType === "MULTI_SELECT"
+                ? "w-full min-w-0"
+                : "min-w-0 flex-1 basis-72"
+            }
+          >
+            <ReportAttributeControl
+              answer={answers.find(
                 ({ assignmentId }) => assignmentId === attribute.assignmentId,
-              );
-              if (!answer) {
-                onChange(answers.filter((_, index) => index !== currentIndex));
-              } else if (currentIndex === -1) {
-                onChange([...answers, answer]);
-              } else {
-                updateAnswer(answers, currentIndex, answer, onChange);
-              }
-            }}
-          />
+              )}
+              attribute={attribute}
+              disabled={disabled}
+              error={errors[attribute.assignmentId]}
+              onChange={(answer) => {
+                const currentIndex = answers.findIndex(
+                  ({ assignmentId }) => assignmentId === attribute.assignmentId,
+                );
+                if (!answer) {
+                  onChange(
+                    answers.filter((_, index) => index !== currentIndex),
+                  );
+                } else if (currentIndex === -1) {
+                  onChange([...answers, answer]);
+                } else {
+                  updateAnswer(answers, currentIndex, answer, onChange);
+                }
+              }}
+            />
+          </div>
         ))}
       </div>
     </section>
