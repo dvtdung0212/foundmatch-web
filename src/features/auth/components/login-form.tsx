@@ -22,10 +22,9 @@ import {
 
 interface LoginFormProps {
   onSuccess?: () => void;
-  nextUrl?: string;
 }
 
-export function LoginForm({ onSuccess, nextUrl = "/profile" }: LoginFormProps) {
+export function LoginForm({ onSuccess }: LoginFormProps) {
   const router = useRouter();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -36,6 +35,12 @@ export function LoginForm({ onSuccess, nextUrl = "/profile" }: LoginFormProps) {
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  const completeLogin = () => {
+    if (onSuccess) onSuccess();
+    router.replace("/");
+    router.refresh();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,10 +55,7 @@ export function LoginForm({ onSuccess, nextUrl = "/profile" }: LoginFormProps) {
         type: "success",
         text: result.message || "Đăng nhập thành công!",
       });
-      setTimeout(() => {
-        if (onSuccess) onSuccess();
-        router.push(nextUrl);
-      }, 500);
+      setTimeout(completeLogin, 500);
     } else {
       setMessage({
         type: "error",
@@ -76,10 +78,7 @@ export function LoginForm({ onSuccess, nextUrl = "/profile" }: LoginFormProps) {
         type: "success",
         text: result.message || "Đăng nhập tài khoản Demo thành công!",
       });
-      setTimeout(() => {
-        if (onSuccess) onSuccess();
-        router.push(nextUrl);
-      }, 500);
+      setTimeout(completeLogin, 500);
     } else {
       setMessage({
         type: "error",

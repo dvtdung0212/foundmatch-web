@@ -4,17 +4,15 @@ import { Footer } from "@/components/layout/footer";
 import { LoginForm } from "@/features/auth/components/login-form";
 import { ShieldCheck, Users, Lock } from "lucide-react";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
-interface LoginPageProps {
-  searchParams?: {
-    next?: string;
-  };
-}
-
-export default async function LoginPage({ searchParams }: LoginPageProps) {
+export default async function LoginPage() {
   const profileResult = await getCurrentProfile();
   const profile = profileResult.success ? profileResult.data : null;
-  const nextUrl = searchParams?.next || "/profile";
+
+  if (profile) {
+    redirect("/");
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-[#FAF7F2] text-[#2A1B17]">
@@ -103,7 +101,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           {/* Right Half (Form) */}
           <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 xl:p-16 bg-white">
             <div className="w-full max-w-[480px]">
-              <LoginForm nextUrl={nextUrl} />
+              <LoginForm />
             </div>
           </div>
 

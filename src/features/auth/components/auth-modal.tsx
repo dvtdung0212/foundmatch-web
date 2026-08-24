@@ -9,7 +9,6 @@ interface AuthModalProps {
   onClose: () => void;
   title?: string;
   subtitle?: string;
-  nextUrl?: string;
 }
 
 export function AuthModal({
@@ -17,7 +16,6 @@ export function AuthModal({
   onClose,
   title = "Yêu cầu đăng nhập",
   subtitle = "Đăng nhập để thực hiện các thao tác báo mất/nhặt đồ, gửi claim hoặc bàn giao an toàn.",
-  nextUrl,
 }: AuthModalProps) {
   if (!isOpen) return null;
 
@@ -45,7 +43,7 @@ export function AuthModal({
 
         {/* LoginForm */}
         <div className="pt-2">
-          <LoginForm onSuccess={onClose} nextUrl={nextUrl} />
+          <LoginForm onSuccess={onClose} />
         </div>
       </div>
     </div>
