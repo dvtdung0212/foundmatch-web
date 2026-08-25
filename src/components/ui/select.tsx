@@ -19,11 +19,13 @@ export interface SelectProps {
   placeholder?: string;
   className?: string;
   triggerClassName?: string;
+  menuClassName?: string;
   error?: string;
   hint?: string;
   required?: boolean;
   disabled?: boolean;
   icon?: React.ReactNode;
+  align?: "left" | "right" | "auto";
   "aria-label"?: string;
 }
 
@@ -37,19 +39,43 @@ export function Select({
   placeholder = "Chọn...",
   className,
   triggerClassName,
+  menuClassName,
   error,
   hint,
   required,
   disabled,
   icon,
+  align = "auto",
   "aria-label": ariaLabel,
 }: SelectProps) {
   const [open, setOpen] = React.useState(false);
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? "");
+  const [menuAlign, setMenuAlign] = React.useState<"left" | "right">("left");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const selectedValue = value !== undefined ? value : internalValue;
   const selectedOption = options.find((opt) => opt.value === selectedValue);
+
+  // Auto detect best alignment (prevent overflowing off-screen)
+  React.useEffect(() => {
+    if (!open) return;
+
+    if (align === "left" || align === "right") {
+      setMenuAlign(align);
+      return;
+    }
+
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      // If trigger is in the right half of the screen or close to right edge, align right
+      if (rect.left + 240 > viewportWidth || rect.right > viewportWidth - 60) {
+        setMenuAlign("right");
+      } else {
+        setMenuAlign("left");
+      }
+    }
+  }, [open, align]);
 
   // Close on click outside
   React.useEffect(() => {
@@ -131,9 +157,15 @@ export function Select({
           />
         </button>
 
-        {/* Floating Dropdown Options Menu */}
+        {/* Floating Dropdown Options Menu (Content-sized & collision-proof) */}
         {open && (
-          <div className="absolute z-[100] mt-1.5 max-h-64 w-full overflow-y-auto rounded-xl border border-brand-border bg-white p-1.5 shadow-xl animate-in fade-in zoom-in-95 duration-100 hide-scrollbar">
+          <div
+            className={cn(
+              "absolute z-[100] mt-1.5 min-w-full w-max max-w-[min(24rem,calc(100vw-2rem))] max-h-72 overflow-y-auto rounded-xl border border-brand-border bg-white p-1.5 shadow-xl animate-in fade-in zoom-in-95 duration-100 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+              menuAlign === "right" ? "right-0" : "left-0",
+              menuClassName
+            )}
+          >
             {options.length === 0 ? (
               <div className="p-3 text-center text-xs text-brand-muted">
                 Không có lựa chọn nào
@@ -147,13 +179,13 @@ export function Select({
                     type="button"
                     onClick={() => handleSelect(opt.value)}
                     className={cn(
-                      "flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs sm:text-sm font-semibold transition-colors cursor-pointer text-left",
+                      "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-xs sm:text-sm font-semibold transition-colors cursor-pointer text-left whitespace-nowrap",
                       isSelected
                         ? "bg-brand-cream/80 text-brand-plum font-bold"
                         : "text-brand-heading hover:bg-brand-cream/50"
                     )}
                   >
-                    <span className="truncate">{opt.label}</span>
+                    <span>{opt.label}</span>
                     {isSelected && (
                       <Check className="h-4 w-4 text-brand-plum shrink-0 ml-2" />
                     )}
