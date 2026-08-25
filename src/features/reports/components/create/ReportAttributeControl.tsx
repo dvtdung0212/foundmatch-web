@@ -1,6 +1,7 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -88,16 +89,17 @@ export function ReportAttributeControl({
       );
     case "DATE":
       return (
-        <Input
+        <DatePicker
           {...common}
-          hint={attribute.helpText ?? undefined}
-          type="date"
           value={answer?.value.kind === "DATE" ? answer.value.dateValue : ""}
-          onChange={(event) =>
-            event.target.value === ""
-              ? onChange(undefined)
-              : setValue({ kind: "DATE", dateValue: event.target.value })
-          }
+          onChange={(event) => {
+            const val = typeof event === "string" ? event : event?.target?.value;
+            if (!val) {
+              onChange(undefined);
+            } else {
+              setValue({ kind: "DATE", dateValue: val });
+            }
+          }}
         />
       );
     case "BOOLEAN":

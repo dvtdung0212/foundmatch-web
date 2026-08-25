@@ -378,7 +378,10 @@ export function LostReportWizard() {
                       label="Ngày bị mất"
                       required
                       value={formData.date}
-                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                      onChange={(val) => {
+                        const dateStr = typeof val === "string" ? val : val?.target?.value || "";
+                        setFormData({ ...formData, date: dateStr });
+                      }}
                       error={errors.date}
                     />
                     <Select
