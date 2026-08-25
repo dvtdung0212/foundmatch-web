@@ -24,7 +24,7 @@ export function Navbar({ profile }: NavbarProps) {
           <Link href="#workflow" className="hover:text-brand-plum transition-colors">
             Cách hoạt động
           </Link>
-          <Link href="#reports" className="hover:text-brand-plum transition-colors">
+          <Link href="/reports/create" className="hover:text-brand-plum transition-colors">
             Báo cáo
           </Link>
           <div className="relative group cursor-pointer flex items-center gap-1 hover:text-brand-plum transition-colors">
