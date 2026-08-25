@@ -49,7 +49,7 @@ export default async function HomePage() {
               <div className="grid sm:grid-cols-2 gap-4">
                 {/* Lost Card */}
                 <Link
-                  href="/reports/lost"
+                  href="/reports/create/lost"
                   className="group relative flex items-center justify-between p-4 sm:p-4.5 rounded-2xl bg-[#FFF4F1] border border-[#FFC7BA] hover:shadow-md hover:bg-[#FFEBE5] transition-all cursor-pointer overflow-hidden"
                 >
                   <div className="flex items-center gap-3">
@@ -70,7 +70,7 @@ export default async function HomePage() {
 
                 {/* Found Card */}
                 <Link
-                  href="/reports/found"
+                  href="/reports/create/found"
                   className="group relative flex items-center justify-between p-4 sm:p-4.5 rounded-2xl bg-[#F3F9F1] border border-[#C4E1BE] hover:shadow-md hover:bg-[#E8F4E5] transition-all cursor-pointer overflow-hidden"
                 >
                   <div className="flex items-center gap-3">

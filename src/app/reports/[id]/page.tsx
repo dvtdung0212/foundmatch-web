@@ -10,6 +10,9 @@ interface PageProps {
   };
 }
 
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   return {
     title: `Báo cáo ${params.id} | FoundMatch`,
@@ -18,6 +21,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ReportDetailPage({ params }: PageProps) {
+  if (!UUID_PATTERN.test(params.id)) notFound();
+
   try {
     const api = await getServerApiClient();
     const [reportResponse, privateFactsResponse] = await Promise.all([
