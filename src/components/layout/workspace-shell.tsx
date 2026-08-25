@@ -18,7 +18,7 @@ export function WorkspaceShell({ profile, children }: WorkspaceShellProps) {
   const isExpanded = isLocked || isHovered;
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-[#FAF7F2]">
+    <div className="flex flex-col h-screen overflow-hidden bg-[#F8F9FA]">
       {/* Global Workspace Header */}
       <WorkspaceHeader profile={profile} />
 
@@ -32,7 +32,7 @@ export function WorkspaceShell({ profile, children }: WorkspaceShellProps) {
           <div
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className={`absolute top-0 left-0 h-full bg-[#FAF7F2] lg:bg-white flex flex-col transition-all duration-300 border-r border-[#EFE8DF] z-50 overflow-visible group ${isExpanded ? "w-[240px] shadow-xl" : "w-[72px]"
+            className={`absolute top-0 left-0 h-full bg-[#F8F9FA] lg:bg-white flex flex-col transition-all duration-300 border-r border-[#E5E7EB] z-50 overflow-visible group ${isExpanded ? "w-[240px] shadow-xl" : "w-[72px]"
               } ${isLocked ? "shadow-none" : ""}`}
           >
             <WorkspaceSidebar isExpanded={isExpanded} />
@@ -40,7 +40,7 @@ export function WorkspaceShell({ profile, children }: WorkspaceShellProps) {
             {/* Lock Toggle Button (Desktop Only) - Hover on right border */}
             <button
               onClick={() => setIsLocked(!isLocked)}
-              className="hidden lg:flex absolute left-full top-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 bg-white border border-[#EFE8DF] rounded-full items-center justify-center text-brand-muted hover:text-brand-plum hover:border-[#FFC7BA] transition-all shadow-sm z-50 opacity-0 group-hover:opacity-100"
+              className="hidden lg:flex absolute left-full top-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 bg-white border border-[#E5E7EB] rounded-full items-center justify-center text-brand-muted hover:text-brand-plum hover:border-[#FFC7BA] transition-all shadow-sm z-50 opacity-0 group-hover:opacity-100"
 
             >
               {isLocked ? (

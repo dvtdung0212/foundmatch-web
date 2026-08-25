@@ -17,7 +17,7 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
   const nextUrl = searchParams?.next || "/profile";
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#FAF7F2] text-[#2A1B17]">
+    <div className="flex min-h-screen flex-col bg-[#F8F9FA] text-[#2A1B17]">
       {/* Shared Navbar */}
       <Navbar profile={profile} />
 
