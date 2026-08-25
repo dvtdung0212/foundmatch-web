@@ -18,10 +18,14 @@ test("runs web development independently without deleting its cache", () => {
 
   assert.equal(
     packageManifest.scripts.dev,
-    "node scripts/dev-preflight.mjs && next dev --port 3000",
+    "node scripts/dev-preflight.mjs && next dev --turbo --port 3000",
   );
   assert.equal(packageManifest.scripts.predev, undefined);
   assert.match(packageManifest.scripts.clean, /\.next-dev/);
+});
+
+test("uses the native development watcher without a Webpack polling override", () => {
+  assert.equal(createNextConfig(PHASE_DEVELOPMENT_SERVER, {}).webpack, undefined);
 });
 
 test("separates development and production Next.js output", () => {
