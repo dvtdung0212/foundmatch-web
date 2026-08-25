@@ -20,6 +20,8 @@ import {
   Calendar,
   AlertCircle,
   CheckCircle2,
+  FileEdit,
+  Trash2,
 } from "lucide-react";
 import type { OwnerItemDeclarationDto } from "./types";
 import { StatusBadge, formatDate } from "./my-reports-table";
@@ -28,14 +30,20 @@ interface MyReportsCardProps {
   report: OwnerItemDeclarationDto;
   onCloseReport?: (report: OwnerItemDeclarationDto) => void;
   onWithdrawReport?: (report: OwnerItemDeclarationDto) => void;
+  onDeleteDraft?: (report: OwnerItemDeclarationDto) => void;
 }
 
 export function MyReportsCard({
   report,
   onCloseReport,
   onWithdrawReport,
+  onDeleteDraft,
 }: MyReportsCardProps) {
   const isLost = report.type === "LOST";
+  const isDraft = report.isDraft || report.workflowStatus === "DRAFT";
+  const targetUrl = isDraft
+    ? report.editUrl || (isLost ? "/reports/create/lost" : "/reports/create/found")
+    : `/reports/${report.id}`;
   const displayImage = report.media?.[0]?.url;
   const displayTitle =
     report.title ||
@@ -76,7 +84,7 @@ export function MyReportsCard({
           </div>
 
           <Link
-            href={`/reports/${report.id}`}
+            href={targetUrl}
             className="font-bold text-brand-heading hover:text-brand-plum transition-colors line-clamp-1 block text-sm mt-1.5"
           >
             {displayTitle}
@@ -89,39 +97,64 @@ export function MyReportsCard({
             <MoreVertical className="h-4 w-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="right">
-            <DropdownMenuItem asChild>
-              <Link href={`/reports/${report.id}`} className="flex items-center gap-2">
-                <Eye className="h-3.5 w-3.5 text-brand-muted" />
-                Xem chi tiết
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href={`/reports/${report.id}?tab=matches`} className="flex items-center gap-2">
-                <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-                Xem ứng viên trùng khớp
-              </Link>
-            </DropdownMenuItem>
-
-            {report.workflowStatus === "ACTIVE" && (
+            {isDraft ? (
               <>
-                <DropdownMenuSeparator />
-                {onCloseReport && (
-                  <DropdownMenuItem
-                    onClick={() => onCloseReport(report)}
-                    className="text-amber-700 hover:bg-amber-50"
-                  >
-                    <Lock className="h-3.5 w-3.5 text-amber-600" />
-                    Đóng báo cáo
-                  </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={targetUrl} className="flex items-center gap-2 font-medium">
+                    <FileEdit className="h-3.5 w-3.5 text-brand-plum" />
+                    Tiếp tục sửa bản nháp
+                  </Link>
+                </DropdownMenuItem>
+                {onDeleteDraft && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => onDeleteDraft(report)}
+                      className="text-red-600 hover:bg-red-50 font-medium"
+                    >
+                      <Trash2 className="h-3.5 w-3.5 text-red-500" />
+                      Xóa bản nháp
+                    </DropdownMenuItem>
+                  </>
                 )}
-                {onWithdrawReport && (
-                  <DropdownMenuItem
-                    onClick={() => onWithdrawReport(report)}
-                    className="text-red-600 hover:bg-red-50"
-                  >
-                    <XCircle className="h-3.5 w-3.5 text-red-500" />
-                    Rút báo cáo
-                  </DropdownMenuItem>
+              </>
+            ) : (
+              <>
+                <DropdownMenuItem asChild>
+                  <Link href={`/reports/${report.id}`} className="flex items-center gap-2">
+                    <Eye className="h-3.5 w-3.5 text-brand-muted" />
+                    Xem chi tiết
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={`/reports/${report.id}?tab=matches`} className="flex items-center gap-2">
+                    <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                    Xem ứng viên trùng khớp
+                  </Link>
+                </DropdownMenuItem>
+
+                {report.workflowStatus === "ACTIVE" && (
+                  <>
+                    <DropdownMenuSeparator />
+                    {onCloseReport && (
+                      <DropdownMenuItem
+                        onClick={() => onCloseReport(report)}
+                        className="text-amber-700 hover:bg-amber-50"
+                      >
+                        <Lock className="h-3.5 w-3.5 text-amber-600" />
+                        Đóng báo cáo
+                      </DropdownMenuItem>
+                    )}
+                    {onWithdrawReport && (
+                      <DropdownMenuItem
+                        onClick={() => onWithdrawReport(report)}
+                        className="text-red-600 hover:bg-red-50"
+                      >
+                        <XCircle className="h-3.5 w-3.5 text-red-500" />
+                        Rút báo cáo
+                      </DropdownMenuItem>
+                    )}
+                  </>
                 )}
               </>
             )}

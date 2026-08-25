@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -17,6 +17,8 @@ import {
   UserCheck,
   Eye,
   EyeOff,
+  FileEdit,
+  Trash2,
 } from "lucide-react";
 import { ReportStepper, StepItem } from "./ReportStepper";
 import { ReportTipsCard } from "./ReportTipsCard";
@@ -34,6 +36,7 @@ import { useReportComposer } from "../../hooks/use-report-composer";
 import type { ReportAttributeAnswerInput } from "../../api/report-submission";
 import { ReportAttributeFields, validateReportAttributeAnswers } from "./ReportAttributeFields";
 import { ReportCategorySelect } from "./ReportCategorySelect";
+import { getReportDraft, saveReportDraft, deleteReportDraft } from "../../utils/report-drafts";
 
 const foundSteps: StepItem[] = [
   { id: 1, title: "Thông tin vật phẩm", description: "Mô tả chi tiết vật phẩm" },
@@ -93,20 +96,68 @@ export function FoundReportWizard() {
     privacySetting: "partial" as "partial" | "minimal" | "full",
   });
   const [attributeAnswers, setAttributeAnswers] = useState<ReportAttributeAnswerInput[]>([]);
-
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [hasRestoredDraft, setHasRestoredDraft] = useState(false);
+
+  // Restore draft on mount
+  useEffect(() => {
+    const draft = getReportDraft("FOUND");
+    if (draft) {
+      setFormData((prev) => ({
+        ...prev,
+        category: (draft.category as string) || prev.category,
+        title: (draft.title as string) || prev.title,
+        description: (draft.description as string) || prev.description,
+        date: (draft.date as string) || prev.date,
+        timeSlot: (draft.timeSlot as string) || prev.timeSlot,
+        locationName: (draft.locationName as string) || prev.locationName,
+        locationArea: (draft.locationArea as string) || prev.locationArea,
+        custodyType: (draft.custodyType as "self_hold" | "holding_point") || prev.custodyType,
+        holdingPointName: (draft.holdingPointName as string) || prev.holdingPointName,
+        holdingPointAddress: (draft.holdingPointAddress as string) || prev.holdingPointAddress,
+        privacySetting: (draft.privacySetting as "partial" | "minimal" | "full") || prev.privacySetting,
+      }));
+      if (draft.attributeAnswers && Array.isArray(draft.attributeAnswers)) {
+        setAttributeAnswers(draft.attributeAnswers as ReportAttributeAnswerInput[]);
+      }
+      if (draft.category) {
+        void loadFormConfiguration(draft.category as string);
+      }
+      if (typeof draft.currentStep === "number" && draft.currentStep >= 1 && draft.currentStep <= 4) {
+        setCurrentStep(draft.currentStep);
+      }
+      setHasRestoredDraft(true);
+    }
+  }, [loadFormConfiguration]);
 
   const handleSaveDraft = () => {
     try {
-      localStorage.setItem(
-        "foundmatch_found_draft",
-        JSON.stringify({ ...formData, attributeAnswers }),
-      );
-      setSaveDraftMessage("Đã lưu bản nháp trên thiết bị!");
+      saveReportDraft("FOUND", { ...formData, attributeAnswers, currentStep });
+      setSaveDraftMessage("Đã lưu bản nháp thành công!");
       setTimeout(() => setSaveDraftMessage(""), 3000);
     } catch {
       setSaveDraftMessage("Không thể lưu bản nháp trên thiết bị.");
     }
+  };
+
+  const handleDiscardDraft = () => {
+    deleteReportDraft("FOUND");
+    setHasRestoredDraft(false);
+    setFormData({
+      category: "",
+      title: "",
+      description: "",
+      date: "",
+      timeSlot: "",
+      locationName: "",
+      locationArea: "",
+      custodyType: "self_hold",
+      holdingPointName: "",
+      holdingPointAddress: "",
+      privacySetting: "partial",
+    });
+    setAttributeAnswers([]);
+    setCurrentStep(1);
   };
 
   const validateStep = (step: number) => {
@@ -160,6 +211,8 @@ export function FoundReportWizard() {
             }),
             true,
           );
+          // Delete saved draft upon successful submission
+          deleteReportDraft("FOUND");
           router.push(
             `/reports/create/success?code=${encodeURIComponent(result.publicCode ?? "")}&reportId=${encodeURIComponent(result.id ?? "")}&type=found&title=${encodeURIComponent(formData.title)}`,
           );
@@ -221,6 +274,25 @@ export function FoundReportWizard() {
           Cung cấp thông tin chi tiết để kết nối với chủ nhân một cách an toàn và minh bạch.
         </p>
       </div>
+
+      {/* Restored Draft Banner */}
+      {hasRestoredDraft && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-emerald-900 text-sm animate-in fade-in">
+          <div className="flex items-center gap-2.5">
+            <FileEdit className="h-4.5 w-4.5 text-emerald-700 shrink-0" />
+            <span>
+              <strong>Đã khôi phục bản nháp:</strong> Bạn đang tiếp tục chỉnh sửa dữ liệu đã lưu từ trước.
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handleDiscardDraft}
+            className="text-xs font-bold text-red-600 hover:text-red-700 hover:underline flex items-center gap-1 shrink-0 cursor-pointer"
+          >
+            <Trash2 className="h-3.5 w-3.5" /> Xóa bản nháp & tạo mới
+          </button>
+        </div>
+      )}
 
       {/* Stepper Navigation */}
       <ReportStepper

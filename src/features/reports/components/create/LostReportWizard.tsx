@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -13,6 +13,8 @@ import {
   ArrowLeft,
   Save,
   CheckCircle2,
+  FileEdit,
+  Trash2,
 } from "lucide-react";
 import { ReportStepper, StepItem } from "./ReportStepper";
 import { ReportTipsCard } from "./ReportTipsCard";
@@ -29,6 +31,7 @@ import { useReportComposer } from "../../hooks/use-report-composer";
 import type { ReportAttributeAnswerInput } from "../../api/report-submission";
 import { ReportAttributeFields, validateReportAttributeAnswers } from "./ReportAttributeFields";
 import { ReportCategorySelect } from "./ReportCategorySelect";
+import { getReportDraft, saveReportDraft, deleteReportDraft } from "../../utils/report-drafts";
 
 const lostSteps: StepItem[] = [
   { id: 1, title: "Thông tin đồ vật", description: "Mô tả chi tiết món đồ" },
@@ -87,21 +90,69 @@ export function LostReportWizard() {
     secretVerificationAnswers: "",
   });
   const [attributeAnswers, setAttributeAnswers] = useState<ReportAttributeAnswerInput[]>([]);
-
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [hasRestoredDraft, setHasRestoredDraft] = useState(false);
 
-  // Auto-save draft
+  // Restore draft on mount
+  useEffect(() => {
+    const draft = getReportDraft("LOST");
+    if (draft) {
+      setFormData((prev) => ({
+        ...prev,
+        category: (draft.category as string) || prev.category,
+        title: (draft.title as string) || prev.title,
+        brand: (draft.brand as string) || prev.brand,
+        description: (draft.description as string) || prev.description,
+        date: (draft.date as string) || prev.date,
+        timeSlot: (draft.timeSlot as string) || prev.timeSlot,
+        locationName: (draft.locationName as string) || prev.locationName,
+        locationArea: (draft.locationArea as string) || prev.locationArea,
+        locationDetail: (draft.locationDetail as string) || prev.locationDetail,
+        distinctiveFeatures: (draft.distinctiveFeatures as string) || prev.distinctiveFeatures,
+        secretVerificationAnswers: (draft.secretVerificationAnswers as string) || prev.secretVerificationAnswers,
+      }));
+      if (draft.attributeAnswers && Array.isArray(draft.attributeAnswers)) {
+        setAttributeAnswers(draft.attributeAnswers as ReportAttributeAnswerInput[]);
+      }
+      if (draft.category) {
+        void loadFormConfiguration(draft.category as string);
+      }
+      if (typeof draft.currentStep === "number" && draft.currentStep >= 1 && draft.currentStep <= 4) {
+        setCurrentStep(draft.currentStep);
+      }
+      setHasRestoredDraft(true);
+    }
+  }, [loadFormConfiguration]);
+
+  // Save draft
   const handleSaveDraft = () => {
     try {
-      localStorage.setItem(
-        "foundmatch_lost_draft",
-        JSON.stringify({ ...formData, attributeAnswers }),
-      );
+      saveReportDraft("LOST", { ...formData, attributeAnswers, currentStep });
       setSaveDraftMessage("Đã lưu bản nháp thành công!");
       setTimeout(() => setSaveDraftMessage(""), 3000);
     } catch {
       // fallback
     }
+  };
+
+  const handleDiscardDraft = () => {
+    deleteReportDraft("LOST");
+    setHasRestoredDraft(false);
+    setFormData({
+      category: "",
+      title: "",
+      brand: "",
+      description: "",
+      date: "",
+      timeSlot: "",
+      locationName: "",
+      locationArea: "",
+      locationDetail: "",
+      distinctiveFeatures: "",
+      secretVerificationAnswers: "",
+    });
+    setAttributeAnswers([]);
+    setCurrentStep(1);
   };
 
   const validateStep = (step: number) => {
@@ -159,6 +210,8 @@ export function LostReportWizard() {
             }),
             true,
           );
+          // Delete saved draft upon successful submission
+          deleteReportDraft("LOST");
           router.push(
             `/reports/create/success?code=${encodeURIComponent(result.publicCode ?? "")}&reportId=${encodeURIComponent(result.id ?? "")}&type=lost&title=${encodeURIComponent(formData.title)}`,
           );
@@ -211,6 +264,25 @@ export function LostReportWizard() {
           Cung cấp thông tin chi tiết để tăng cơ hội tìm lại đồ thất lạc nhanh chóng và an toàn.
         </p>
       </div>
+
+      {/* Restored Draft Banner */}
+      {hasRestoredDraft && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-900 text-sm animate-in fade-in">
+          <div className="flex items-center gap-2.5">
+            <FileEdit className="h-4.5 w-4.5 text-amber-700 shrink-0" />
+            <span>
+              <strong>Đã khôi phục bản nháp:</strong> Bạn đang tiếp tục chỉnh sửa dữ liệu đã lưu từ trước.
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handleDiscardDraft}
+            className="text-xs font-bold text-red-600 hover:text-red-700 hover:underline flex items-center gap-1 shrink-0 cursor-pointer"
+          >
+            <Trash2 className="h-3.5 w-3.5" /> Xóa bản nháp & tạo mới
+          </button>
+        </div>
+      )}
 
       {/* Stepper Navigation */}
       <ReportStepper

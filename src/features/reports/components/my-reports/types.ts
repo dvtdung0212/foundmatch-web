@@ -26,6 +26,8 @@ export interface OwnerItemDeclarationDto {
     processingStatus: string;
     url?: string | null;
   }>;
+  isDraft?: boolean;
+  editUrl?: string;
 }
 
 export interface OwnerItemDeclarationPageDto {

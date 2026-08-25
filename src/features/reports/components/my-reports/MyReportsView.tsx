@@ -16,6 +16,7 @@ import {
   closeOwnReport,
   withdrawOwnReport,
 } from "../../api/owner-report-api";
+import { getAllReportDrafts, deleteReportDraft } from "../../utils/report-drafts";
 import type { OwnerItemDeclarationDto } from "./types";
 
 export function MyReportsView() {
@@ -54,24 +55,52 @@ export function MyReportsView() {
       const typeParam = activeTab === "ALL" ? undefined : activeTab;
       const statusParam = statusFilter === "ALL" ? undefined : statusFilter;
 
-      const data = await listOwnReports({
-        page,
-        pageSize,
-        type: typeParam,
-        workflowStatus: statusParam,
-        search: searchQuery ? searchQuery.trim() : undefined,
+      // Get local drafts
+      const allDrafts = getAllReportDrafts();
+      const filteredDrafts = allDrafts.filter((d) => {
+        if (typeParam && d.type !== typeParam) return false;
+        if (searchQuery && !d.title?.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+        return true;
       });
 
-      const items = (data?.items || []) as OwnerItemDeclarationDto[];
-      const total = data?.total ?? items.length;
+      let items: OwnerItemDeclarationDto[] = [];
+      let total = 0;
+
+      if (statusFilter === "DRAFT") {
+        items = filteredDrafts;
+        total = filteredDrafts.length;
+      } else {
+        const data = await listOwnReports({
+          page,
+          pageSize,
+          type: typeParam,
+          workflowStatus: statusParam,
+          search: searchQuery ? searchQuery.trim() : undefined,
+        });
+
+        const serverItems = (data?.items || []) as OwnerItemDeclarationDto[];
+        const serverTotal = data?.total ?? serverItems.length;
+
+        // If on page 1 and statusFilter is ALL, include local drafts at the beginning
+        if (page === 1 && statusFilter === "ALL") {
+          items = [...filteredDrafts, ...serverItems];
+          total = serverTotal + filteredDrafts.length;
+        } else {
+          items = serverItems;
+          total = serverTotal;
+        }
+      }
 
       setReports(items);
       setTotalCount(total);
 
       // Also fetch tab counts if on page 1 of "ALL"
       if (activeTab === "ALL" && !statusParam && !searchQuery) {
-        const lostCount = items.filter((item) => item.type === "LOST").length;
-        const foundCount = items.filter((item) => item.type === "FOUND").length;
+        const lostDrafts = allDrafts.filter((d) => d.type === "LOST").length;
+        const foundDrafts = allDrafts.filter((d) => d.type === "FOUND").length;
+
+        const lostCount = items.filter((item) => item.type === "LOST" && !item.isDraft).length + lostDrafts;
+        const foundCount = items.filter((item) => item.type === "FOUND" && !item.isDraft).length + foundDrafts;
         setCounts({
           all: total,
           lost: lostCount,
@@ -140,6 +169,14 @@ export function MyReportsView() {
       alert(errObj?.message || "Không thể rút báo cáo. Vui lòng thử lại.");
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  // Handle Delete Draft action
+  const handleDeleteDraft = (report: OwnerItemDeclarationDto) => {
+    if (window.confirm(`Bạn có chắc muốn xóa bản nháp "${report.title || "này"}"?`)) {
+      deleteReportDraft(report.id);
+      void fetchReports();
     }
   };
 
@@ -312,6 +349,7 @@ export function MyReportsView() {
                   setSelectedReport(report);
                   setIsWithdrawModalOpen(true);
                 }}
+                onDeleteDraft={handleDeleteDraft}
               />
             </div>
 
@@ -329,6 +367,7 @@ export function MyReportsView() {
                     setSelectedReport(rep);
                     setIsWithdrawModalOpen(true);
                   }}
+                  onDeleteDraft={handleDeleteDraft}
                 />
               ))}
             </div>
