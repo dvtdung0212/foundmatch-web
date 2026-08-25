@@ -1,15 +1,9 @@
 "use client";
 
+import React, { useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { DataTable, type DataTableColumn } from "@/components/ui/data-table";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,159 +28,204 @@ import type { OwnerItemDeclarationDto } from "./types";
 
 interface MyReportsTableProps {
   reports: OwnerItemDeclarationDto[];
+  isLoading?: boolean;
   onCloseReport?: (report: OwnerItemDeclarationDto) => void;
   onWithdrawReport?: (report: OwnerItemDeclarationDto) => void;
+  page?: number;
+  total?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
+  pageSize?: number;
+  onPageSizeChange?: (size: number) => void;
 }
 
 export function MyReportsTable({
   reports,
+  isLoading,
   onCloseReport,
   onWithdrawReport,
+  page,
+  total,
+  totalPages,
+  onPageChange,
+  pageSize,
+  onPageSizeChange,
 }: MyReportsTableProps) {
-  return (
-    <Table className="min-w-[760px]">
-      <TableHeader>
-        <TableRow className="border-b border-brand-border/60">
-          <TableHead className="w-[34%]">Vật phẩm</TableHead>
-          <TableHead className="w-[14%]">Loại báo cáo</TableHead>
-          <TableHead className="w-[16%]">Trạng thái</TableHead>
-          <TableHead className="w-[14%]">Ngày tạo</TableHead>
-          <TableHead className="w-[14%]">Cập nhật cuối</TableHead>
-          <TableHead className="w-[8%] text-center">Thao tác</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {reports.map((item) => {
+  const columns = useMemo<DataTableColumn<OwnerItemDeclarationDto>[]>(
+    () => [
+      {
+        key: "item",
+        header: "Vật phẩm",
+        className: "w-[34%]",
+        cell: (item) => {
           const isLost = item.type === "LOST";
           const displayImage = item.media?.[0]?.url;
-          const displayTitle = item.title || (isLost ? "Đồ thất lạc chưa đặt tên" : "Đồ nhặt được chưa đặt tên");
+          const displayTitle =
+            item.title || (isLost ? "Đồ thất lạc chưa đặt tên" : "Đồ nhặt được chưa đặt tên");
           const location = item.publicAreaLabel || "Không rõ khu vực";
 
           return (
-            <TableRow key={item.id} className="hover:bg-brand-cream/30 transition-colors">
-              {/* Vật phẩm: Image + Title + Location */}
-              <TableCell>
-                <div className="flex items-center gap-3.5">
-                  <div className="relative h-12 w-12 rounded-xl bg-brand-cream/80 border border-brand-border/80 overflow-hidden shrink-0 flex items-center justify-center">
-                    {displayImage ? (
-                      <Image
-                        src={displayImage}
-                        alt={displayTitle}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <Package className="h-5 w-5 text-brand-muted/70" />
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <Link
-                      href={`/reports/${item.id}`}
-                      className="font-bold text-brand-heading hover:text-brand-plum transition-colors line-clamp-1 block text-sm"
-                    >
-                      {displayTitle}
-                    </Link>
-                    <div className="flex items-center gap-1 text-xs text-brand-muted mt-1 font-medium">
-                      <MapPin className="h-3 w-3 shrink-0 text-brand-muted/70" />
-                      <span className="truncate">{location}</span>
-                    </div>
-                  </div>
-                </div>
-              </TableCell>
-
-              {/* Loại báo cáo Badge */}
-              <TableCell>
-                {isLost ? (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-[#FFF4F1] text-brand-lost border border-[#FFC7BA]/50">
-                    <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                    Thất lạc
-                  </span>
+            <div className="flex items-center gap-3.5">
+              <div className="relative h-12 w-12 rounded-xl bg-brand-cream/80 border border-brand-border/80 overflow-hidden shrink-0 flex items-center justify-center">
+                {displayImage ? (
+                  <Image
+                    src={displayImage}
+                    alt={displayTitle}
+                    fill
+                    className="object-cover"
+                  />
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-[#F3F9F1] text-brand-found border border-[#D4E8CE]/50">
-                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
-                    Nhặt được
-                  </span>
+                  <Package className="h-5 w-5 text-brand-muted/70" />
                 )}
-              </TableCell>
+              </div>
+              <div className="min-w-0 flex-1">
+                <Link
+                  href={`/reports/${item.id}`}
+                  className="font-bold text-brand-heading hover:text-brand-plum transition-colors line-clamp-1 block text-sm"
+                >
+                  {displayTitle}
+                </Link>
+                <div className="flex items-center gap-1 text-xs text-brand-muted mt-1 font-medium">
+                  <MapPin className="h-3 w-3 shrink-0 text-brand-muted/70" />
+                  <span className="truncate">{location}</span>
+                </div>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        key: "type",
+        header: "Loại báo cáo",
+        className: "w-[14%]",
+        cell: (item) => {
+          const isLost = item.type === "LOST";
+          return isLost ? (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-[#FFF4F1] text-brand-lost border border-[#FFC7BA]/50">
+              <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+              Thất lạc
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-[#F3F9F1] text-brand-found border border-[#D4E8CE]/50">
+              <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+              Nhặt được
+            </span>
+          );
+        },
+      },
+      {
+        key: "status",
+        header: "Trạng thái",
+        className: "w-[16%]",
+        cell: (item) => (
+          <StatusBadge
+            workflowStatus={item.workflowStatus}
+            isLost={item.type === "LOST"}
+          />
+        ),
+      },
+      {
+        key: "createdAt",
+        header: "Ngày tạo",
+        className: "w-[14%] text-xs text-brand-muted font-medium",
+        cell: (item) => formatDate(item.createdAt),
+      },
+      {
+        key: "updatedAt",
+        header: "Cập nhật cuối",
+        className: "w-[14%] text-xs text-brand-muted font-medium",
+        cell: (item) => formatDate(item.updatedAt),
+      },
+      {
+        key: "actions",
+        header: "Thao tác",
+        align: "center",
+        className: "w-[8%] text-center",
+        cell: (item) => (
+          <div
+            className="flex items-center justify-center gap-1"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Quick View Button */}
+            <Link
+              href={`/reports/${item.id}`}
+              className="h-8 w-8 rounded-lg border border-brand-border bg-white flex items-center justify-center text-brand-muted hover:text-brand-plum hover:border-brand-plum/40 hover:bg-brand-cream/60 transition-all shadow-2xs"
+              title="Xem chi tiết"
+            >
+              <Eye className="h-4 w-4" />
+            </Link>
 
-              {/* Trạng thái Badge */}
-              <TableCell>
-                <StatusBadge workflowStatus={item.workflowStatus} isLost={isLost} />
-              </TableCell>
-
-              {/* Ngày tạo */}
-              <TableCell className="text-xs text-brand-muted font-medium">
-                {formatDate(item.createdAt)}
-              </TableCell>
-
-              {/* Cập nhật cuối */}
-              <TableCell className="text-xs text-brand-muted font-medium">
-                {formatDate(item.updatedAt)}
-              </TableCell>
-
-              {/* Thao tác (View icon & 3 dots menu) */}
-              <TableCell className="text-center">
-                <div className="flex items-center justify-center gap-1">
-                  {/* Quick View Button */}
+            {/* Actions Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="h-8 w-8 rounded-lg border border-brand-border bg-white flex items-center justify-center text-brand-muted hover:text-brand-plum hover:border-brand-plum/40 hover:bg-brand-cream/60 transition-all shadow-2xs cursor-pointer">
+                <MoreVertical className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="right">
+                <DropdownMenuItem asChild>
                   <Link
                     href={`/reports/${item.id}`}
-                    className="h-8 w-8 rounded-lg border border-brand-border bg-white flex items-center justify-center text-brand-muted hover:text-brand-plum hover:border-brand-plum/40 hover:bg-brand-cream/60 transition-all shadow-2xs"
-                    title="Xem chi tiết"
+                    className="flex items-center gap-2"
                   >
-                    <Eye className="h-4 w-4" />
+                    <Eye className="h-3.5 w-3.5 text-brand-muted" />
+                    Xem chi tiết
                   </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`/reports/${item.id}?tab=matches`}
+                    className="flex items-center gap-2"
+                  >
+                    <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                    Xem ứng viên trùng khớp
+                  </Link>
+                </DropdownMenuItem>
 
-                  {/* Actions Dropdown */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="h-8 w-8 rounded-lg border border-brand-border bg-white flex items-center justify-center text-brand-muted hover:text-brand-plum hover:border-brand-plum/40 hover:bg-brand-cream/60 transition-all shadow-2xs cursor-pointer">
-                      <MoreVertical className="h-4 w-4" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="right">
-                      <DropdownMenuItem asChild>
-                        <Link href={`/reports/${item.id}`} className="flex items-center gap-2">
-                          <Eye className="h-3.5 w-3.5 text-brand-muted" />
-                          Xem chi tiết
-                        </Link>
+                {item.workflowStatus === "ACTIVE" && (
+                  <>
+                    <DropdownMenuSeparator />
+                    {onCloseReport && (
+                      <DropdownMenuItem
+                        onClick={() => onCloseReport(item)}
+                        className="text-amber-700 hover:bg-amber-50"
+                      >
+                        <Lock className="h-3.5 w-3.5 text-amber-600" />
+                        Đóng báo cáo
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href={`/reports/${item.id}?tab=matches`} className="flex items-center gap-2">
-                          <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-                          Xem ứng viên trùng khớp
-                        </Link>
+                    )}
+                    {onWithdrawReport && (
+                      <DropdownMenuItem
+                        onClick={() => onWithdrawReport(item)}
+                        className="text-red-600 hover:bg-red-50"
+                      >
+                        <XCircle className="h-3.5 w-3.5 text-red-500" />
+                        Rút báo cáo
                       </DropdownMenuItem>
+                    )}
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ),
+      },
+    ],
+    [onCloseReport, onWithdrawReport]
+  );
 
-                      {item.workflowStatus === "ACTIVE" && (
-                        <>
-                          <DropdownMenuSeparator />
-                          {onCloseReport && (
-                            <DropdownMenuItem
-                              onClick={() => onCloseReport(item)}
-                              className="text-amber-700 hover:bg-amber-50"
-                            >
-                              <Lock className="h-3.5 w-3.5 text-amber-600" />
-                              Đóng báo cáo
-                            </DropdownMenuItem>
-                          )}
-                          {onWithdrawReport && (
-                            <DropdownMenuItem
-                              onClick={() => onWithdrawReport(item)}
-                              className="text-red-600 hover:bg-red-50"
-                            >
-                              <XCircle className="h-3.5 w-3.5 text-red-500" />
-                              Rút báo cáo
-                            </DropdownMenuItem>
-                          )}
-                        </>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+  return (
+    <DataTable<OwnerItemDeclarationDto>
+      data={reports}
+      columns={columns}
+      isLoading={isLoading}
+      rowKey={(row) => row.id}
+      page={page}
+      total={total}
+      totalPages={totalPages}
+      onPageChange={onPageChange}
+      pageSize={pageSize}
+      onPageSizeChange={onPageSizeChange}
+      emptyState="Không có báo cáo nào."
+    />
   );
 }
 
