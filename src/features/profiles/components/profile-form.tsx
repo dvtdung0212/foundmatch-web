@@ -21,6 +21,9 @@ import {
   MessageSquare
 } from "lucide-react";
 
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
 interface ProfileFormProps {
   profile: UserProfileDTO;
 }
@@ -50,52 +53,52 @@ const InputField = ({
 }) => {
   const isReadonly = !isEditing || disabled;
 
-  return (
-    <div className="space-y-1.5">
-      <label className="block text-xs font-bold text-brand-muted uppercase tracking-wide">
-        {label}
-      </label>
-
-      <div className="relative">
-        {isTextarea ? (
-          <div className="relative">
-            <textarea
-              value={value}
-              onChange={(e) => onChange?.(e.target.value)}
-              disabled={isReadonly}
-              maxLength={maxLength}
-              placeholder={isReadonly ? "Chưa cập nhật" : "Nhập thông tin..."}
-              className={`w-full px-4 py-3 rounded-xl border ${isReadonly ? 'bg-slate-50/50 border-brand-border/50 text-brand-heading/80 cursor-not-allowed' : 'bg-white border-brand-border text-brand-heading focus:ring-2 focus:ring-brand-plum/20 focus:border-brand-plum'} text-sm font-semibold transition-all min-h-[100px] resize-none`}
-            />
-            {maxLength && (
-              <div className="absolute bottom-3 right-4 text-[10px] font-bold text-brand-muted">
-                {value.length}/{maxLength}
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="relative flex items-center">
-            <input
-              type={type}
-              value={value}
-              onChange={(e) => onChange?.(e.target.value)}
-              disabled={isReadonly}
-              placeholder={isReadonly ? "Chưa cập nhật" : "Nhập thông tin..."}
-              className={`w-full ${isVerified ? 'pr-28' : 'pr-10'} ${icon ? 'pl-10' : 'pl-4'} py-2.5 rounded-xl border ${isReadonly ? 'bg-slate-50/50 border-brand-border/50 text-brand-heading/80 cursor-not-allowed' : 'bg-white border-brand-border text-brand-heading focus:ring-2 focus:ring-brand-plum/20 focus:border-brand-plum'} text-sm font-semibold transition-all h-[42px]`}
-            />
-            {icon && (
-              <div className="absolute left-3.5 text-brand-muted/70">
-                {icon}
-              </div>
-            )}
-            {isVerified && (
-              <div className="absolute right-2 flex items-center gap-1 text-[10px] text-brand-found font-bold bg-[#F3F9F1] px-2 py-1 rounded-md">
-                Đã xác minh
-              </div>
-            )}
+  if (isTextarea) {
+    return (
+      <div className="relative space-y-1.5">
+        <Textarea
+          label={label}
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
+          disabled={isReadonly}
+          maxLength={maxLength}
+          placeholder={isReadonly ? "Chưa cập nhật" : "Nhập thông tin..."}
+          className={
+            isReadonly
+              ? "bg-slate-50/50 border-brand-border/50 text-brand-heading/80 cursor-not-allowed min-h-[100px] resize-none"
+              : "min-h-[100px] resize-none"
+          }
+        />
+        {maxLength && (
+          <div className="absolute bottom-3 right-4 text-[10px] font-bold text-brand-muted">
+            {value.length}/{maxLength}
           </div>
         )}
       </div>
+    );
+  }
+
+  return (
+    <div className="relative space-y-1.5">
+      <Input
+        label={label}
+        type={type}
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        disabled={isReadonly}
+        icon={icon}
+        placeholder={isReadonly ? "Chưa cập nhật" : "Nhập thông tin..."}
+        className={
+          isReadonly
+            ? "bg-slate-50/50 border-brand-border/50 text-brand-heading/80 cursor-not-allowed"
+            : ""
+        }
+      />
+      {isVerified && (
+        <div className="absolute right-2 top-8 flex items-center gap-1 text-[10px] text-brand-found font-bold bg-[#F3F9F1] px-2 py-1 rounded-md">
+          Đã xác minh
+        </div>
+      )}
     </div>
   );
 };

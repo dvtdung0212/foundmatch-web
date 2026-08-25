@@ -15,25 +15,18 @@ import {
 
 const menuGroups = [
   {
-    title: "BÁO CÁO",
+    title: "BÁO CÁO CỦA TÔI",
     items: [
-      { name: "Tạo báo cáo", href: "#", icon: FilePlus2 },
-      { name: "Báo cáo của tôi", href: "/reports/mine", icon: FileText },
-      { name: "Báo cáo đã lưu", href: "#", icon: Bookmark },
-    ],
-  },
-  {
-    title: "HOẠT ĐỘNG",
-    items: [
-      { name: "Tin nhắn", href: "#", icon: MessageSquare },
-      { name: "Thông báo", href: "#", icon: Bell, badge: 3 },
+      { name: "Tất cả báo cáo", href: "/reports", icon: FileText },
+      { name: "Báo cáo thất lạc", href: "/reports/create/lost", icon: FilePlus2 },
+      { name: "Báo cáo nhặt được", href: "/reports/create/found", icon: Bookmark },
     ],
   },
   {
     title: "TÀI KHOẢN",
     items: [
-      { name: "Hồ sơ", href: "/profile", icon: User },
-      { name: "Cài đặt", href: "#", icon: Settings },
+      { name: "Hồ sơ cá nhân", href: "/profile", icon: User },
+      { name: "Cài đặt", href: "/settings", icon: Settings },
     ],
   },
 ];
@@ -46,22 +39,22 @@ export function WorkspaceSidebar({ isExpanded }: WorkspaceSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <>
+    <div className="flex flex-col h-full justify-between">
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto py-6 hide-scrollbar flex flex-col gap-5">
-
         {/* Top level item */}
         <div className="px-3">
           <Link
-            href="/overview"
-            className={`flex items-center gap-3 px-3 py-2 rounded-xl font-semibold text-[13px] transition-colors ${pathname === "/overview"
-              ? "bg-[#FFF4F1] text-brand-plum"
-              : "text-brand-muted hover:bg-black/5 hover:text-brand-heading"
-              } ${!isExpanded ? "justify-center px-0" : ""}`}
-            title={!isExpanded ? "Tổng quan" : undefined}
+            href="/reports"
+            className={`flex items-center gap-3 px-3 py-2 rounded-xl font-semibold text-[13px] transition-colors ${
+              pathname === "/reports" || pathname === "/reports/mine"
+                ? "bg-[#FFF4F1] text-brand-plum"
+                : "text-brand-muted hover:bg-black/5 hover:text-brand-heading"
+            } ${!isExpanded ? "justify-center px-0" : ""}`}
+            title={!isExpanded ? "Báo cáo của tôi" : undefined}
           >
             <LayoutGrid className="h-4.5 w-4.5 shrink-0" />
-            {isExpanded && <span className="truncate">Tổng quan</span>}
+            {isExpanded && <span className="truncate">Báo cáo của tôi</span>}
           </Link>
         </div>
 
@@ -79,17 +72,20 @@ export function WorkspaceSidebar({ isExpanded }: WorkspaceSidebarProps) {
 
             <div className="space-y-0.5">
               {group.items.map((item) => {
-                const isActive = pathname.startsWith(item.href) && item.href !== "#";
+                const isActive =
+                  pathname === item.href ||
+                  (item.href !== "#" && item.href !== "/reports" && pathname.startsWith(item.href));
 
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
                     title={!isExpanded ? item.name : undefined}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-xl font-semibold text-[13px] transition-all relative ${isActive
-                      ? "bg-[#FFF4F1] text-brand-plum"
-                      : "text-brand-muted hover:bg-black/5 hover:text-brand-heading"
-                      } ${!isExpanded ? "justify-center px-0" : ""}`}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-xl font-semibold text-[13px] transition-all relative ${
+                      isActive
+                        ? "bg-[#FFF4F1] text-brand-plum"
+                        : "text-brand-muted hover:bg-black/5 hover:text-brand-heading"
+                    } ${!isExpanded ? "justify-center px-0" : ""}`}
                   >
                     {/* Active left border indicator */}
                     {isActive && isExpanded && (
@@ -101,16 +97,6 @@ export function WorkspaceSidebar({ isExpanded }: WorkspaceSidebarProps) {
                     {isExpanded && (
                       <span className="flex-1 truncate">{item.name}</span>
                     )}
-
-                    {/* Badge */}
-                    {item.badge && (
-                      <div
-                        className={`h-5 min-w-[20px] rounded-full bg-brand-plum text-white text-[9px] font-bold flex items-center justify-center px-1.5 ${!isExpanded ? "absolute -top-1 -right-1" : ""
-                          }`}
-                      >
-                        {item.badge}
-                      </div>
-                    )}
                   </Link>
                 );
               })}
@@ -119,6 +105,26 @@ export function WorkspaceSidebar({ isExpanded }: WorkspaceSidebarProps) {
         ))}
       </div>
 
-    </>
+      {/* Safety Tips Card (Desktop Bottom) */}
+      {isExpanded && (
+        <div className="p-3 m-3 rounded-2xl bg-brand-cream/60 border border-brand-border/80 space-y-2">
+          <div className="flex items-center gap-2 text-brand-heading font-bold text-xs">
+            <div className="h-6 w-6 rounded-lg bg-white border border-brand-border flex items-center justify-center text-brand-plum">
+              <ShieldCheck className="h-3.5 w-3.5" />
+            </div>
+            Mẹo an toàn
+          </div>
+          <p className="text-[11px] text-brand-muted leading-relaxed font-medium">
+            Không chia sẻ thông tin cá nhân hoặc gặp mặt khi chưa xác minh đối phương.
+          </p>
+          <Link
+            href="/safety-tips"
+            className="inline-flex items-center gap-1 text-[11px] font-bold text-brand-plum hover:underline pt-1"
+          >
+            Tìm hiểu thêm <ArrowRight className="h-3 w-3" />
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }

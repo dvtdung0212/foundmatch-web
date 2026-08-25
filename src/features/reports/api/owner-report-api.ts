@@ -222,6 +222,61 @@ export async function listReportCategories(
     }));
 }
 
+export async function listOwnReports(query?: {
+  page?: number;
+  pageSize?: number;
+  workflowStatus?: string;
+  type?: string;
+  search?: string;
+}) {
+  const client = await getAuthenticatedApiClient();
+  return call(() =>
+    client.GET("/api/v1/public/item-declarations/me", {
+      params: {
+        query: query as never,
+      },
+    }),
+  );
+}
+
+export async function closeOwnReport(
+  declarationId: string,
+  expectedVersion: number,
+  reason?: string,
+  idempotencyKey?: string,
+) {
+  const client = await getAuthenticatedApiClient();
+  const idKey = idempotencyKey || (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `close-${Date.now()}`);
+  return call(() =>
+    client.POST("/api/v1/public/item-declarations/{id}/close", {
+      body: { expectedVersion, reason } as never,
+      params: {
+        header: { "Idempotency-Key": idKey },
+        path: { id: declarationId },
+      },
+    }),
+  );
+}
+
+export async function withdrawOwnReport(
+  declarationId: string,
+  expectedVersion: number,
+  reason?: string,
+  idempotencyKey?: string,
+) {
+  const client = await getAuthenticatedApiClient();
+  const idKey = idempotencyKey || (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `withdraw-${Date.now()}`);
+  return call(() =>
+    client.POST("/api/v1/public/item-declarations/{id}/withdraw", {
+      body: { expectedVersion, reason } as never,
+      params: {
+        header: { "Idempotency-Key": idKey },
+        path: { id: declarationId },
+      },
+    }),
+  );
+}
+
 export type {
   PrivateFactInput,
   ReportAttributeAnswerInput,

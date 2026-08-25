@@ -7234,8 +7234,9 @@ export interface operations {
                 page?: number;
                 pageSize?: number;
                 workflowStatus?: "DRAFT" | "SUBMITTED" | "ACTIVE" | "RESOLVED" | "CLOSED" | "WITHDRAWN" | "EXPIRED" | "ARCHIVED";
-                reviewStatus?: "NOT_REQUIRED" | "PENDING_REVIEW" | "APPROVED" | "REJECTED";
+                type?: "LOST" | "FOUND";
                 search?: string;
+                reviewStatus?: "NOT_REQUIRED" | "PENDING_REVIEW" | "APPROVED" | "REJECTED";
             };
             header?: never;
             path?: never;
@@ -7788,6 +7789,8 @@ export interface operations {
                 page?: number;
                 pageSize?: number;
                 workflowStatus?: "DRAFT" | "SUBMITTED" | "ACTIVE" | "RESOLVED" | "CLOSED" | "WITHDRAWN" | "EXPIRED" | "ARCHIVED";
+                type?: "LOST" | "FOUND";
+                search?: string;
             };
             header?: never;
             path?: never;
