@@ -47,8 +47,7 @@ export function ReportCategorySelect({
         required
         options={categories.map(({ id, name }) => ({ label: name, value: id }))}
         value={value}
-        onChange={(event) => {
-          const nextCategoryId = event.target.value;
+        onChange={(nextCategoryId) => {
           if (value && nextCategoryId !== value && hasAnswers) {
             setPendingCategoryId(nextCategoryId);
             return;

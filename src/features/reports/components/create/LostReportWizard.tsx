@@ -386,7 +386,7 @@ export function LostReportWizard() {
                       required
                       options={timeSlotOptions}
                       value={formData.timeSlot}
-                      onChange={(e) => setFormData({ ...formData, timeSlot: e.target.value })}
+                      onChange={(val) => setFormData({ ...formData, timeSlot: val })}
                       error={errors.timeSlot}
                     />
                   </div>

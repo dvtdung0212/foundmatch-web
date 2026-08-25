@@ -3,6 +3,7 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Select } from "./select";
 
 interface PaginationProps {
   currentPage: number;
@@ -104,18 +105,17 @@ export function Pagination({
 
         {/* Page size selector */}
         {onPageSizeChange && (
-          <div className="relative">
-            <select
-              value={pageSize}
-              onChange={(e) => onPageSizeChange(Number(e.target.value))}
-              className="h-8 rounded-lg border border-brand-border bg-white px-2.5 py-1 text-xs font-semibold text-brand-heading focus:outline-none focus:border-brand-plum cursor-pointer"
-            >
-              {pageSizeOptions.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt} / trang
-                </option>
-              ))}
-            </select>
+          <div className="w-28">
+            <Select
+              aria-label="Số bản ghi mỗi trang"
+              value={String(pageSize)}
+              onChange={(val) => onPageSizeChange(Number(val))}
+              options={pageSizeOptions.map((opt) => ({
+                label: `${opt} / trang`,
+                value: String(opt),
+              }))}
+              triggerClassName="h-8 rounded-lg px-2.5 py-1 text-xs font-semibold"
+            />
           </div>
         )}
       </div>

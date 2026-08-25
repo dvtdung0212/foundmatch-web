@@ -114,10 +114,10 @@ export function ReportAttributeControl({
               ? String(answer.value.booleanValue)
               : ""
           }
-          onChange={(event) =>
+          onChange={(val) =>
             setValue({
               kind: "BOOLEAN",
-              booleanValue: event.target.value === "true",
+              booleanValue: val === "true",
             })
           }
         />
@@ -136,10 +136,10 @@ export function ReportAttributeControl({
               ? (answer.value.valueAssignmentIds[0] ?? "")
               : ""
           }
-          onChange={(event) =>
+          onChange={(val) =>
             setValue({
               kind: "SELECTION",
-              valueAssignmentIds: [event.target.value],
+              valueAssignmentIds: [val],
             })
           }
         />

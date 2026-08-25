@@ -6,6 +6,7 @@ import { Plus, RefreshCw, AlertCircle, FileText, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Pagination } from "@/components/ui/pagination";
+import { Select } from "@/components/ui/select";
 import { MyReportsTable } from "./my-reports-table";
 import { MyReportsCard } from "./my-reports-card";
 import { CloseReportDialog } from "../modals/CloseReportDialog";
@@ -190,35 +191,39 @@ export function MyReportsView() {
         {/* Right: Dropdowns + Create button */}
         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
           {/* Status Dropdown */}
-          <div className="relative">
-            <select
+          <div className="w-44 sm:w-52">
+            <Select
+              aria-label="Lọc theo trạng thái"
               value={statusFilter}
-              onChange={(e) => {
-                setStatusFilter(e.target.value);
+              onChange={(val) => {
+                setStatusFilter(val);
                 setPage(1);
               }}
-              className="h-10 rounded-xl border border-brand-border bg-white px-3.5 py-2 text-xs sm:text-[13px] font-bold text-brand-heading focus:outline-none focus:border-brand-plum shadow-2xs cursor-pointer"
-            >
-              <option value="ALL">Trạng thái: Tất cả</option>
-              <option value="ACTIVE">Đang tìm kiếm / Chờ xác minh</option>
-              <option value="RESOLVED">Đã tìm thấy / Đã trả lại</option>
-              <option value="SUBMITTED">Đã gửi</option>
-              <option value="DRAFT">Bản nháp</option>
-              <option value="CLOSED">Đã đóng</option>
-              <option value="WITHDRAWN">Đã rút</option>
-            </select>
+              options={[
+                { label: "Trạng thái: Tất cả", value: "ALL" },
+                { label: "Đang tìm kiếm / Chờ xác minh", value: "ACTIVE" },
+                { label: "Đã tìm thấy / Đã trả lại", value: "RESOLVED" },
+                { label: "Đã gửi", value: "SUBMITTED" },
+                { label: "Bản nháp", value: "DRAFT" },
+                { label: "Đã đóng", value: "CLOSED" },
+                { label: "Đã rút", value: "WITHDRAWN" },
+              ]}
+              triggerClassName="h-10 text-xs sm:text-[13px] font-bold shadow-2xs"
+            />
           </div>
 
           {/* Sort Order Dropdown */}
-          <div className="relative">
-            <select
+          <div className="w-36 sm:w-44">
+            <Select
+              aria-label="Sắp xếp thời gian"
               value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-              className="h-10 rounded-xl border border-brand-border bg-white px-3.5 py-2 text-xs sm:text-[13px] font-bold text-brand-heading focus:outline-none focus:border-brand-plum shadow-2xs cursor-pointer"
-            >
-              <option value="NEWEST">Thời gian: Mới nhất</option>
-              <option value="OLDEST">Thời gian: Cũ nhất</option>
-            </select>
+              onChange={(val) => setSortOrder(val)}
+              options={[
+                { label: "Thời gian: Mới nhất", value: "NEWEST" },
+                { label: "Thời gian: Cũ nhất", value: "OLDEST" },
+              ]}
+              triggerClassName="h-10 text-xs sm:text-[13px] font-bold shadow-2xs"
+            />
           </div>
 
           {/* Desktop Create Button */}
