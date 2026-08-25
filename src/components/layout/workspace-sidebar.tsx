@@ -27,24 +27,26 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
   return (
     <div className="flex flex-col h-full justify-between overflow-hidden whitespace-nowrap select-none">
       {/* Navigation links */}
-      <div className="flex-1 overflow-y-auto py-5 hide-scrollbar flex flex-col">
+      <div className="flex-1 overflow-y-auto py-4 hide-scrollbar flex flex-col">
         {/* Top Group: Trang chủ */}
         <div className="px-3">
           <Link
             href="/"
             className={cn(
-              "flex items-center gap-3.5 px-3 py-2.5 rounded-xl font-semibold text-[13px] transition-all relative whitespace-nowrap overflow-hidden",
+              "flex items-center h-10 px-3 rounded-xl font-semibold text-[13px] transition-all relative overflow-hidden",
               isHomeActive
                 ? "bg-[#FFF4F1] text-brand-plum font-bold"
-                : "text-brand-muted hover:bg-black/5 hover:text-brand-heading",
-              !isExpanded && "justify-center px-0"
+                : "text-brand-muted hover:bg-black/5 hover:text-brand-heading"
             )}
             title={!isExpanded ? "Trang chủ" : undefined}
           >
-            <Home className="h-4.5 w-4.5 shrink-0" />
+            {/* Fixed Icon Anchor (Zero horizontal/vertical shift) */}
+            <div className="w-6 h-6 flex items-center justify-center shrink-0">
+              <Home className="h-4.5 w-4.5" />
+            </div>
             <span
               className={cn(
-                "whitespace-nowrap overflow-hidden transition-all duration-300",
+                "ml-3 whitespace-nowrap overflow-hidden transition-all duration-300",
                 isExpanded
                   ? "opacity-100 max-w-[180px]"
                   : "opacity-0 max-w-0 pointer-events-none"
@@ -56,20 +58,21 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-brand-border/60 mx-4 my-3.5 shrink-0" />
+        <div className="h-px bg-brand-border/60 mx-4 my-3 shrink-0" />
 
         {/* Group 1: BÁO CÁO CỦA TÔI */}
         <div className="px-3 space-y-1">
-          <h4
-            className={cn(
-              "px-3 text-[10px] font-extrabold text-brand-muted/60 uppercase tracking-widest mb-2 whitespace-nowrap overflow-hidden transition-all duration-300",
-              isExpanded
-                ? "opacity-100 max-h-6"
-                : "opacity-0 max-h-0 pointer-events-none mb-0"
-            )}
-          >
-            BÁO CÁO CỦA TÔI
-          </h4>
+          {/* Constant-height heading container to prevent vertical layout shifts */}
+          <div className="h-5 flex items-center px-3 mb-1 overflow-hidden">
+            <h4
+              className={cn(
+                "text-[10px] font-extrabold text-brand-muted/60 uppercase tracking-widest whitespace-nowrap transition-opacity duration-200",
+                isExpanded ? "opacity-100" : "opacity-0 pointer-events-none select-none"
+              )}
+            >
+              BÁO CÁO CỦA TÔI
+            </h4>
+          </div>
 
           <div className="space-y-0.5">
             {/* Tất cả báo cáo */}
@@ -77,17 +80,18 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
               href="/reports"
               title={!isExpanded ? "Tất cả báo cáo" : undefined}
               className={cn(
-                "flex items-center gap-3.5 px-3 py-2.5 rounded-xl font-semibold text-[13px] transition-all relative whitespace-nowrap overflow-hidden",
+                "flex items-center h-10 px-3 rounded-xl font-semibold text-[13px] transition-all relative overflow-hidden",
                 pathname === "/reports" && !typeParam
                   ? "bg-[#FFF4F1] text-brand-plum font-bold"
-                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading",
-                !isExpanded && "justify-center px-0"
+                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading"
               )}
             >
-              <FileText className="h-4.5 w-4.5 shrink-0" />
+              <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                <FileText className="h-4.5 w-4.5" />
+              </div>
               <span
                 className={cn(
-                  "whitespace-nowrap overflow-hidden transition-all duration-300",
+                  "ml-3 whitespace-nowrap overflow-hidden transition-all duration-300",
                   isExpanded
                     ? "opacity-100 max-w-[180px]"
                     : "opacity-0 max-w-0 pointer-events-none"
@@ -102,17 +106,18 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
               href="/reports?type=LOST"
               title={!isExpanded ? "Báo cáo thất lạc" : undefined}
               className={cn(
-                "flex items-center gap-3.5 px-3 py-2.5 rounded-xl font-semibold text-[13px] transition-all relative whitespace-nowrap overflow-hidden",
+                "flex items-center h-10 px-3 rounded-xl font-semibold text-[13px] transition-all relative overflow-hidden",
                 pathname === "/reports" && typeParam === "LOST"
                   ? "bg-[#FFF4F1] text-brand-plum font-bold"
-                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading",
-                !isExpanded && "justify-center px-0"
+                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading"
               )}
             >
-              <Clock className="h-4.5 w-4.5 shrink-0" />
+              <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                <Clock className="h-4.5 w-4.5" />
+              </div>
               <span
                 className={cn(
-                  "whitespace-nowrap overflow-hidden transition-all duration-300",
+                  "ml-3 whitespace-nowrap overflow-hidden transition-all duration-300",
                   isExpanded
                     ? "opacity-100 max-w-[180px]"
                     : "opacity-0 max-w-0 pointer-events-none"
@@ -127,17 +132,18 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
               href="/reports?type=FOUND"
               title={!isExpanded ? "Báo cáo nhặt được" : undefined}
               className={cn(
-                "flex items-center gap-3.5 px-3 py-2.5 rounded-xl font-semibold text-[13px] transition-all relative whitespace-nowrap overflow-hidden",
+                "flex items-center h-10 px-3 rounded-xl font-semibold text-[13px] transition-all relative overflow-hidden",
                 pathname === "/reports" && typeParam === "FOUND"
                   ? "bg-[#FFF4F1] text-brand-plum font-bold"
-                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading",
-                !isExpanded && "justify-center px-0"
+                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading"
               )}
             >
-              <Package className="h-4.5 w-4.5 shrink-0" />
+              <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                <Package className="h-4.5 w-4.5" />
+              </div>
               <span
                 className={cn(
-                  "whitespace-nowrap overflow-hidden transition-all duration-300",
+                  "ml-3 whitespace-nowrap overflow-hidden transition-all duration-300",
                   isExpanded
                     ? "opacity-100 max-w-[180px]"
                     : "opacity-0 max-w-0 pointer-events-none"
@@ -152,17 +158,18 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
               href="/reports"
               title={!isExpanded ? "Báo cáo của tôi" : undefined}
               className={cn(
-                "flex items-center gap-3.5 px-3 py-2.5 rounded-xl font-semibold text-[13px] transition-all relative whitespace-nowrap overflow-hidden",
+                "flex items-center h-10 px-3 rounded-xl font-semibold text-[13px] transition-all relative overflow-hidden",
                 (pathname === "/reports" || pathname === "/reports/mine") && !typeParam
                   ? "bg-[#FFF4F1] text-brand-plum font-bold"
-                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading",
-                !isExpanded && "justify-center px-0"
+                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading"
               )}
             >
-              <FolderArchive className="h-4.5 w-4.5 shrink-0" />
+              <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                <FolderArchive className="h-4.5 w-4.5" />
+              </div>
               <span
                 className={cn(
-                  "whitespace-nowrap overflow-hidden transition-all duration-300",
+                  "ml-3 whitespace-nowrap overflow-hidden transition-all duration-300",
                   isExpanded
                     ? "opacity-100 max-w-[180px]"
                     : "opacity-0 max-w-0 pointer-events-none"
@@ -175,20 +182,21 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-brand-border/60 mx-4 my-3.5 shrink-0" />
+        <div className="h-px bg-brand-border/60 mx-4 my-3 shrink-0" />
 
         {/* Group 2: TÀI KHOẢN */}
         <div className="px-3 space-y-1">
-          <h4
-            className={cn(
-              "px-3 text-[10px] font-extrabold text-brand-muted/60 uppercase tracking-widest mb-2 whitespace-nowrap overflow-hidden transition-all duration-300",
-              isExpanded
-                ? "opacity-100 max-h-6"
-                : "opacity-0 max-h-0 pointer-events-none mb-0"
-            )}
-          >
-            TÀI KHOẢN
-          </h4>
+          {/* Constant-height heading container to prevent vertical layout shifts */}
+          <div className="h-5 flex items-center px-3 mb-1 overflow-hidden">
+            <h4
+              className={cn(
+                "text-[10px] font-extrabold text-brand-muted/60 uppercase tracking-widest whitespace-nowrap transition-opacity duration-200",
+                isExpanded ? "opacity-100" : "opacity-0 pointer-events-none select-none"
+              )}
+            >
+              TÀI KHOẢN
+            </h4>
+          </div>
 
           <div className="space-y-0.5">
             {/* Hồ sơ cá nhân */}
@@ -196,17 +204,18 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
               href="/profile"
               title={!isExpanded ? "Hồ sơ cá nhân" : undefined}
               className={cn(
-                "flex items-center gap-3.5 px-3 py-2.5 rounded-xl font-semibold text-[13px] transition-all relative whitespace-nowrap overflow-hidden",
+                "flex items-center h-10 px-3 rounded-xl font-semibold text-[13px] transition-all relative overflow-hidden",
                 pathname === "/profile"
                   ? "bg-[#FFF4F1] text-brand-plum font-bold"
-                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading",
-                !isExpanded && "justify-center px-0"
+                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading"
               )}
             >
-              <User className="h-4.5 w-4.5 shrink-0" />
+              <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                <User className="h-4.5 w-4.5" />
+              </div>
               <span
                 className={cn(
-                  "whitespace-nowrap overflow-hidden transition-all duration-300",
+                  "ml-3 whitespace-nowrap overflow-hidden transition-all duration-300",
                   isExpanded
                     ? "opacity-100 max-w-[180px]"
                     : "opacity-0 max-w-0 pointer-events-none"
@@ -220,15 +229,14 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
             <Link
               href="/profile#contact"
               title={!isExpanded ? "Địa chỉ & liên hệ" : undefined}
-              className={cn(
-                "flex items-center gap-3.5 px-3 py-2.5 rounded-xl font-semibold text-[13px] text-brand-muted hover:bg-black/5 hover:text-brand-heading transition-all whitespace-nowrap overflow-hidden",
-                !isExpanded && "justify-center px-0"
-              )}
+              className="flex items-center h-10 px-3 rounded-xl font-semibold text-[13px] text-brand-muted hover:bg-black/5 hover:text-brand-heading transition-all overflow-hidden"
             >
-              <MapPin className="h-4.5 w-4.5 shrink-0" />
+              <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                <MapPin className="h-4.5 w-4.5" />
+              </div>
               <span
                 className={cn(
-                  "whitespace-nowrap overflow-hidden transition-all duration-300",
+                  "ml-3 whitespace-nowrap overflow-hidden transition-all duration-300",
                   isExpanded
                     ? "opacity-100 max-w-[180px]"
                     : "opacity-0 max-w-0 pointer-events-none"
@@ -242,15 +250,14 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
             <Link
               href="/profile#security"
               title={!isExpanded ? "Bảo mật" : undefined}
-              className={cn(
-                "flex items-center gap-3.5 px-3 py-2.5 rounded-xl font-semibold text-[13px] text-brand-muted hover:bg-black/5 hover:text-brand-heading transition-all whitespace-nowrap overflow-hidden",
-                !isExpanded && "justify-center px-0"
-              )}
+              className="flex items-center h-10 px-3 rounded-xl font-semibold text-[13px] text-brand-muted hover:bg-black/5 hover:text-brand-heading transition-all overflow-hidden"
             >
-              <Shield className="h-4.5 w-4.5 shrink-0" />
+              <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                <Shield className="h-4.5 w-4.5" />
+              </div>
               <span
                 className={cn(
-                  "whitespace-nowrap overflow-hidden transition-all duration-300",
+                  "ml-3 whitespace-nowrap overflow-hidden transition-all duration-300",
                   isExpanded
                     ? "opacity-100 max-w-[180px]"
                     : "opacity-0 max-w-0 pointer-events-none"
@@ -265,17 +272,18 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
               href="/settings"
               title={!isExpanded ? "Cài đặt" : undefined}
               className={cn(
-                "flex items-center gap-3.5 px-3 py-2.5 rounded-xl font-semibold text-[13px] transition-all relative whitespace-nowrap overflow-hidden",
+                "flex items-center h-10 px-3 rounded-xl font-semibold text-[13px] transition-all relative overflow-hidden",
                 pathname === "/settings"
                   ? "bg-[#FFF4F1] text-brand-plum font-bold"
-                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading",
-                !isExpanded && "justify-center px-0"
+                  : "text-brand-muted hover:bg-black/5 hover:text-brand-heading"
               )}
             >
-              <Settings className="h-4.5 w-4.5 shrink-0" />
+              <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                <Settings className="h-4.5 w-4.5" />
+              </div>
               <span
                 className={cn(
-                  "whitespace-nowrap overflow-hidden transition-all duration-300",
+                  "ml-3 whitespace-nowrap overflow-hidden transition-all duration-300",
                   isExpanded
                     ? "opacity-100 max-w-[180px]"
                     : "opacity-0 max-w-0 pointer-events-none"
@@ -288,7 +296,7 @@ export function WorkspaceSidebar({ isExpanded }: { isExpanded: boolean }) {
         </div>
       </div>
 
-      {/* Safety Tips Card (Desktop Bottom) - Smooth Collapse */}
+      {/* Safety Tips Card (Desktop Bottom) */}
       <div
         className={cn(
           "transition-all duration-300 overflow-hidden",
