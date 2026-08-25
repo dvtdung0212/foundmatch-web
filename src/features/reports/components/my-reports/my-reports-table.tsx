@@ -57,6 +57,7 @@ export function MyReportsTable({
         key: "item",
         header: "Vật phẩm",
         className: "w-[34%]",
+        align: "left",
         cell: (item) => {
           const isLost = item.type === "LOST";
           const displayImage = item.media?.[0]?.url;

@@ -191,16 +191,17 @@ export function MyReportsView() {
         {/* Right: Dropdowns + Create button */}
         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
           {/* Status Dropdown */}
-          <div className="w-44 sm:w-52">
+          <div className="w-44 sm:w-48">
             <Select
               aria-label="Lọc theo trạng thái"
+              inlineLabel="Trạng thái:"
               value={statusFilter}
               onChange={(val) => {
                 setStatusFilter(val);
                 setPage(1);
               }}
               options={[
-                { label: "Trạng thái: Tất cả", value: "ALL" },
+                { label: "Tất cả", value: "ALL" },
                 { label: "Đang tìm kiếm / Chờ xác minh", value: "ACTIVE" },
                 { label: "Đã tìm thấy / Đã trả lại", value: "RESOLVED" },
                 { label: "Đã gửi", value: "SUBMITTED" },
@@ -213,14 +214,15 @@ export function MyReportsView() {
           </div>
 
           {/* Sort Order Dropdown */}
-          <div className="w-36 sm:w-44">
+          <div className="w-36 sm:w-40">
             <Select
               aria-label="Sắp xếp thời gian"
+              inlineLabel="Thời gian:"
               value={sortOrder}
               onChange={(val) => setSortOrder(val)}
               options={[
-                { label: "Thời gian: Mới nhất", value: "NEWEST" },
-                { label: "Thời gian: Cũ nhất", value: "OLDEST" },
+                { label: "Mới nhất", value: "NEWEST" },
+                { label: "Cũ nhất", value: "OLDEST" },
               ]}
               triggerClassName="h-10 text-xs sm:text-[13px] font-bold shadow-2xs"
             />

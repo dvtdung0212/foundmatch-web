@@ -12,6 +12,7 @@ export interface SelectOption {
 export interface SelectProps {
   id?: string;
   label?: string;
+  inlineLabel?: string;
   options: SelectOption[];
   value?: string;
   defaultValue?: string;
@@ -32,6 +33,7 @@ export interface SelectProps {
 export function Select({
   id,
   label,
+  inlineLabel,
   options,
   value,
   defaultValue,
@@ -68,7 +70,6 @@ export function Select({
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
-      // If trigger is in the right half of the screen or close to right edge, align right
       if (rect.left + 240 > viewportWidth || rect.right > viewportWidth - 60) {
         setMenuAlign("right");
       } else {
@@ -123,7 +124,7 @@ export function Select({
           id={inputId}
           type="button"
           disabled={disabled}
-          aria-label={ariaLabel || label}
+          aria-label={ariaLabel || label || inlineLabel}
           aria-expanded={open}
           onClick={() => setOpen((prev) => !prev)}
           className={cn(
@@ -140,13 +141,19 @@ export function Select({
             </div>
           )}
 
-          <span
-            className={cn(
-              "truncate block text-left",
-              !selectedOption && "text-brand-muted/70 font-normal"
+          <span className="truncate block text-left">
+            {inlineLabel && (
+              <span className="font-semibold text-brand-muted/90 mr-1.5 inline-block">
+                {inlineLabel}
+              </span>
             )}
-          >
-            {selectedOption ? selectedOption.label : placeholder}
+            <span
+              className={cn(
+                selectedOption ? "text-brand-heading font-bold" : "text-brand-muted/70 font-normal"
+              )}
+            >
+              {selectedOption ? selectedOption.label : placeholder}
+            </span>
           </span>
 
           <ChevronDown
@@ -157,7 +164,7 @@ export function Select({
           />
         </button>
 
-        {/* Floating Dropdown Options Menu (Content-sized & collision-proof) */}
+        {/* Floating Dropdown Options Menu */}
         {open && (
           <div
             className={cn(
