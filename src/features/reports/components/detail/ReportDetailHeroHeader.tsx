@@ -179,85 +179,83 @@ export function ReportDetailHeroHeader({
         </div>
 
         {/* Box 2: Thông tin chính */}
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs flex flex-col justify-between space-y-3">
-          <div>
-            <h2 className="text-sm font-bold text-slate-900 pb-2">
-              Thông tin chính
-            </h2>
+        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs flex flex-col justify-between h-full space-y-2">
+          <h2 className="text-sm font-bold text-slate-900 pb-1 shrink-0">
+            Thông tin chính
+          </h2>
 
-            <dl className="space-y-2.5 text-xs">
-              <div className="flex items-center justify-between gap-2">
-                <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
-                  <Tag className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Tên đồ vật</span>
-                </dt>
-                <dd className="font-bold text-slate-900 text-right truncate max-w-[180px]">
-                  {report.title || "Ví da màu đen"}
-                </dd>
-              </div>
+          <dl className="flex-1 flex flex-col justify-between py-0.5 text-xs">
+            <div className="flex items-center justify-between gap-2 py-1">
+              <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
+                <Tag className="w-3.5 h-3.5 text-slate-400" />
+                <span>Tên đồ vật</span>
+              </dt>
+              <dd className="font-bold text-slate-900 text-right truncate max-w-[180px]">
+                {report.title || "Ví da màu đen"}
+              </dd>
+            </div>
 
-              <div className="flex items-center justify-between gap-2">
-                <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
-                  <FileText className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Mã báo cáo</span>
-                </dt>
-                <dd className="font-mono font-bold text-slate-900 flex items-center gap-1">
-                  <span>{report.code || "FM-2024-1024"}</span>
-                  <button
-                    type="button"
-                    onClick={handleCopyCode}
-                    className="p-0.5 rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
-                    title="Sao chép mã"
-                  >
-                    {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
-                  </button>
-                </dd>
-              </div>
+            <div className="flex items-center justify-between gap-2 py-1">
+              <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
+                <FileText className="w-3.5 h-3.5 text-slate-400" />
+                <span>Mã báo cáo</span>
+              </dt>
+              <dd className="font-mono font-bold text-slate-900 flex items-center gap-1">
+                <span>{report.code || "FM-2024-1024"}</span>
+                <button
+                  type="button"
+                  onClick={handleCopyCode}
+                  className="p-0.5 rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+                  title="Sao chép mã"
+                >
+                  {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                </button>
+              </dd>
+            </div>
 
-              <div className="flex items-center justify-between gap-2">
-                <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
-                  <Folder className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Danh mục</span>
-                </dt>
-                <dd className="font-semibold text-slate-900 text-right">{report.category || "Ví / Bóp"}</dd>
-              </div>
+            <div className="flex items-center justify-between gap-2 py-1">
+              <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
+                <Folder className="w-3.5 h-3.5 text-slate-400" />
+                <span>Danh mục</span>
+              </dt>
+              <dd className="font-semibold text-slate-900 text-right">{report.category || "Ví / Bóp"}</dd>
+            </div>
 
-              <div className="flex items-center justify-between gap-2">
-                <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
-                  <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Khu vực</span>
-                </dt>
-                <dd className="font-semibold text-slate-900 text-right truncate max-w-[180px]">
-                  {report.location || "Quận 1, TP. HCM"}
-                </dd>
-              </div>
+            <div className="flex items-center justify-between gap-2 py-1">
+              <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
+                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <span>Khu vực</span>
+              </dt>
+              <dd className="font-semibold text-slate-900 text-right truncate max-w-[180px]">
+                {report.location || "Quận 1, TP. HCM"}
+              </dd>
+            </div>
 
-              <div className="flex items-center justify-between gap-2">
-                <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Ngày tạo</span>
-                </dt>
-                <dd className="font-normal text-slate-700 text-right">20/05/2024 10:30</dd>
-              </div>
+            <div className="flex items-center justify-between gap-2 py-1">
+              <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
+                <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                <span>Ngày tạo</span>
+              </dt>
+              <dd className="font-normal text-slate-700 text-right">20/05/2024 10:30</dd>
+            </div>
 
-              <div className="flex items-center justify-between gap-2">
-                <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
-                  <Clock className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Cập nhật cuối</span>
-                </dt>
-                <dd className="font-normal text-slate-700 text-right">22/05/2024 09:15</dd>
-              </div>
-            </dl>
-          </div>
+            <div className="flex items-center justify-between gap-2 py-1">
+              <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
+                <Clock className="w-3.5 h-3.5 text-slate-400" />
+                <span>Cập nhật cuối</span>
+              </dt>
+              <dd className="font-normal text-slate-700 text-right">22/05/2024 09:15</dd>
+            </div>
+          </dl>
         </div>
 
         {/* Box 3: Trạng thái báo cáo */}
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs flex flex-col justify-between space-y-3">
-          <div className="space-y-3">
-            <h2 className="text-sm font-bold text-slate-900">
-              Trạng thái báo cáo
-            </h2>
+        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs flex flex-col justify-between h-full space-y-2">
+          <h2 className="text-sm font-bold text-slate-900 pb-1 shrink-0">
+            Trạng thái báo cáo
+          </h2>
 
+          <div className="flex-1 flex flex-col justify-between gap-3">
             {/* Status Box */}
             <div className="p-3.5 rounded-xl bg-[#FFFBEB] border border-[#FDE68A] space-y-2">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 border border-[#FDE68A] text-[#B45309] font-bold text-[11px] shadow-2xs">
