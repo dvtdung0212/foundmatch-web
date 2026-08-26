@@ -1,46 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Calendar,
-  CheckCircle2,
-  Clock,
-  Edit,
-  Eye,
-  FileImage,
-  Filter,
-  PlusCircle,
-  RotateCcw,
-  ShieldCheck,
-  Sparkles,
-  User,
-} from "lucide-react";
+import { Filter, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { ActivityTimeline, type ActivityTimelineItem } from "@/components/ui/activity-timeline";
 import type { OwnerReportView } from "../../../api/owner-report-view";
 
 interface ActivityHistoryTabProps {
   report: OwnerReportView;
 }
 
-interface TimelineItem {
-  id: string;
-  type: "create" | "edit" | "media" | "system" | "view" | "verify";
-  title: string;
-  description: string;
-  actorName: string;
-  actorRole: string;
-  actorAvatar?: string;
-  isSystem?: boolean;
-  time: string;
-}
-
-const DEFAULT_TIMELINE_EVENTS: TimelineItem[] = [
+const DEFAULT_TIMELINE_EVENTS: ActivityTimelineItem[] = [
   {
     id: "act-1",
     type: "create",
-    title: "Tạo báo cáo",
+    tag: "Tạo báo cáo",
     description: "Báo cáo thất lạc được tạo thành công.",
     actorName: "Nguyễn Thu Minh",
     actorRole: "Thành viên",
@@ -50,7 +26,7 @@ const DEFAULT_TIMELINE_EVENTS: TimelineItem[] = [
   {
     id: "act-2",
     type: "edit",
-    title: "Cập nhật mô tả",
+    tag: "Cập nhật mô tả",
     description: "Cập nhật mô tả báo cáo.",
     actorName: "Nguyễn Thu Minh",
     actorRole: "Thành viên",
@@ -60,7 +36,7 @@ const DEFAULT_TIMELINE_EVENTS: TimelineItem[] = [
   {
     id: "act-3",
     type: "media",
-    title: "Thêm ảnh",
+    tag: "Thêm ảnh",
     description: "Đã thêm 3 ảnh cho báo cáo.",
     actorName: "Nguyễn Thu Minh",
     actorRole: "Thành viên",
@@ -70,7 +46,7 @@ const DEFAULT_TIMELINE_EVENTS: TimelineItem[] = [
   {
     id: "act-4",
     type: "system",
-    title: "Hệ thống",
+    tag: "Hệ thống",
     description: "Hệ thống đã tạo kết quả khớp dựa trên thông tin hiện có.",
     actorName: "Hệ thống FoundMatch",
     actorRole: "Hệ thống",
@@ -80,7 +56,7 @@ const DEFAULT_TIMELINE_EVENTS: TimelineItem[] = [
   {
     id: "act-5",
     type: "view",
-    title: "Xem kết quả khớp",
+    tag: "Xem kết quả khớp",
     description: "Người dùng đã xem kết quả khớp.",
     actorName: "Nguyễn Thu Minh",
     actorRole: "Thành viên",
@@ -90,7 +66,7 @@ const DEFAULT_TIMELINE_EVENTS: TimelineItem[] = [
   {
     id: "act-6",
     type: "verify",
-    title: "Bổ sung xác minh",
+    tag: "Bổ sung xác minh",
     description: "Bổ sung thông tin xác minh: số điện thoại liên hệ.",
     actorName: "Nguyễn Thu Minh",
     actorRole: "Thành viên",
@@ -106,7 +82,7 @@ export function ActivityHistoryTab({ report }: ActivityHistoryTabProps) {
   const [fromDate, setFromDate] = useState("2024-05-15");
   const [toDate, setToDate] = useState("2024-05-22");
 
-  const [filteredEvents, setFilteredEvents] = useState<TimelineItem[]>(DEFAULT_TIMELINE_EVENTS);
+  const [filteredEvents, setFilteredEvents] = useState<ActivityTimelineItem[]>(DEFAULT_TIMELINE_EVENTS);
 
   const handleApplyFilter = () => {
     let result = DEFAULT_TIMELINE_EVENTS;
@@ -128,118 +104,30 @@ export function ActivityHistoryTab({ report }: ActivityHistoryTabProps) {
     setFilteredEvents(DEFAULT_TIMELINE_EVENTS);
   };
 
-  const getEventIcon = (type: TimelineItem["type"]) => {
-    switch (type) {
-      case "create":
-        return <PlusCircle className="w-4 h-4 text-emerald-600" />;
-      case "edit":
-        return <Edit className="w-4 h-4 text-sky-600" />;
-      case "media":
-        return <FileImage className="w-4 h-4 text-purple-600" />;
-      case "system":
-        return <Sparkles className="w-4 h-4 text-amber-600" />;
-      case "view":
-        return <Eye className="w-4 h-4 text-teal-600" />;
-      case "verify":
-        return <ShieldCheck className="w-4 h-4 text-indigo-600" />;
-    }
-  };
-
-  const getBadgeStyle = (type: TimelineItem["type"]) => {
-    switch (type) {
-      case "create":
-        return "bg-emerald-50 text-emerald-700 border-emerald-200";
-      case "edit":
-        return "bg-sky-50 text-sky-700 border-sky-200";
-      case "media":
-        return "bg-purple-50 text-purple-700 border-purple-200";
-      case "system":
-        return "bg-amber-50 text-amber-700 border-amber-200";
-      case "view":
-        return "bg-teal-50 text-teal-700 border-teal-200";
-      case "verify":
-        return "bg-indigo-50 text-indigo-700 border-indigo-200";
-    }
-  };
-
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-      {/* Left Column (8 cols): Timeline List */}
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
+      {/* Left Column (8 cols): Timeline List Container */}
       <div className="lg:col-span-8 space-y-4 text-left">
-        <div className="rounded-2xl border border-brand-border/80 bg-white p-5 sm:p-6 shadow-2xs space-y-5">
-          <div className="flex items-center justify-between border-b border-brand-border/40 pb-3">
-            <h2 className="text-base font-bold text-brand-heading">
+        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-2xs space-y-5">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+            <h2 className="text-base font-bold text-slate-900">
               Dòng sự kiện hoạt động
             </h2>
-            <span className="text-xs text-brand-muted">
+            <span className="text-xs text-slate-500 font-medium">
               Hiển thị {filteredEvents.length} sự kiện
             </span>
           </div>
 
-          {/* Timeline Nodes */}
-          <div className="space-y-4 relative pl-3 sm:pl-4 border-l-2 border-slate-200">
-            {filteredEvents.map((event) => (
-              <div
-                key={event.id}
-                className="relative pl-6 py-2 group"
-              >
-                {/* Bullet node on timeline border */}
-                <div className="absolute -left-[19px] sm:-left-[23px] top-4 w-3.5 h-3.5 rounded-full bg-white border-2 border-brand-plum ring-4 ring-brand-soft/60" />
-
-                {/* Event Card */}
-                <div className="rounded-xl border border-brand-border/70 bg-white p-4 shadow-2xs hover:border-brand-plum/40 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                  <div className="flex items-start gap-3 flex-1 min-w-0">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border ${getBadgeStyle(event.type)}`}>
-                      {getEventIcon(event.type)}
-                    </div>
-                    <div className="space-y-0.5 min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${getBadgeStyle(event.type)}`}>
-                          {event.title}
-                        </span>
-                      </div>
-                      <p className="text-xs text-brand-heading font-medium leading-relaxed">
-                        {event.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Actor and Timestamp */}
-                  <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-brand-border/30 text-right">
-                    <div className="flex items-center gap-2">
-                      {event.isSystem ? (
-                        <div className="w-7 h-7 rounded-full bg-brand-plum text-white flex items-center justify-center text-[10px] font-bold shadow-xs">
-                          FM
-                        </div>
-                      ) : (
-                        <img
-                          src={event.actorAvatar}
-                          alt={event.actorName}
-                          className="w-7 h-7 rounded-full object-cover border border-brand-border"
-                        />
-                      )}
-                      <div className="text-left sm:text-right">
-                        <p className="text-xs font-bold text-brand-heading leading-tight">{event.actorName}</p>
-                        <p className="text-[10px] text-brand-muted">{event.actorRole}</p>
-                      </div>
-                    </div>
-
-                    <span className="text-[11px] text-brand-muted font-mono font-medium shrink-0">
-                      {event.time}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* Reusable ActivityTimeline Component */}
+          <ActivityTimeline items={filteredEvents} />
         </div>
       </div>
 
       {/* Right Column (4 cols): Filter Card */}
       <div className="lg:col-span-4 space-y-4 text-left">
-        <div className="rounded-2xl border border-brand-border/80 bg-white p-5 sm:p-6 shadow-2xs space-y-4">
-          <div className="flex items-center gap-2 text-brand-heading font-bold text-sm border-b border-brand-border/40 pb-3">
-            <Filter className="w-4 h-4 text-brand-plum" />
+        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-2xs space-y-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm border-b border-slate-200 pb-3">
+            <Filter className="w-4 h-4 text-[#4A0E2E]" />
             <span>Bộ lọc lịch sử hoạt động</span>
           </div>
 
@@ -309,13 +197,13 @@ export function ActivityHistoryTab({ report }: ActivityHistoryTabProps) {
           </div>
 
           {/* Action Buttons */}
-          <div className="space-y-2 pt-2 border-t border-brand-border/40">
+          <div className="space-y-2 pt-2 border-t border-slate-200">
             <Button
               variant="primary"
               size="sm"
               fullWidth
               onClick={handleApplyFilter}
-              className="justify-center text-xs font-bold bg-brand-plum hover:bg-brand-plumDark text-white shadow-xs"
+              className="justify-center text-xs font-bold bg-[#4A0E2E] hover:bg-[#3B0B24] text-white shadow-xs"
             >
               Áp dụng bộ lọc
             </Button>
@@ -324,7 +212,7 @@ export function ActivityHistoryTab({ report }: ActivityHistoryTabProps) {
               size="sm"
               fullWidth
               onClick={handleResetFilter}
-              className="justify-center text-xs text-brand-muted hover:text-brand-heading"
+              className="justify-center text-xs text-slate-500 hover:text-slate-900"
             >
               <RotateCcw className="w-3.5 h-3.5 mr-1" />
               Đặt lại bộ lọc
