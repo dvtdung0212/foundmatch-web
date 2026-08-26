@@ -159,13 +159,13 @@ export function ActivityTimeline({
                   <div className="space-y-1 min-w-0 flex-1">
                     <span
                       className={cn(
-                        "inline-block text-[11px] font-bold px-2 py-0.5 rounded border",
+                        "inline-block text-xs font-bold px-2.5 py-0.5 rounded border",
                         styles.tag
                       )}
                     >
                       {tagLabel}
                     </span>
-                    <p className="text-xs font-semibold text-slate-900 leading-snug">
+                    <p className="text-[13px] sm:text-sm font-semibold text-slate-900 leading-snug">
                       {item.description}
                     </p>
                   </div>
@@ -176,27 +176,27 @@ export function ActivityTimeline({
                   {item.actorName && (
                     <div className="flex items-center gap-2">
                       {item.isSystem ? (
-                        <div className="w-7 h-7 rounded-full bg-[#4A0E2E] text-white flex items-center justify-center text-[10px] font-bold shrink-0 shadow-2xs">
+                        <div className="w-8 h-8 rounded-full bg-[#4A0E2E] text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-2xs">
                           FM
                         </div>
                       ) : item.actorAvatar ? (
                         <img
                           src={item.actorAvatar}
                           alt={item.actorName}
-                          className="w-7 h-7 rounded-full object-cover border border-slate-200 shrink-0"
+                          className="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0"
                         />
                       ) : (
-                        <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 text-xs shrink-0">
-                          <User className="w-3.5 h-3.5" />
+                        <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 text-sm shrink-0">
+                          <User className="w-4 h-4" />
                         </div>
                       )}
 
                       <div className="text-left sm:text-right">
-                        <p className="text-xs font-bold text-slate-900 leading-tight">
+                        <p className="text-[13px] sm:text-sm font-bold text-slate-900 leading-tight">
                           {item.actorName}
                         </p>
                         {item.actorRole && (
-                          <p className="text-[10px] text-slate-400 leading-tight">
+                          <p className="text-xs text-slate-400 leading-tight">
                             {item.actorRole}
                           </p>
                         )}
@@ -204,7 +204,7 @@ export function ActivityTimeline({
                     </div>
                   )}
 
-                  <span className="text-xs text-slate-500 font-normal whitespace-nowrap pl-2">
+                  <span className="text-[13px] text-slate-500 font-normal whitespace-nowrap pl-2">
                     {item.time}
                   </span>
                 </div>

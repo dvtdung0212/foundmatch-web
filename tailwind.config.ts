@@ -17,6 +17,18 @@ const config: Config = {
       },
     },
     extend: {
+      fontSize: {
+        xs: ["0.875rem", { lineHeight: "1.25rem" }],      // 14px (+2px from 12px)
+        sm: ["1rem", { lineHeight: "1.5rem" }],           // 16px (+2px from 14px)
+        base: ["1.125rem", { lineHeight: "1.75rem" }],    // 18px (+2px from 16px)
+        lg: ["1.25rem", { lineHeight: "1.75rem" }],       // 20px (+2px from 18px)
+        xl: ["1.375rem", { lineHeight: "1.875rem" }],     // 22px (+2px from 20px)
+        "2xl": ["1.625rem", { lineHeight: "2.125rem" }],  // 26px (+2px from 24px)
+        "3xl": ["2rem", { lineHeight: "2.375rem" }],      // 32px (+2px from 30px)
+        "4xl": ["2.375rem", { lineHeight: "2.75rem" }],   // 38px (+2px from 36px)
+        "5xl": ["3.125rem", { lineHeight: "1" }],          // 50px (+2px from 48px)
+        "6xl": ["3.875rem", { lineHeight: "1" }],          // 62px (+2px from 60px)
+      },
       colors: {
         /* Standard HSL mapping for Shadcn primitives */
         border: "hsl(var(--border))",

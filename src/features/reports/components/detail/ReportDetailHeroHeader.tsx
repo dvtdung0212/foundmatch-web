@@ -160,7 +160,7 @@ export function ReportDetailHeroHeader({
                   key={idx}
                   type="button"
                   onClick={() => setSelectedImageIndex(idx)}
-                  className={`relative h-[58px] w-full rounded-lg overflow-hidden border transition-all cursor-pointer ${
+                  className={`relative h-[56px] w-full rounded-lg overflow-hidden border transition-all cursor-pointer ${
                     selectedImageIndex === idx
                       ? "border-[#4A0E2E] ring-2 ring-[#4A0E2E]/20"
                       : "border-slate-200 hover:border-slate-400 opacity-80 hover:opacity-100"
@@ -184,7 +184,7 @@ export function ReportDetailHeroHeader({
             Thông tin chính
           </h2>
 
-          <dl className="flex-1 flex flex-col justify-between py-0.5 text-xs">
+          <dl className="flex-1 flex flex-col justify-between py-1 text-xs">
             <div className="flex items-center justify-between gap-2 py-1">
               <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
                 <Tag className="w-3.5 h-3.5 text-slate-400" />
@@ -273,7 +273,7 @@ export function ReportDetailHeroHeader({
                 <ShieldCheck className="w-4 h-4" />
               </div>
               <div className="space-y-0.5 text-xs">
-                <p className="font-bold text-[#14532D]">Thông tin của bạn được bảo mật</p>
+                <p className="font-bold text-xs text-[#14532D]">Thông tin của bạn được bảo mật</p>
                 <p className="text-[11px] text-[#166534] leading-relaxed">
                   Chỉ bên liên quan được xác minh mới có thể xem thông tin liên hệ.
                 </p>

@@ -30,14 +30,14 @@ export function PublicAttributesTab({ report }: PublicAttributesTabProps) {
       <div className="lg:col-span-8 space-y-6 text-left">
         <div className="rounded-2xl border border-brand-border/80 bg-white p-6 shadow-2xs space-y-5">
           <div>
-            <h2 className="text-base font-bold text-brand-heading">Thuộc tính công khai</h2>
-            <p className="text-xs text-brand-muted mt-1">
+            <h2 className="text-[17px] font-bold text-slate-900">Thuộc tính công khai</h2>
+            <p className="text-[13px] text-slate-500 mt-1">
               Những thông tin này có thể được hiển thị công khai để giúp kết nối với người nhặt/chủ sở hữu.
             </p>
           </div>
 
           {/* Key-Value Table */}
-          <div className="rounded-xl border border-brand-border/60 overflow-hidden divide-y divide-brand-border/40 text-xs sm:text-[13px]">
+          <div className="rounded-xl border border-slate-200 overflow-hidden divide-y divide-slate-100 text-sm">
             {/* Grid 2 rows side-by-side on tablet/desktop */}
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-brand-border/40">
               <div className="p-3.5 flex justify-between gap-2 bg-slate-50/50">
