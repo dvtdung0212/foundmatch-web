@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function ReportDetailPage({ params }: PageProps) {
+export default async function WorkspaceReportDetailPage({ params }: PageProps) {
   if (!UUID_PATTERN.test(params.id)) notFound();
 
   try {
@@ -37,9 +37,11 @@ export default async function ReportDetailPage({ params }: PageProps) {
     if (!reportResponse.data || !privateFactsResponse.data) notFound();
 
     return (
-      <ReportDetailView
-        report={mapOwnerReportView(reportResponse.data, privateFactsResponse.data)}
-      />
+      <div className="w-full px-6 py-6">
+        <ReportDetailView
+          report={mapOwnerReportView(reportResponse.data, privateFactsResponse.data)}
+        />
+      </div>
     );
   } catch (error) {
     const status = (error as { status?: number })?.status;

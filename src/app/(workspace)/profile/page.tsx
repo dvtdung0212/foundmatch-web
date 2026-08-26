@@ -17,9 +17,8 @@ export default async function ProfilePage() {
   const profile = result.data;
 
   return (
-    <div className="py-8 px-4 sm:px-8 lg:px-10">
-      <div className="max-w-[1200px] mx-auto space-y-6">
-        {/* Breadcrumb & Title */}
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      {/* Breadcrumb & Title */}
         <div className="space-y-1">
           <div className="text-[13px] text-brand-muted font-semibold flex items-center gap-1.5">
             <Link href="/" className="hover:text-brand-plum transition-colors">Trang chủ</Link>
@@ -49,7 +48,6 @@ export default async function ProfilePage() {
           </div>
 
         </div>
-      </div>
     </div>
   );
 }
