@@ -125,61 +125,63 @@ export function ReportDetailHeroHeader({
         </div>
       </div>
 
-      {/* Hero Overview Card (Gallery + Specs + Status) */}
-      <div className="rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-2xs w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Col 1 (Gallery, 4 cols) */}
-          <div className="lg:col-span-4 space-y-2.5 max-w-[280px]">
-            {/* Main Image */}
-            <div className="relative w-full h-[180px] rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
-              <img
-                src={images[selectedImageIndex] || images[0]}
-                alt={report.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute top-2.5 left-2.5">
-                <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs ${
+      {/* Row of 3 Separate Boxes (Gallery | Thông tin chính | Trạng thái báo cáo) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch w-full">
+        {/* Box 1: Gallery (Full width image & thumbnails) */}
+        <div className="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-2xs flex flex-col justify-between">
+          {/* Main Image */}
+          <div className="relative w-full h-[185px] sm:h-[200px] rounded-xl overflow-hidden bg-slate-100 border border-slate-200/60">
+            <img
+              src={images[selectedImageIndex] || images[0]}
+              alt={report.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute top-2.5 left-2.5">
+              <span
+                className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs ${
                   isLost
                     ? "bg-[#FEE2E2] text-[#DC2626] border-[#FECACA]"
                     : "bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]"
-                }`}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                  {isLost ? "Thất lạc" : "Nhặt được"}
-                </span>
-              </div>
-            </div>
-
-            {/* Thumbnails Row */}
-            <div className="grid grid-cols-3 gap-2">
-              {images.slice(0, 3).map((imgUrl, idx) => {
-                const isThirdAndMore = idx === 2 && images.length > 3;
-                const remainingCount = images.length - 3;
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setSelectedImageIndex(idx)}
-                    className={`relative h-[56px] rounded-lg overflow-hidden border transition-all cursor-pointer ${
-                      selectedImageIndex === idx
-                        ? "border-[#4A0E2E] ring-2 ring-[#4A0E2E]/20"
-                        : "border-slate-200 hover:border-slate-400 opacity-80 hover:opacity-100"
-                    }`}
-                  >
-                    <img src={imgUrl} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
-                    {isThirdAndMore && (
-                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-xs font-bold">
-                        +{remainingCount}
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
+                }`}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                {isLost ? "Thất lạc" : "Nhặt được"}
+              </span>
             </div>
           </div>
 
-          {/* Col 2 (Thông tin chính, 4 cols) */}
-          <div className="lg:col-span-4 space-y-3">
-            <h2 className="text-sm font-bold text-slate-900 pb-1">
+          {/* Thumbnails Row (Full width) */}
+          <div className="grid grid-cols-3 gap-2 mt-3 w-full">
+            {images.slice(0, 3).map((imgUrl, idx) => {
+              const isThirdAndMore = idx === 2 && images.length > 3;
+              const remainingCount = images.length - 3;
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setSelectedImageIndex(idx)}
+                  className={`relative h-[58px] w-full rounded-lg overflow-hidden border transition-all cursor-pointer ${
+                    selectedImageIndex === idx
+                      ? "border-[#4A0E2E] ring-2 ring-[#4A0E2E]/20"
+                      : "border-slate-200 hover:border-slate-400 opacity-80 hover:opacity-100"
+                  }`}
+                >
+                  <img src={imgUrl} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
+                  {isThirdAndMore && (
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-xs font-bold">
+                      +{remainingCount}
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Box 2: Thông tin chính */}
+        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs flex flex-col justify-between space-y-3">
+          <div>
+            <h2 className="text-sm font-bold text-slate-900 pb-2">
               Thông tin chính
             </h2>
 
@@ -189,7 +191,9 @@ export function ReportDetailHeroHeader({
                   <Tag className="w-3.5 h-3.5 text-slate-400" />
                   <span>Tên đồ vật</span>
                 </dt>
-                <dd className="font-bold text-slate-900 text-right">{report.title || "Ví da màu đen"}</dd>
+                <dd className="font-bold text-slate-900 text-right truncate max-w-[180px]">
+                  {report.title || "Ví da màu đen"}
+                </dd>
               </div>
 
               <div className="flex items-center justify-between gap-2">
@@ -223,7 +227,9 @@ export function ReportDetailHeroHeader({
                   <MapPin className="w-3.5 h-3.5 text-slate-400" />
                   <span>Khu vực</span>
                 </dt>
-                <dd className="font-semibold text-slate-900 text-right">{report.location || "Quận 1, TP. HCM"}</dd>
+                <dd className="font-semibold text-slate-900 text-right truncate max-w-[180px]">
+                  {report.location || "Quận 1, TP. HCM"}
+                </dd>
               </div>
 
               <div className="flex items-center justify-between gap-2">
@@ -243,10 +249,12 @@ export function ReportDetailHeroHeader({
               </div>
             </dl>
           </div>
+        </div>
 
-          {/* Col 3 (Trạng thái báo cáo, 4 cols) */}
-          <div className="lg:col-span-4 space-y-3">
-            <h2 className="text-sm font-bold text-slate-900 pb-1">
+        {/* Box 3: Trạng thái báo cáo */}
+        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs flex flex-col justify-between space-y-3">
+          <div className="space-y-3">
+            <h2 className="text-sm font-bold text-slate-900">
               Trạng thái báo cáo
             </h2>
 
