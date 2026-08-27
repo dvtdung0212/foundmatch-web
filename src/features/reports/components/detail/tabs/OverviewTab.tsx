@@ -89,9 +89,9 @@ export function OverviewTab({ report, onSelectTab }: OverviewTabProps) {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-1.5 text-slate-500 font-medium">
                   <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Ngày bị mất</span>
+                  <span>{report.type === "lost" ? "Ngày bị mất" : "Ngày nhặt được"}</span>
                 </div>
-                <p className="font-semibold text-slate-800 pl-5">18/05/2024 (Thứ bảy)</p>
+                <p className="font-semibold text-slate-800 pl-5">{report.eventDate || "18/05/2024"}</p>
               </div>
 
               <div className="space-y-0.5">
@@ -99,7 +99,7 @@ export function OverviewTab({ report, onSelectTab }: OverviewTabProps) {
                   <Clock className="w-3.5 h-3.5 text-slate-400" />
                   <span>Khoảng thời gian</span>
                 </div>
-                <p className="font-semibold text-slate-800 pl-5">14:00 - 15:30</p>
+                <p className="font-semibold text-slate-800 pl-5">{report.eventTimeRange || "Cả ngày"}</p>
               </div>
 
               <div className="space-y-0.5">

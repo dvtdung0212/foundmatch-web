@@ -45,6 +45,8 @@ export type OwnerReportView = {
   code: string;
   description: string;
   distinctiveFeatures?: string;
+  eventDate: string;
+  eventTimeRange: string;
   id: string;
   images: string[];
   isPublic: boolean;
@@ -72,6 +74,62 @@ function formatDate(value: string): string {
     timeStyle: "short",
     timeZone: "Asia/Ho_Chi_Minh",
   }).format(new Date(value));
+}
+
+function formatDateTimeClean(date: Date): { dateStr: string; timeStr: string } {
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  const day = pad(date.getDate());
+  const month = pad(date.getMonth() + 1);
+  const year = date.getFullYear();
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  return {
+    dateStr: `${day}/${month}/${year}`,
+    timeStr: `${hours}:${minutes}`,
+  };
+}
+
+export function formatEventTime(startedAtStr?: string, endedAtStr?: string): {
+  date: string;
+  timeRange: string;
+  formatted: string;
+} {
+  if (!startedAtStr) {
+    return {
+      date: "Chưa xác định",
+      timeRange: "Chưa xác định",
+      formatted: "Chưa có thời gian",
+    };
+  }
+
+  const startDate = new Date(startedAtStr);
+  const start = formatDateTimeClean(startDate);
+
+  if (!endedAtStr) {
+    return {
+      date: start.dateStr,
+      timeRange: start.timeStr,
+      formatted: `${start.timeStr}, ${start.dateStr}`,
+    };
+  }
+
+  const endDate = new Date(endedAtStr);
+  const end = formatDateTimeClean(endDate);
+
+  if (start.dateStr === end.dateStr) {
+    const timeRange = start.timeStr === end.timeStr ? start.timeStr : `${start.timeStr} – ${end.timeStr}`;
+    return {
+      date: start.dateStr,
+      timeRange,
+      formatted: `${timeRange}, ${start.dateStr}`,
+    };
+  }
+
+  return {
+    date: `${start.dateStr} – ${end.dateStr}`,
+    timeRange: `${start.timeStr} – ${end.timeStr}`,
+    formatted: `${start.timeStr} ${start.dateStr} – ${end.timeStr} ${end.dateStr}`,
+  };
 }
 
 function statusText(report: OwnerReportSource): string {
@@ -105,6 +163,8 @@ export function mapOwnerReportView(
     .filter(({ processingStatus, url }) => processingStatus === "READY" && text(url))
     .map(({ url }) => text(url) as string);
 
+  const eventTimeInfo = formatEventTime(eventStartedAt, eventEndedAt);
+
   return {
     activities: [
       {
@@ -118,6 +178,8 @@ export function mapOwnerReportView(
     code: report.publicCode,
     description: text(report.description) ?? "Chưa có mô tả.",
     distinctiveFeatures: fact(privateFacts, "distinctive_feature"),
+    eventDate: eventTimeInfo.date,
+    eventTimeRange: eventTimeInfo.timeRange,
     id: report.id,
     images: readyImages,
     isPublic:
@@ -131,9 +193,7 @@ export function mapOwnerReportView(
     potentialMatchesCount: 0,
     secretVerificationAnswers: fact(privateFacts, "verification_secret"),
     statusText: statusText(report),
-    time: eventStartedAt
-      ? `${formatDate(eventStartedAt)}${eventEndedAt ? ` – ${formatDate(eventEndedAt)}` : ""}`
-      : "Chưa có thời gian",
+    time: eventTimeInfo.formatted,
     title: text(report.title) ?? "Báo cáo chưa đặt tên",
     type: report.type.toLowerCase() as "lost" | "found",
     typeText: report.type === "LOST" ? "Tôi bị mất đồ" : "Tôi nhặt được đồ",

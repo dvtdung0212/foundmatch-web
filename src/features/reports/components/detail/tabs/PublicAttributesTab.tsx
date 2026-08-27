@@ -10,20 +10,6 @@ interface PublicAttributesTabProps {
 export function PublicAttributesTab({ report }: PublicAttributesTabProps) {
   const isLost = report.type === "lost";
 
-  // Standardized key-value list matching mockup
-  const attributesList = [
-    { key: "Danh mục", value: report.category },
-    { key: "Tình trạng", value: "Đã qua sử dụng" },
-    { key: "Màu sắc", value: "Đen" },
-    { key: "Khu vực", value: report.location },
-    { key: "Thương hiệu", value: "Pedro" },
-    { key: isLost ? "Ngày bị mất" : "Ngày nhặt được", value: report.time },
-    { key: "Chất liệu", value: "Da" },
-    { key: isLost ? "Địa điểm bị mất" : "Địa điểm nhặt được", value: report.location },
-    { key: "Kích thước", value: "11 x 8 x 2 cm" },
-    { key: "Mã công khai", value: report.code },
-  ];
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       {/* Left Column (8 cols): Structured Public Attributes & Full Description */}
@@ -38,7 +24,7 @@ export function PublicAttributesTab({ report }: PublicAttributesTabProps) {
 
           {/* Key-Value Table */}
           <div className="rounded-xl border border-slate-200 overflow-hidden divide-y divide-slate-100 text-sm">
-            {/* Grid 2 rows side-by-side on tablet/desktop */}
+            {/* Row 1 */}
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-brand-border/40">
               <div className="p-3.5 flex justify-between gap-2 bg-slate-50/50">
                 <span className="text-brand-muted font-medium">Danh mục</span>
@@ -50,6 +36,7 @@ export function PublicAttributesTab({ report }: PublicAttributesTabProps) {
               </div>
             </div>
 
+            {/* Row 2 */}
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-brand-border/40">
               <div className="p-3.5 flex justify-between gap-2 bg-slate-50/50">
                 <span className="text-brand-muted font-medium">Màu sắc</span>
@@ -61,6 +48,7 @@ export function PublicAttributesTab({ report }: PublicAttributesTabProps) {
               </div>
             </div>
 
+            {/* Row 3: Ngày rõ ràng */}
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-brand-border/40">
               <div className="p-3.5 flex justify-between gap-2 bg-slate-50/50">
                 <span className="text-brand-muted font-medium">Thương hiệu</span>
@@ -68,21 +56,23 @@ export function PublicAttributesTab({ report }: PublicAttributesTabProps) {
               </div>
               <div className="p-3.5 flex justify-between gap-2">
                 <span className="text-brand-muted font-medium">{isLost ? "Ngày bị mất" : "Ngày nhặt được"}</span>
-                <span className="font-semibold text-brand-heading text-right">{report.time}</span>
+                <span className="font-semibold text-brand-heading text-right">{report.eventDate || "Chưa xác định"}</span>
               </div>
             </div>
 
+            {/* Row 4: Khung giờ gộp gọn */}
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-brand-border/40">
               <div className="p-3.5 flex justify-between gap-2 bg-slate-50/50">
                 <span className="text-brand-muted font-medium">Chất liệu</span>
                 <span className="font-semibold text-brand-heading text-right">Da bò</span>
               </div>
               <div className="p-3.5 flex justify-between gap-2">
-                <span className="text-brand-muted font-medium">{isLost ? "Địa điểm mất" : "Địa điểm nhặt"}</span>
-                <span className="font-semibold text-brand-heading text-right">{report.location}</span>
+                <span className="text-brand-muted font-medium">Khoảng thời gian</span>
+                <span className="font-semibold text-brand-heading text-right">{report.eventTimeRange || "Cả ngày"}</span>
               </div>
             </div>
 
+            {/* Row 5 */}
             <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-brand-border/40">
               <div className="p-3.5 flex justify-between gap-2 bg-slate-50/50">
                 <span className="text-brand-muted font-medium">Kích thước</span>
@@ -119,35 +109,26 @@ export function PublicAttributesTab({ report }: PublicAttributesTabProps) {
             Các thuộc tính trên là thông tin công khai, được hiển thị cho cộng đồng để tăng khả năng tìm lại đồ thất lạc.
           </p>
 
-          <ul className="space-y-2.5 text-xs text-emerald-900 pt-1">
+          <ul className="space-y-2 text-xs text-emerald-950/90 pt-1">
             <li className="flex items-start gap-2">
-              <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
-                <Check className="w-2.5 h-2.5 stroke-[3]" />
-              </div>
-              <span>Không chứa thông tin liên hệ cá nhân nhạy cảm</span>
+              <span className="w-4 h-4 rounded-full bg-emerald-200/80 text-emerald-800 flex items-center justify-center text-[10px] font-bold mt-0.5 shrink-0">
+                ✓
+              </span>
+              <span>Không hiển thị số điện thoại hay địa chỉ chính xác của bạn.</span>
             </li>
             <li className="flex items-start gap-2">
-              <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
-                <Check className="w-2.5 h-2.5 stroke-[3]" />
-              </div>
-              <span>Tập trung vào đặc điểm nhận dạng tổng quát của đồ vật</span>
+              <span className="w-4 h-4 rounded-full bg-emerald-200/80 text-emerald-800 flex items-center justify-center text-[10px] font-bold mt-0.5 shrink-0">
+                ✓
+              </span>
+              <span>Các đặc điểm nhận dạng bí mật chỉ dùng để đối soát quyền sở hữu.</span>
             </li>
             <li className="flex items-start gap-2">
-              <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
-                <Check className="w-2.5 h-2.5 stroke-[3]" />
-              </div>
-              <span>Hỗ trợ thuật toán gợi ý ghép đôi chính xác và an toàn</span>
+              <span className="w-4 h-4 rounded-full bg-emerald-200/80 text-emerald-800 flex items-center justify-center text-[10px] font-bold mt-0.5 shrink-0">
+                ✓
+              </span>
+              <span>Bạn có thể chỉnh sửa hoặc ẩn thông tin bất kỳ lúc nào.</span>
             </li>
           </ul>
-
-          <div className="pt-2 border-t border-emerald-200/60">
-            <a
-              href="#privacy-policy"
-              className="text-xs font-bold text-emerald-800 hover:text-emerald-950 hover:underline flex items-center gap-1"
-            >
-              Tìm hiểu thêm về quy tắc hiển thị →
-            </a>
-          </div>
         </div>
       </div>
     </div>
