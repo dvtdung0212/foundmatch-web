@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, ShieldCheck } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { OwnerReportView } from "../../../api/owner-report-view";
 
 interface PublicAttributesTabProps {
@@ -14,12 +15,12 @@ export function PublicAttributesTab({ report }: PublicAttributesTabProps) {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       {/* Left Column (8 cols): Structured Public Attributes & Full Description */}
       <div className="lg:col-span-8 space-y-6 text-left">
-        <div className="rounded-2xl border border-brand-border/80 bg-white p-6 shadow-2xs space-y-5">
+        <Card className="p-6 space-y-5">
           <div>
-            <h2 className="text-[17px] font-bold text-slate-900">Thuộc tính công khai</h2>
-            <p className="text-[13px] text-slate-500 mt-1">
+            <CardTitle className="text-[17px]">Thuộc tính công khai</CardTitle>
+            <CardDescription className="mt-1">
               Những thông tin này có thể được hiển thị công khai để giúp kết nối với người nhặt/chủ sở hữu.
-            </p>
+            </CardDescription>
           </div>
 
           {/* Key-Value Table */}
@@ -92,12 +93,12 @@ export function PublicAttributesTab({ report }: PublicAttributesTabProps) {
               {report.description || "Chưa có mô tả công khai nào được thêm."}
             </div>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Right Column (4 cols): Safety Rules & Guidance */}
       <div className="lg:col-span-4 space-y-4 text-left">
-        <div className="rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/70 via-white to-emerald-50/40 p-6 shadow-2xs space-y-4">
+        <Card variant="highlight" className="p-6 space-y-4">
           <div className="flex items-center gap-2.5 text-emerald-950 font-bold text-sm">
             <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
               <ShieldCheck className="w-4 h-4 text-emerald-700" />
@@ -129,7 +130,7 @@ export function PublicAttributesTab({ report }: PublicAttributesTabProps) {
               <span>Bạn có thể chỉnh sửa hoặc ẩn thông tin bất kỳ lúc nào.</span>
             </li>
           </ul>
-        </div>
+        </Card>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Users,
 } from "lucide-react";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import type { OwnerReportView } from "../../../api/owner-report-view";
 
 interface OverviewTabProps {
@@ -38,11 +39,9 @@ export function OverviewTab({ report, onSelectTab }: OverviewTabProps) {
       {/* Top 3 Cards Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Card 1: Mô tả ngắn */}
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 space-y-3 flex flex-col justify-between shadow-2xs">
+        <Card className="p-5 flex flex-col justify-between space-y-3">
           <div className="space-y-2">
-            <h3 className="font-bold text-sm text-slate-900">
-              Mô tả ngắn
-            </h3>
+            <CardTitle>Mô tả ngắn</CardTitle>
             <p className="text-xs text-slate-600 leading-relaxed">
               {report.description && report.description !== "Chưa có mô tả."
                 ? report.description
@@ -59,13 +58,11 @@ export function OverviewTab({ report, onSelectTab }: OverviewTabProps) {
               <span>→</span>
             </button>
           </div>
-        </div>
+        </Card>
 
         {/* Card 2: Điểm nổi bật */}
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 space-y-3 shadow-2xs">
-          <h3 className="font-bold text-sm text-slate-900">
-            Điểm nổi bật
-          </h3>
+        <Card className="p-5 space-y-3">
+          <CardTitle>Điểm nổi bật</CardTitle>
           <ul className="space-y-2.5 text-xs text-slate-700">
             {defaultBullets.map((text, idx) => (
               <li key={idx} className="flex items-center gap-2">
@@ -76,13 +73,11 @@ export function OverviewTab({ report, onSelectTab }: OverviewTabProps) {
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
 
         {/* Card 3: Thời gian & Địa điểm */}
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 space-y-3 shadow-2xs">
-          <h3 className="font-bold text-sm text-slate-900">
-            Thời gian & Địa điểm
-          </h3>
+        <Card className="p-5 space-y-3">
+          <CardTitle>Thời gian & Địa điểm</CardTitle>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
             <div className="space-y-2 text-xs text-slate-600">
@@ -127,21 +122,19 @@ export function OverviewTab({ report, onSelectTab }: OverviewTabProps) {
               </button>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Bottom 2 Cards Row: Private Verification + Quick Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         {/* Left (5 cols): Xác minh riêng tư */}
-        <div className="lg:col-span-5 rounded-2xl border border-slate-200/90 bg-white p-5 space-y-3 flex flex-col justify-between shadow-2xs">
+        <Card className="lg:col-span-5 p-5 space-y-3 flex flex-col justify-between">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center">
                 <Lock className="w-3.5 h-3.5" />
               </div>
-              <h3 className="font-bold text-sm text-slate-900">
-                Xác minh riêng tư
-              </h3>
+              <CardTitle>Xác minh riêng tư</CardTitle>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
               Để bảo vệ quyền riêng tư, chúng tôi chỉ chia sẻ thông tin nhạy cảm khi có kết quả khớp tiềm năng.
@@ -167,17 +160,15 @@ export function OverviewTab({ report, onSelectTab }: OverviewTabProps) {
               <span>→</span>
             </button>
           </div>
-        </div>
+        </Card>
 
         {/* Right (7 cols): Thống kê nhanh */}
-        <div className="lg:col-span-7 rounded-2xl border border-slate-200/90 bg-white p-5 space-y-3.5 shadow-2xs">
-          <h3 className="font-bold text-sm text-slate-900">
-            Thống kê nhanh
-          </h3>
+        <Card className="lg:col-span-7 p-5 space-y-3.5">
+          <CardTitle>Thống kê nhanh</CardTitle>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {/* Box 1 */}
-            <div className="p-3 rounded-xl border border-slate-100 bg-white text-center space-y-1 shadow-2xs">
+            <div className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 text-center space-y-1 shadow-2xs">
               <div className="flex items-center justify-center gap-1 text-[11px] font-medium text-slate-500">
                 <Eye className="w-3.5 h-3.5 text-slate-400" />
                 <span>Lượt xem</span>
@@ -186,16 +177,16 @@ export function OverviewTab({ report, onSelectTab }: OverviewTabProps) {
             </div>
 
             {/* Box 2 */}
-            <div className="p-3 rounded-xl border border-slate-100 bg-white text-center space-y-1 shadow-2xs">
+            <div className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 text-center space-y-1 shadow-2xs">
               <div className="flex items-center justify-center gap-1 text-[11px] font-medium text-slate-500">
                 <Users className="w-3.5 h-3.5 text-slate-400" />
-                <span>Kết quả khớp tiềm năng</span>
+                <span>Khớp tiềm năng</span>
               </div>
               <p className="text-xl font-bold text-slate-900">12</p>
             </div>
 
             {/* Box 3 */}
-            <div className="p-3 rounded-xl border border-slate-100 bg-white text-center space-y-1 shadow-2xs">
+            <div className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 text-center space-y-1 shadow-2xs">
               <div className="flex items-center justify-center gap-1 text-[11px] font-medium text-slate-500">
                 <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
                 <span>Yêu cầu xác minh</span>
@@ -204,7 +195,7 @@ export function OverviewTab({ report, onSelectTab }: OverviewTabProps) {
             </div>
 
             {/* Box 4 */}
-            <div className="p-3 rounded-xl border border-slate-100 bg-white text-center space-y-1 shadow-2xs">
+            <div className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 text-center space-y-1 shadow-2xs">
               <div className="flex items-center justify-center gap-1 text-[11px] font-medium text-slate-500">
                 <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
                 <span>Phản hồi từ bạn</span>
@@ -212,7 +203,7 @@ export function OverviewTab({ report, onSelectTab }: OverviewTabProps) {
               <p className="text-xl font-bold text-slate-900">2</p>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

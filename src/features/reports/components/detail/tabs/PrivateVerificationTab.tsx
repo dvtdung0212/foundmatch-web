@@ -20,6 +20,7 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { OwnerReportView } from "../../../api/owner-report-view";
 
 interface PrivateVerificationTabProps {
@@ -38,19 +39,17 @@ export function PrivateVerificationTab({ report }: PrivateVerificationTabProps) 
       {/* 3 Columns Grid: 1. Secret Facts, 2. Sharing Rules, 3. Provided Evidence */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
         {/* Card 1: Thông tin bí mật để xác minh */}
-        <div className="rounded-2xl border border-brand-border/80 bg-white p-5 sm:p-6 shadow-2xs space-y-4 flex flex-col justify-between">
+        <Card className="p-5 sm:p-6 space-y-4 flex flex-col justify-between">
           <div className="space-y-3.5">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-brand-plum/10 text-brand-plum font-bold text-xs flex items-center justify-center">
                 1
               </div>
-              <h3 className="font-bold text-sm text-brand-heading">
-                Thông tin bí mật để xác minh
-              </h3>
+              <CardTitle>Thông tin bí mật để xác minh</CardTitle>
             </div>
-            <p className="text-[11px] text-brand-muted">
+            <CardDescription>
               Những thông tin này chỉ được chia sẻ khi đã xác minh quyền sở hữu thành công.
-            </p>
+            </CardDescription>
 
             <div className="space-y-2.5 text-xs">
               {/* Phone */}
@@ -114,22 +113,20 @@ export function PrivateVerificationTab({ report }: PrivateVerificationTabProps) 
               </div>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Card 2: Quy tắc chia sẻ thông tin */}
-        <div className="rounded-2xl border border-brand-border/80 bg-white p-5 sm:p-6 shadow-2xs space-y-4 flex flex-col justify-between">
+        <Card className="p-5 sm:p-6 space-y-4 flex flex-col justify-between">
           <div className="space-y-3.5">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-brand-plum/10 text-brand-plum font-bold text-xs flex items-center justify-center">
                 2
               </div>
-              <h3 className="font-bold text-sm text-brand-heading">
-                Quy tắc chia sẻ thông tin
-              </h3>
+              <CardTitle>Quy tắc chia sẻ thông tin</CardTitle>
             </div>
-            <p className="text-[11px] text-brand-muted">
+            <CardDescription>
               Thông tin riêng tư của bạn được bảo vệ tuyệt đối theo chính sách Zero-Knowledge.
-            </p>
+            </CardDescription>
 
             <ul className="space-y-3 text-xs text-slate-700 pt-1">
               <li className="flex items-start gap-2.5">
@@ -169,22 +166,20 @@ export function PrivateVerificationTab({ report }: PrivateVerificationTabProps) 
               Chúng tôi không chia sẻ thông tin cá nhân của bạn cho bên thứ ba vì bất kỳ mục đích thương mại nào.
             </p>
           </div>
-        </div>
+        </Card>
 
         {/* Card 3: Bằng chứng đã cung cấp */}
-        <div className="rounded-2xl border border-brand-border/80 bg-white p-5 sm:p-6 shadow-2xs space-y-4 flex flex-col justify-between">
+        <Card className="p-5 sm:p-6 space-y-4 flex flex-col justify-between">
           <div className="space-y-3.5">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-brand-plum/10 text-brand-plum font-bold text-xs flex items-center justify-center">
                 3
               </div>
-              <h3 className="font-bold text-sm text-brand-heading">
-                Bằng chứng đã cung cấp
-              </h3>
+              <CardTitle>Bằng chứng đã cung cấp</CardTitle>
             </div>
-            <p className="text-[11px] text-brand-muted">
+            <CardDescription>
               Các tệp và tài liệu giúp đối chiếu và chứng minh quyền sở hữu hợp pháp.
-            </p>
+            </CardDescription>
 
             {/* Evidence Files List */}
             <div className="space-y-2 text-xs">
@@ -234,11 +229,11 @@ export function PrivateVerificationTab({ report }: PrivateVerificationTabProps) 
               <span className="text-[10px] text-emerald-700 font-semibold">Độ tin cậy cao</span>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Bottom Full-width Action Banner */}
-      <div className="rounded-2xl border border-brand-plum/20 bg-gradient-to-r from-brand-soft/60 via-white to-brand-soft/40 p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs">
+      <Card variant="muted" className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
           <div className="w-9 h-9 rounded-xl bg-brand-plum/10 text-brand-plum flex items-center justify-center shrink-0 mt-0.5">
             <Lock className="w-5 h-5" />
@@ -262,7 +257,7 @@ export function PrivateVerificationTab({ report }: PrivateVerificationTabProps) 
           <Edit className="w-3.5 h-3.5" />
           Cập nhật thông tin xác minh
         </Button>
-      </div>
+      </Card>
     </div>
   );
 }

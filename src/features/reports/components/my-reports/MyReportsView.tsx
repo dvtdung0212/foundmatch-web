@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Pagination } from "@/components/ui/pagination";
 import { Select } from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
 import { MyReportsTable } from "./my-reports-table";
 import { MyReportsCard } from "./my-reports-card";
 import { CloseReportDialog } from "../modals/CloseReportDialog";
@@ -281,17 +282,17 @@ export function MyReportsView() {
       <div className="space-y-4">
         {loading ? (
           /* Loading Skeleton */
-          <div className="bg-white rounded-2xl border border-brand-border p-6 shadow-xs space-y-4 animate-pulse">
+          <Card className="p-6 space-y-4 animate-pulse">
             <div className="h-6 bg-brand-cream/80 rounded-md w-1/4" />
             <div className="space-y-3 pt-2">
               {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="h-14 bg-brand-cream/50 rounded-xl w-full" />
               ))}
             </div>
-          </div>
+          </Card>
         ) : error ? (
           /* Error State */
-          <div className="bg-white rounded-2xl border border-brand-border p-8 text-center space-y-4 shadow-xs">
+          <Card className="p-8 text-center space-y-4">
             <div className="h-12 w-12 rounded-full bg-red-50 text-brand-lost flex items-center justify-center mx-auto">
               <AlertCircle className="h-6 w-6" />
             </div>
@@ -306,10 +307,10 @@ export function MyReportsView() {
             >
               <RefreshCw className="h-3.5 w-3.5" /> Thử lại
             </Button>
-          </div>
+          </Card>
         ) : sortedReports.length === 0 ? (
           /* Empty State */
-          <div className="bg-white rounded-2xl border border-brand-border p-12 text-center space-y-4 shadow-xs">
+          <Card className="p-12 text-center space-y-4">
             <div className="h-16 w-16 rounded-full bg-brand-cream flex items-center justify-center text-brand-muted mx-auto">
               <FileText className="h-8 w-8" />
             </div>
@@ -333,7 +334,7 @@ export function MyReportsView() {
                 <Plus className="h-4 w-4" /> Tạo báo cáo ngay
               </Button>
             </Link>
-          </div>
+          </Card>
         ) : (
           /* Report List */
           <div className="space-y-4">
@@ -373,7 +374,7 @@ export function MyReportsView() {
             </div>
 
             {/* Pagination Footer */}
-            <div className="bg-white rounded-2xl border border-brand-border px-4 shadow-xs">
+            <Card className="px-4">
               <Pagination
                 currentPage={page}
                 totalPages={totalPages}
@@ -385,7 +386,7 @@ export function MyReportsView() {
                   setPage(1);
                 }}
               />
-            </div>
+            </Card>
           </div>
         )}
       </div>

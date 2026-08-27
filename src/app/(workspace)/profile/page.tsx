@@ -4,6 +4,7 @@ import { ProfileHeaderCard } from "@/features/profiles/components/profile-header
 import { ProfileQuoteCard } from "@/features/profiles/components/profile-quote-card";
 import { ProfileStatsRow } from "@/features/profiles/components/profile-stats-row";
 import { ProfileSidebar } from "@/features/profiles/components/profile-sidebar";
+import { Card } from "@/components/ui/card";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
@@ -37,10 +38,10 @@ export default async function ProfilePage() {
         <div className="space-y-6">
           
           {/* Profile Overview (Header + Stats) */}
-          <div className="bg-white rounded-[32px] p-5 sm:p-6 border border-[#F9ECE3] shadow-sm space-y-6">
+          <Card className="p-5 sm:p-6 space-y-6">
             <ProfileHeaderCard profile={profile} />
             <ProfileStatsRow />
-          </div>
+          </Card>
           
           {/* Profile Tabs & Forms */}
           <div className="w-full">

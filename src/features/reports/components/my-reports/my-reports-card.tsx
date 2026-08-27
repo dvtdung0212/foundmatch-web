@@ -23,6 +23,7 @@ import {
   FileEdit,
   Trash2,
 } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import type { OwnerItemDeclarationDto } from "./types";
 import { StatusBadge, formatDate } from "./my-reports-table";
 
@@ -51,7 +52,7 @@ export function MyReportsCard({
   const location = report.publicAreaLabel || "Không rõ khu vực";
 
   return (
-    <div className="bg-white rounded-2xl border border-brand-border p-4 shadow-xs hover:border-brand-plum/30 transition-all space-y-3.5">
+    <Card className="p-4 hover:border-brand-plum/30 transition-all space-y-3.5">
       {/* Top: Thumbnail, Title, Type, Dropdown */}
       <div className="flex items-start gap-3">
         <div className="relative h-14 w-14 rounded-xl bg-brand-cream/80 border border-brand-border/80 overflow-hidden shrink-0 flex items-center justify-center">
@@ -173,6 +174,6 @@ export function MyReportsCard({
           <span>{formatDate(report.createdAt)}</span>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
