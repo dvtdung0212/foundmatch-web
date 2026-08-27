@@ -138,11 +138,10 @@ export function ReportDetailHeroHeader({
             />
             <div className="absolute top-2.5 left-2.5">
               <span
-                className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs ${
-                  isLost
-                    ? "bg-[#FEE2E2] text-[#DC2626] border-[#FECACA]"
-                    : "bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]"
-                }`}
+                className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs ${isLost
+                  ? "bg-[#FEE2E2] text-[#DC2626] border-[#FECACA]"
+                  : "bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]"
+                  }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-current" />
                 {isLost ? "Thất lạc" : "Nhặt được"}
@@ -160,11 +159,10 @@ export function ReportDetailHeroHeader({
                   key={idx}
                   type="button"
                   onClick={() => setSelectedImageIndex(idx)}
-                  className={`relative h-[60px] sm:h-[65px] w-full rounded-lg overflow-hidden border transition-all cursor-pointer ${
-                    selectedImageIndex === idx
-                      ? "border-[#4A0E2E] ring-2 ring-[#4A0E2E]/20"
-                      : "border-slate-200 hover:border-slate-400 opacity-80 hover:opacity-100"
-                  }`}
+                  className={`relative h-[60px] sm:h-[65px] w-full rounded-lg overflow-hidden border transition-all cursor-pointer ${selectedImageIndex === idx
+                    ? "border-[#4A0E2E] ring-2 ring-[#4A0E2E]/20"
+                    : "border-slate-200 hover:border-slate-400 opacity-80 hover:opacity-100"
+                    }`}
                 >
                   <img src={imgUrl} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
                   {isThirdAndMore && (
@@ -182,7 +180,7 @@ export function ReportDetailHeroHeader({
         <div className="lg:col-span-7 rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-2xs flex flex-col justify-between space-y-4">
           {/* Header Row: Title & Status Pill */}
           <div className="flex flex-wrap items-center justify-between gap-3 pb-1 border-b border-slate-100">
-            <h2 className="text-base font-bold text-slate-900">
+            <h2 className="text-lg font-bold text-slate-900">
               Thông tin chính
             </h2>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFFBEB] border border-[#FDE68A] text-[#B45309] font-bold text-xs shadow-2xs">
