@@ -125,12 +125,12 @@ export function ReportDetailHeroHeader({
         </div>
       </div>
 
-      {/* Row of 3 Separate Boxes (Gallery | Thông tin chính | Trạng thái báo cáo) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch w-full">
-        {/* Box 1: Gallery (Full width image & thumbnails) */}
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-2xs flex flex-col justify-between">
+      {/* 2-Column Hero Layout: Gallery (Left) | Main Info & Status (Right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch w-full">
+        {/* Column 1: Gallery (5 cols) */}
+        <div className="lg:col-span-5 rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 shadow-2xs flex flex-col justify-between">
           {/* Main Image */}
-          <div className="relative w-full h-[185px] sm:h-[200px] rounded-xl overflow-hidden bg-slate-100 border border-slate-200/60">
+          <div className="relative w-full h-[210px] sm:h-[235px] rounded-xl overflow-hidden bg-slate-100 border border-slate-200/60">
             <img
               src={images[selectedImageIndex] || images[0]}
               alt={report.title}
@@ -151,7 +151,7 @@ export function ReportDetailHeroHeader({
           </div>
 
           {/* Thumbnails Row (Full width) */}
-          <div className="grid grid-cols-3 gap-2 mt-3 w-full">
+          <div className="grid grid-cols-3 gap-2.5 mt-3 w-full">
             {images.slice(0, 3).map((imgUrl, idx) => {
               const isThirdAndMore = idx === 2 && images.length > 3;
               const remainingCount = images.length - 3;
@@ -160,7 +160,7 @@ export function ReportDetailHeroHeader({
                   key={idx}
                   type="button"
                   onClick={() => setSelectedImageIndex(idx)}
-                  className={`relative h-[56px] w-full rounded-lg overflow-hidden border transition-all cursor-pointer ${
+                  className={`relative h-[60px] sm:h-[65px] w-full rounded-lg overflow-hidden border transition-all cursor-pointer ${
                     selectedImageIndex === idx
                       ? "border-[#4A0E2E] ring-2 ring-[#4A0E2E]/20"
                       : "border-slate-200 hover:border-slate-400 opacity-80 hover:opacity-100"
@@ -178,24 +178,44 @@ export function ReportDetailHeroHeader({
           </div>
         </div>
 
-        {/* Box 2: Thông tin chính */}
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs flex flex-col justify-between h-full space-y-2">
-          <h2 className="text-sm font-bold text-slate-900 pb-1 shrink-0">
-            Thông tin chính
-          </h2>
+        {/* Column 2: Thông tin chính & Trạng thái (7 cols) */}
+        <div className="lg:col-span-7 rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-2xs flex flex-col justify-between space-y-4">
+          {/* Header Row: Title & Status Pill */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-1 border-b border-slate-100">
+            <h2 className="text-base font-bold text-slate-900">
+              Thông tin chính
+            </h2>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFFBEB] border border-[#FDE68A] text-[#B45309] font-bold text-xs shadow-2xs">
+              <Clock className="w-3.5 h-3.5 text-[#D97706]" />
+              <span>Đang tìm kiếm</span>
+            </div>
+          </div>
 
-          <dl className="flex-1 flex flex-col justify-between py-1 text-xs">
-            <div className="flex items-center justify-between gap-2 py-1">
+          {/* 2-Column Key Attributes Grid */}
+          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3.5 py-1 text-xs">
+            {/* Row 1 */}
+            <div className="flex items-center justify-between gap-2 border-b border-slate-100/80 pb-2">
               <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
                 <Tag className="w-3.5 h-3.5 text-slate-400" />
                 <span>Tên đồ vật</span>
               </dt>
-              <dd className="font-bold text-slate-900 text-right truncate max-w-[180px]">
+              <dd className="font-bold text-slate-900 text-right truncate max-w-[160px]">
                 {report.title || "Ví da màu đen"}
               </dd>
             </div>
 
-            <div className="flex items-center justify-between gap-2 py-1">
+            <div className="flex items-center justify-between gap-2 border-b border-slate-100/80 pb-2">
+              <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
+                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <span>Khu vực</span>
+              </dt>
+              <dd className="font-semibold text-slate-900 text-right truncate max-w-[160px]">
+                {report.location || "Quận 1, TP. HCM"}
+              </dd>
+            </div>
+
+            {/* Row 2 */}
+            <div className="flex items-center justify-between gap-2 border-b border-slate-100/80 pb-2">
               <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
                 <FileText className="w-3.5 h-3.5 text-slate-400" />
                 <span>Mã báo cáo</span>
@@ -213,25 +233,7 @@ export function ReportDetailHeroHeader({
               </dd>
             </div>
 
-            <div className="flex items-center justify-between gap-2 py-1">
-              <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
-                <Folder className="w-3.5 h-3.5 text-slate-400" />
-                <span>Danh mục</span>
-              </dt>
-              <dd className="font-semibold text-slate-900 text-right">{report.category || "Ví / Bóp"}</dd>
-            </div>
-
-            <div className="flex items-center justify-between gap-2 py-1">
-              <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
-                <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                <span>Khu vực</span>
-              </dt>
-              <dd className="font-semibold text-slate-900 text-right truncate max-w-[180px]">
-                {report.location || "Quận 1, TP. HCM"}
-              </dd>
-            </div>
-
-            <div className="flex items-center justify-between gap-2 py-1">
+            <div className="flex items-center justify-between gap-2 border-b border-slate-100/80 pb-2">
               <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
                 <Calendar className="w-3.5 h-3.5 text-slate-400" />
                 <span>Ngày tạo</span>
@@ -239,7 +241,16 @@ export function ReportDetailHeroHeader({
               <dd className="font-normal text-slate-700 text-right">20/05/2024 10:30</dd>
             </div>
 
-            <div className="flex items-center justify-between gap-2 py-1">
+            {/* Row 3 */}
+            <div className="flex items-center justify-between gap-2 pb-1">
+              <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
+                <Folder className="w-3.5 h-3.5 text-slate-400" />
+                <span>Danh mục</span>
+              </dt>
+              <dd className="font-semibold text-slate-900 text-right">{report.category || "Ví / Bóp"}</dd>
+            </div>
+
+            <div className="flex items-center justify-between gap-2 pb-1">
               <dt className="text-slate-500 font-medium flex items-center gap-2 shrink-0">
                 <Clock className="w-3.5 h-3.5 text-slate-400" />
                 <span>Cập nhật cuối</span>
@@ -247,45 +258,27 @@ export function ReportDetailHeroHeader({
               <dd className="font-normal text-slate-700 text-right">22/05/2024 09:15</dd>
             </div>
           </dl>
-        </div>
 
-        {/* Box 3: Trạng thái báo cáo */}
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs flex flex-col justify-between h-full space-y-2">
-          <h2 className="text-sm font-bold text-slate-900 pb-1 shrink-0">
-            Trạng thái báo cáo
-          </h2>
-
-          <div className="flex-1 flex flex-col justify-between gap-3">
-            {/* Status Box */}
-            <div className="p-3.5 rounded-xl bg-[#FFFBEB] border border-[#FDE68A] space-y-2">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 border border-[#FDE68A] text-[#B45309] font-bold text-[11px] shadow-2xs">
-                <Clock className="w-3.5 h-3.5 text-[#D97706]" />
-                <span>Đang tìm kiếm</span>
-              </div>
-              <p className="text-[11px] text-[#92400E] leading-relaxed">
-                Chúng tôi đang giúp bạn tìm kiếm chủ sở hữu. Hãy theo dõi kết quả khớp mới và phản hồi khi có liên hệ.
-              </p>
-            </div>
-
-            {/* Safety Box */}
-            <div className="p-3.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-start gap-3">
-              <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5 text-emerald-700">
+          {/* Merged Status & Security Footer Banner */}
+          <div className="p-3 sm:p-3.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
                 <ShieldCheck className="w-4 h-4" />
               </div>
-              <div className="space-y-0.5 text-xs">
+              <div>
                 <p className="font-bold text-xs text-[#14532D]">Thông tin của bạn được bảo mật</p>
-                <p className="text-[11px] text-[#166534] leading-relaxed">
+                <p className="text-[11px] text-[#166534] leading-tight">
                   Chỉ bên liên quan được xác minh mới có thể xem thông tin liên hệ.
                 </p>
-                <button
-                  type="button"
-                  onClick={() => onSelectTab("private-verification")}
-                  className="text-[11px] font-bold text-[#166534] hover:underline flex items-center gap-1 pt-1 cursor-pointer"
-                >
-                  Tìm hiểu thêm →
-                </button>
               </div>
             </div>
+            <button
+              type="button"
+              onClick={() => onSelectTab("private-verification")}
+              className="text-[11px] font-bold text-[#166534] hover:underline whitespace-nowrap cursor-pointer pl-9 sm:pl-0"
+            >
+              Tìm hiểu thêm →
+            </button>
           </div>
         </div>
       </div>
