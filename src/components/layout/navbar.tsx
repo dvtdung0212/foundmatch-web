@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
 import { UserMenu } from "@/features/auth/components/user-menu";
+import { NotificationBell } from "@/features/notifications/components/NotificationBell";
 import type { UserProfileDTO } from "@/types/profile.types";
 import { ChevronDown } from "lucide-react";
 
@@ -36,7 +37,10 @@ export function Navbar({ profile }: NavbarProps) {
         {/* Auth Buttons */}
         <div className="flex items-center gap-3">
           {profile ? (
-            <UserMenu profile={profile} />
+            <div className="flex items-center gap-3">
+              <NotificationBell />
+              <UserMenu profile={profile} />
+            </div>
           ) : (
             <>
               <Link href="/login">

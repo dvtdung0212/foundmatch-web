@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import ReportDetailPage from "@/app/reports/[id]/page";
+import ReportDetailPage from "@/app/(workspace)/reports/[id]/page";
 
 const mocks = vi.hoisted(() => ({
   getServerApiClient: vi.fn(),

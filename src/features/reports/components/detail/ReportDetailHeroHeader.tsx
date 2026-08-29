@@ -9,6 +9,7 @@ import {
   Copy,
   Edit,
   Eye,
+  FileEdit,
   FileText,
   Folder,
   Lock,
@@ -125,6 +126,50 @@ export function ReportDetailHeroHeader({
           </button>
         </div>
       </div>
+
+      {/* Information Request Alert Banner */}
+      {(report.openInformationRequest || report.reviewStatus === "NEEDS_INFORMATION") && (
+        <div className="w-full rounded-2xl bg-amber-50 border border-amber-200 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs animate-in fade-in-50">
+          <div className="flex items-start gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0 shadow-2xs mt-0.5 sm:mt-0">
+              <FileEdit className="w-5 h-5 text-amber-700" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-amber-900 font-heading">
+                  Yêu cầu bổ sung thông tin từ Kiểm duyệt viên
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-200 text-amber-900 uppercase tracking-wider">
+                  Cần xử lý
+                </span>
+              </div>
+              <p className="text-xs text-amber-800 mt-1 leading-relaxed max-w-3xl">
+                {report.openInformationRequest?.message || "Kiểm duyệt viên đã yêu cầu bạn bổ sung thêm chi tiết hình ảnh hoặc thông tin để tiến hành phê duyệt bài đăng."}
+              </p>
+              {report.openInformationRequest?.fields && report.openInformationRequest.fields.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                  <span className="text-[11px] font-semibold text-amber-900">Các trường cần bổ sung:</span>
+                  {report.openInformationRequest.fields.map((f, idx) => (
+                    <span key={idx} className="px-2 py-0.5 rounded-md bg-white border border-amber-300 text-amber-900 text-[11px] font-medium shadow-2xs">
+                      {f.labelSnapshot || f.key}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <Link href={`/reports/create?edit=${report.id}&requestId=${report.openInformationRequest?.id || ''}`} className="shrink-0 w-full sm:w-auto">
+            <button
+              type="button"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+            >
+              <Edit className="w-3.5 h-3.5" />
+              <span>Bổ sung thông tin ngay</span>
+            </button>
+          </Link>
+        </div>
+      )}
 
       {/* 2-Column Hero Layout: Gallery (Left) | Main Info & Status (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch w-full">

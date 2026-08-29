@@ -20,7 +20,18 @@ type OwnerReportSource = {
   publicAreaLabel?: unknown;
   publicCode: string;
   publishedAt?: unknown;
-  reviewStatus: "NOT_REQUIRED" | "PENDING_REVIEW" | "APPROVED" | "REJECTED";
+  reviewStatus: "NOT_REQUIRED" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "NEEDS_INFORMATION";
+  openInformationRequest?: {
+    id: string;
+    message: string;
+    createdAt: string;
+    fields: Array<{
+      kind: string;
+      key: string;
+      labelSnapshot: string;
+      attributeAssignmentId?: string | null;
+    }>;
+  } | null;
   submittedAt?: unknown;
   title?: unknown;
   type: "LOST" | "FOUND";
@@ -52,8 +63,20 @@ export type OwnerReportView = {
   isPublic: boolean;
   location: string;
   locationDetail?: string;
+  openInformationRequest?: {
+    id: string;
+    message: string;
+    createdAt: string;
+    fields: Array<{
+      kind: string;
+      key: string;
+      labelSnapshot: string;
+      attributeAssignmentId?: string | null;
+    }>;
+  } | null;
   pendingMediaCount: number;
   potentialMatchesCount: number;
+  reviewStatus: OwnerReportSource["reviewStatus"];
   secretVerificationAnswers?: string;
   statusText: string;
   time: string;
@@ -61,6 +84,7 @@ export type OwnerReportView = {
   type: "lost" | "found";
   typeText: string;
   verificationRequestsCount: number;
+  version: number;
   workflowStatus: OwnerReportSource["workflowStatus"];
 };
 
@@ -189,8 +213,10 @@ export function mapOwnerReportView(
       text(report.locations[0]?.publicAreaLabel) ??
       "Chưa có khu vực công khai",
     locationDetail: fact(privateFacts, "exact_location_context"),
+    openInformationRequest: report.openInformationRequest ?? null,
     pendingMediaCount: report.media.filter(({ processingStatus }) => processingStatus === "PENDING").length,
     potentialMatchesCount: 0,
+    reviewStatus: report.reviewStatus,
     secretVerificationAnswers: fact(privateFacts, "verification_secret"),
     statusText: statusText(report),
     time: eventTimeInfo.formatted,
@@ -198,6 +224,7 @@ export function mapOwnerReportView(
     type: report.type.toLowerCase() as "lost" | "found",
     typeText: report.type === "LOST" ? "Tôi bị mất đồ" : "Tôi nhặt được đồ",
     verificationRequestsCount: 0,
+    version: report.version,
     workflowStatus: report.workflowStatus,
   };
 }
