@@ -20,16 +20,22 @@ type OwnerReportSource = {
   publicAreaLabel?: unknown;
   publicCode: string;
   publishedAt?: unknown;
-  reviewStatus: "NOT_REQUIRED" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "NEEDS_INFORMATION";
+  reviewStatus:
+    | "NOT_REQUIRED"
+    | "PENDING_REVIEW"
+    | "APPROVED"
+    | "REJECTED"
+    | "NEEDS_INFORMATION";
   openInformationRequest?: {
     id: string;
     message: string;
     createdAt: string;
     fields: Array<{
-      kind: string;
-      key: string;
-      labelSnapshot: string;
-      attributeAssignmentId?: string | null;
+      attributeAssignmentId: string | null;
+      fieldKey: string;
+      fieldKind: string;
+      fulfilled: boolean;
+      label: string;
     }>;
   } | null;
   submittedAt?: unknown;
@@ -38,7 +44,15 @@ type OwnerReportSource = {
   updatedAt: string;
   version: number;
   visibilityStatus: "PRIVATE" | "PUBLIC" | "HIDDEN";
-  workflowStatus: "DRAFT" | "SUBMITTED" | "ACTIVE" | "RESOLVED" | "CLOSED" | "WITHDRAWN" | "EXPIRED" | "ARCHIVED";
+  workflowStatus:
+    | "DRAFT"
+    | "SUBMITTED"
+    | "ACTIVE"
+    | "RESOLVED"
+    | "CLOSED"
+    | "WITHDRAWN"
+    | "EXPIRED"
+    | "ARCHIVED";
 };
 
 type PrivateFactsSource = {
@@ -113,7 +127,10 @@ function formatDateTimeClean(date: Date): { dateStr: string; timeStr: string } {
   };
 }
 
-export function formatEventTime(startedAtStr?: string, endedAtStr?: string): {
+export function formatEventTime(
+  startedAtStr?: string,
+  endedAtStr?: string,
+): {
   date: string;
   timeRange: string;
   formatted: string;
@@ -141,7 +158,10 @@ export function formatEventTime(startedAtStr?: string, endedAtStr?: string): {
   const end = formatDateTimeClean(endDate);
 
   if (start.dateStr === end.dateStr) {
-    const timeRange = start.timeStr === end.timeStr ? start.timeStr : `${start.timeStr} – ${end.timeStr}`;
+    const timeRange =
+      start.timeStr === end.timeStr
+        ? start.timeStr
+        : `${start.timeStr} – ${end.timeStr}`;
     return {
       date: start.dateStr,
       timeRange,
@@ -184,7 +204,9 @@ export function mapOwnerReportView(
   const eventStartedAt = text(report.eventStartedAt);
   const eventEndedAt = text(report.eventEndedAt);
   const readyImages = report.media
-    .filter(({ processingStatus, url }) => processingStatus === "READY" && text(url))
+    .filter(
+      ({ processingStatus, url }) => processingStatus === "READY" && text(url),
+    )
     .map(({ url }) => text(url) as string);
 
   const eventTimeInfo = formatEventTime(eventStartedAt, eventEndedAt);
@@ -207,14 +229,29 @@ export function mapOwnerReportView(
     id: report.id,
     images: readyImages,
     isPublic:
-      report.workflowStatus === "ACTIVE" && report.visibilityStatus === "PUBLIC",
+      report.workflowStatus === "ACTIVE" &&
+      report.visibilityStatus === "PUBLIC",
     location:
       text(report.publicAreaLabel) ??
       text(report.locations[0]?.publicAreaLabel) ??
       "Chưa có khu vực công khai",
     locationDetail: fact(privateFacts, "exact_location_context"),
-    openInformationRequest: report.openInformationRequest ?? null,
-    pendingMediaCount: report.media.filter(({ processingStatus }) => processingStatus === "PENDING").length,
+    openInformationRequest: report.openInformationRequest
+      ? {
+          createdAt: report.openInformationRequest.createdAt,
+          fields: report.openInformationRequest.fields.map((field) => ({
+            attributeAssignmentId: field.attributeAssignmentId,
+            key: field.fieldKey,
+            kind: field.fieldKind,
+            labelSnapshot: field.label,
+          })),
+          id: report.openInformationRequest.id,
+          message: report.openInformationRequest.message,
+        }
+      : null,
+    pendingMediaCount: report.media.filter(
+      ({ processingStatus }) => processingStatus === "PENDING",
+    ).length,
     potentialMatchesCount: 0,
     reviewStatus: report.reviewStatus,
     secretVerificationAnswers: fact(privateFacts, "verification_secret"),

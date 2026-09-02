@@ -1585,6 +1585,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/private/item-declarations/{id}/information-request-options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List safe owner-editable fields available for an information request */
+        get: operations["getCmsItemDeclarationInformationRequestOptions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/item-declarations/{id}/information-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Request allowlisted additional information from the declaration owner */
+        post: operations["requestCmsItemDeclarationInformation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/private/item-declarations/{id}/history": {
         parameters: {
             query?: never;
@@ -1843,6 +1877,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/public/item-declarations/{id}/requested-information": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update only core fields selected in an open information request */
+        patch: operations["updateRequestedItemDeclarationInformation"];
+        trace?: never;
+    };
+    "/api/v1/public/item-declarations/{id}/information-requests/{requestId}/resubmit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resubmit a fulfilled owner information request for review */
+        post: operations["resubmitItemDeclarationInformation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/public/item-declarations/{id}/submit": {
         parameters: {
             query?: never;
@@ -1928,6 +1996,261 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/public/item-declarations/{id}/matches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List visible candidates for one owned declaration */
+        get: operations["listOwnItemDeclarationMatches"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/match-candidates/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get an owner-safe candidate projection */
+        get: operations["getOwnMatchCandidate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/match-candidates/{id}/save": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Save one owner-scoped match candidate */
+        post: operations["saveOwnMatchCandidate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/match-candidates/{id}/unsave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Remove one candidate from the owner saved list */
+        post: operations["unsaveOwnMatchCandidate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/match-candidates/{id}/dismiss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Dismiss one owner-scoped match candidate */
+        post: operations["dismissOwnMatchCandidate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/match-candidates/{id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Restore one dismissed owner-scoped match candidate */
+        post: operations["restoreOwnMatchCandidate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/match-candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List staff-safe candidates using server-side filters */
+        get: operations["listCmsMatchCandidates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/match-candidates/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one staff-safe match candidate */
+        get: operations["getCmsMatchCandidate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/match-candidates/{id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm a current candidate with optimistic concurrency */
+        post: operations["confirmCmsMatchCandidate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/match-candidates/{id}/dismiss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Dismiss a current candidate with a required reason */
+        post: operations["dismissCmsMatchCandidate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/item-declarations/{id}/matching-runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Request an auditable matching rerun for a current declaration */
+        post: operations["requestCmsItemDeclarationMatchingRun"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List notifications for the current authenticated user */
+        get: operations["listUserNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/notifications/unread-count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get unread notification count for the current authenticated user */
+        get: operations["getUserUnreadNotificationCount"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/notifications/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Mark a notification as read */
+        patch: operations["markNotificationAsRead"];
+        trace?: never;
+    };
+    "/api/v1/public/notifications/read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mark all notifications as read for current user */
+        post: operations["markAllNotificationsAsRead"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1964,7 +2287,7 @@ export interface components {
         };
         PermissionDefinitionResponseDto: {
             /** @enum {string} */
-            key: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read";
+            key: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run";
             label: string;
             description: string;
             module: string;
@@ -1990,7 +2313,7 @@ export interface components {
         };
         PermissionOverrideItemDto: {
             /** @enum {string} */
-            permissionKey: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read";
+            permissionKey: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run";
             /** @enum {string} */
             effect: "allow" | "deny";
         };
@@ -2134,7 +2457,7 @@ export interface components {
             label: string;
             description: string;
             rank: number;
-            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
+            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
             usersCount: number;
             isSystem: boolean;
             status: string;
@@ -2164,7 +2487,7 @@ export interface components {
             label: string;
             description: string;
             rank: number;
-            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
+            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
             usersCount: number;
             isSystem: boolean;
             status: string;
@@ -2172,20 +2495,20 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
+            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
         };
         CreateRoleDto: {
             name: string;
             description: string;
             rank: number;
-            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
+            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
         };
         UpdateRoleDto: {
             name?: string;
             status?: string;
             description?: string;
             rank?: number;
-            basePermissions?: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
+            basePermissions?: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
         };
         InviteUserDto: {
             /** Format: email */
@@ -2280,7 +2603,7 @@ export interface components {
             devicesCount: number | null;
             activeSessions: number | null;
             avgActiveTimeMinutes: number | null;
-            effectivePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read")[];
+            effectivePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
             roleRank: number;
         };
         UserListResponseDto: {
@@ -3589,6 +3912,14 @@ export interface components {
             id: string;
             url: string;
         };
+        StaffItemDeclarationRiskResponseDto: {
+            /** Format: date-time */
+            assessedAt: string;
+            /** @enum {string} */
+            level: "LOW" | "MEDIUM" | "HIGH";
+            policyVersion: string;
+            reasonCodes: string[];
+        };
         StaffItemDeclarationResponseDto: {
             attributes: components["schemas"]["ItemDeclarationAttributeAnswerResponseDto"][];
             brand?: Record<string, never> | null;
@@ -3609,7 +3940,7 @@ export interface components {
             /** Format: date-time */
             publishedAt?: Record<string, never> | null;
             /** @enum {string} */
-            reviewStatus: "NOT_REQUIRED" | "PENDING_REVIEW" | "APPROVED" | "REJECTED";
+            reviewStatus: "NOT_REQUIRED" | "PENDING_REVIEW" | "NEEDS_INFORMATION" | "APPROVED" | "REJECTED";
             /** Format: date-time */
             submittedAt?: Record<string, never> | null;
             title?: Record<string, never> | null;
@@ -3625,12 +3956,73 @@ export interface components {
             owner: components["schemas"]["StaffOwnerSummaryResponseDto"];
             locations: components["schemas"]["StaffItemDeclarationLocationResponseDto"][];
             media: components["schemas"]["PublicItemDeclarationMediaResponseDto"][];
+            risk: components["schemas"]["StaffItemDeclarationRiskResponseDto"] | null;
         };
         StaffItemDeclarationPageResponseDto: {
             items: components["schemas"]["StaffItemDeclarationResponseDto"][];
             page: number;
             pageSize: number;
             total: number;
+        };
+        ItemDeclarationInformationFieldOptionResponseDto: {
+            /** Format: uuid */
+            attributeAssignmentId?: string;
+            key: string;
+            /** @enum {string} */
+            kind: "CORE" | "LOCATION" | "MEDIA" | "PRIVATE_ATTRIBUTE" | "PRIVATE_FACT" | "PUBLIC_ATTRIBUTE";
+            label: string;
+        };
+        ItemDeclarationInformationFieldGroupResponseDto: {
+            fields: components["schemas"]["ItemDeclarationInformationFieldOptionResponseDto"][];
+            key: string;
+            label: string;
+        };
+        ItemDeclarationInformationRequestOptionsResponseDto: {
+            expectedVersion: number;
+            groups: components["schemas"]["ItemDeclarationInformationFieldGroupResponseDto"][];
+        };
+        ItemDeclarationInformationFieldInputDto: {
+            /** Format: uuid */
+            attributeAssignmentId?: string;
+            key: string;
+            /** @enum {string} */
+            kind: "CORE" | "LOCATION" | "MEDIA" | "PRIVATE_ATTRIBUTE" | "PRIVATE_FACT" | "PUBLIC_ATTRIBUTE";
+        };
+        RequestItemDeclarationInformationDto: {
+            /** Format: int32 */
+            expectedVersion: number;
+            fields: components["schemas"]["ItemDeclarationInformationFieldInputDto"][];
+            message: string;
+        };
+        ItemDeclarationInformationRequestFieldResponseDto: {
+            /** Format: uuid */
+            attributeAssignmentId?: Record<string, never> | null;
+            fieldKey: string;
+            /** @enum {string} */
+            fieldKind: "CORE" | "LOCATION" | "MEDIA" | "PRIVATE_ATTRIBUTE" | "PRIVATE_FACT" | "PUBLIC_ATTRIBUTE";
+            fulfilledByVersion?: Record<string, never> | null;
+            /** Format: uuid */
+            id: string;
+            label: string;
+        };
+        ItemDeclarationInformationRequestResponseDto: {
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: uuid */
+            declarationId: string;
+            declarationVersion: number;
+            fields: components["schemas"]["ItemDeclarationInformationRequestFieldResponseDto"][];
+            /** Format: uuid */
+            id: string;
+            message: string;
+            /** Format: uuid */
+            requestedBy: string;
+            /** @enum {string} */
+            status: "OPEN" | "FULFILLED" | "CANCELLED";
+        };
+        RequestItemDeclarationInformationResponseDto: {
+            declaration: components["schemas"]["StaffItemDeclarationResponseDto"];
+            informationRequest: components["schemas"]["ItemDeclarationInformationRequestResponseDto"];
         };
         ItemDeclarationHistoryEntryResponseDto: {
             /** Format: uuid */
@@ -3759,6 +4151,23 @@ export interface components {
             processingStatus: "PENDING" | "READY" | "REJECTED" | "FAILED";
             url?: Record<string, never> | null;
         };
+        OwnerInformationRequestFieldResponseDto: {
+            /** Format: uuid */
+            attributeAssignmentId: string | null;
+            fieldKey: string;
+            /** @enum {string} */
+            fieldKind: "CORE" | "LOCATION" | "MEDIA" | "PUBLIC_ATTRIBUTE" | "PRIVATE_ATTRIBUTE" | "PRIVATE_FACT";
+            fulfilled: boolean;
+            label: string;
+        };
+        OwnerInformationRequestResponseDto: {
+            /** Format: date-time */
+            createdAt: string;
+            fields: components["schemas"]["OwnerInformationRequestFieldResponseDto"][];
+            /** Format: uuid */
+            id: string;
+            message: string;
+        };
         OwnerItemDeclarationResponseDto: {
             attributes: components["schemas"]["ItemDeclarationAttributeAnswerResponseDto"][];
             brand?: Record<string, never> | null;
@@ -3776,12 +4185,13 @@ export interface components {
             id: string;
             locations: components["schemas"]["OwnerItemDeclarationLocationResponseDto"][];
             media: components["schemas"]["OwnerItemDeclarationMediaResponseDto"][];
+            openInformationRequest: components["schemas"]["OwnerInformationRequestResponseDto"] | null;
             publicAreaLabel?: Record<string, never> | null;
             publicCode: string;
             /** Format: date-time */
             publishedAt?: Record<string, never> | null;
             /** @enum {string} */
-            reviewStatus: "NOT_REQUIRED" | "PENDING_REVIEW" | "APPROVED" | "REJECTED";
+            reviewStatus: "NOT_REQUIRED" | "PENDING_REVIEW" | "NEEDS_INFORMATION" | "APPROVED" | "REJECTED";
             /** Format: date-time */
             submittedAt?: Record<string, never> | null;
             title?: Record<string, never> | null;
@@ -3887,6 +4297,26 @@ export interface components {
             type?: "FOUND" | "LOST";
             expectedVersion: number;
         };
+        RequestedCoreInformationChangesDto: {
+            brand?: string | null;
+            /** Format: uuid */
+            categoryId?: string;
+            color?: string | null;
+            description?: string | null;
+            /** Format: date-time */
+            eventEndedAt?: string | null;
+            /** Format: date-time */
+            eventStartedAt?: string | null;
+            publicAreaLabel?: string | null;
+            title?: string | null;
+        };
+        UpdateRequestedItemDeclarationInformationDto: {
+            /** Format: int32 */
+            expectedVersion: number;
+            changes: components["schemas"]["RequestedCoreInformationChangesDto"];
+            /** Format: uuid */
+            informationRequestId: string;
+        };
         VersionedItemDeclarationCommandDto: {
             /** Format: int32 */
             expectedVersion: number;
@@ -3920,6 +4350,135 @@ export interface components {
             page: number;
             pageSize: number;
             total: number;
+        };
+        MatchScoreComponentResponseDto: {
+            /** @enum {string} */
+            code: "CATEGORY" | "TIME" | "DISTANCE" | "PUBLIC_ATTRIBUTES" | "BRAND" | "COLOR" | "PUBLIC_TEXT";
+            maxScore: number;
+            score: number;
+        };
+        MatchCandidateCategoryResponseDto: {
+            /** Format: uuid */
+            id?: Record<string, never> | null;
+            name: string;
+        };
+        MatchCandidateCounterpartResponseDto: {
+            brand?: string | null;
+            category: components["schemas"]["MatchCandidateCategoryResponseDto"];
+            color?: string | null;
+            /** Format: date-time */
+            eventEndedAt?: string | null;
+            /** Format: date-time */
+            eventStartedAt: string;
+            publicAreaLabel: string;
+            publicCode: string;
+            title: string;
+            /** @enum {string} */
+            type: "LOST" | "FOUND";
+        };
+        OwnerMatchCandidateResponseDto: {
+            components: components["schemas"]["MatchScoreComponentResponseDto"][];
+            counterpart: components["schemas"]["MatchCandidateCounterpartResponseDto"];
+            /** Format: uuid */
+            id: string;
+            isDismissed: boolean;
+            isSaved: boolean;
+            score: number;
+            /** @enum {string} */
+            strength: "POSSIBLE" | "STRONG";
+            /** Format: date-time */
+            updatedAt: string;
+            version: number;
+        };
+        OwnerMatchCandidatePageResponseDto: {
+            items: components["schemas"]["OwnerMatchCandidateResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        StaffMatchReportSummaryResponseDto: {
+            category: components["schemas"]["MatchCandidateCategoryResponseDto"];
+            /** Format: uuid */
+            id: string;
+            publicAreaLabel: string;
+            publicCode: string;
+            title: string;
+            /** @enum {string} */
+            type: "FOUND" | "LOST";
+        };
+        StaffMatchCandidateResponseDto: {
+            components: components["schemas"]["MatchScoreComponentResponseDto"][];
+            found: components["schemas"]["StaffMatchReportSummaryResponseDto"];
+            /** Format: uuid */
+            id: string;
+            lost: components["schemas"]["StaffMatchReportSummaryResponseDto"];
+            score: number;
+            scoringVersion: string;
+            /** @enum {string} */
+            status: "ACTIVE" | "STAFF_CONFIRMED" | "STAFF_DISMISSED" | "STALE";
+            /** @enum {string} */
+            strength: "REVIEW" | "POSSIBLE" | "STRONG";
+            /** Format: date-time */
+            updatedAt: string;
+            version: number;
+        };
+        StaffMatchCandidatePageResponseDto: {
+            items: components["schemas"]["StaffMatchCandidateResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        ReviewStaffMatchCandidateDto: {
+            expectedVersion: number;
+            reason?: string;
+        };
+        RequestManualMatchingRunDto: {
+            expectedVersion: number;
+            reason: string;
+        };
+        ManualMatchingRunResponseDto: {
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: uuid */
+            id: string;
+            scoringVersion: string;
+            /** @enum {string} */
+            status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED";
+            /** Format: uuid */
+            triggerDeclarationId: string;
+            triggerDeclarationVersion: number;
+        };
+        NotificationDto: {
+            /** @example 3fa85f64-5717-4562-b3fc-2c963f66afa6 */
+            id: string;
+            /** @example ITEM_DECLARATION_INFORMATION_REQUESTED */
+            type: string;
+            /** @example Khai báo cần bổ sung thông tin */
+            title: string;
+            /** @example Vui lòng bổ sung ảnh rõ hơn và thời gian xảy ra. */
+            message: string;
+            /**
+             * @example {
+             *       "declarationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+             *       "path": "/reports/3fa85f64"
+             *     }
+             */
+            data: Record<string, never>;
+            /** @example false */
+            isRead: boolean;
+            /** @example 2026-08-29T12:00:00.000Z */
+            createdAt: string;
+        };
+        NotificationListResponseDto: {
+            items: components["schemas"]["NotificationDto"][];
+            /** @example 10 */
+            total: number;
+            /** @example 3 */
+            unreadCount: number;
+        };
+        UnreadCountResponseDto: {
+            /** @example 3 */
+            unreadCount: number;
         };
     };
     responses: never;
@@ -7236,7 +7795,9 @@ export interface operations {
                 workflowStatus?: "DRAFT" | "SUBMITTED" | "ACTIVE" | "RESOLVED" | "CLOSED" | "WITHDRAWN" | "EXPIRED" | "ARCHIVED";
                 type?: "LOST" | "FOUND";
                 search?: string;
-                reviewStatus?: "NOT_REQUIRED" | "PENDING_REVIEW" | "APPROVED" | "REJECTED";
+                moderationQueue?: "ALL" | "PRE_REVIEW" | "POST_REVIEW";
+                reviewStatus?: "NOT_REQUIRED" | "PENDING_REVIEW" | "NEEDS_INFORMATION" | "APPROVED" | "REJECTED";
+                riskLevel?: "LOW" | "MEDIUM" | "HIGH";
             };
             header?: never;
             path?: never;
@@ -7322,6 +7883,118 @@ export interface operations {
                 };
             };
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getCmsItemDeclarationInformationRequestOptions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemDeclarationInformationRequestOptionsResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    requestCmsItemDeclarationInformation: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestItemDeclarationInformationDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RequestItemDeclarationInformationResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -8357,6 +9030,143 @@ export interface operations {
             };
         };
     };
+    updateRequestedItemDeclarationInformation: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateRequestedItemDeclarationInformationDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerItemDeclarationResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    resubmitItemDeclarationInformation: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+                requestId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VersionedItemDeclarationCommandDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerItemDeclarationResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
     submitItemDeclaration: {
         parameters: {
             query?: never;
@@ -8573,6 +9383,744 @@ export interface operations {
                 };
             };
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    listOwnItemDeclarationMatches: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerMatchCandidatePageResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getOwnMatchCandidate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerMatchCandidateResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    saveOwnMatchCandidate: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerMatchCandidateResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    unsaveOwnMatchCandidate: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerMatchCandidateResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    dismissOwnMatchCandidate: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerMatchCandidateResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    restoreOwnMatchCandidate: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerMatchCandidateResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    listCmsMatchCandidates: {
+        parameters: {
+            query?: {
+                categoryId?: string;
+                maxScore?: number;
+                minScore?: number;
+                page?: number;
+                pageSize?: number;
+                sort?: "score_asc" | "score_desc" | "updated_asc" | "updated_desc";
+                status?: "ACTIVE" | "STAFF_CONFIRMED" | "STAFF_DISMISSED" | "STALE";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffMatchCandidatePageResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getCmsMatchCandidate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffMatchCandidateResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    confirmCmsMatchCandidate: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewStaffMatchCandidateDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffMatchCandidateResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    dismissCmsMatchCandidate: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewStaffMatchCandidateDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffMatchCandidateResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    requestCmsItemDeclarationMatchingRun: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestManualMatchingRunDto"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ManualMatchingRunResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    listUserNotifications: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+                unreadOnly?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationListResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getUserUnreadNotificationCount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnreadCountResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    markNotificationAsRead: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    markAllNotificationsAsRead: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        count?: number;
+                    };
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
