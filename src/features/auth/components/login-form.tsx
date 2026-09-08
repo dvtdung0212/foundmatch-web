@@ -168,19 +168,19 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         <div className="flex items-center justify-between pt-1">
           {rememberLoginEnabled ? (
             <Checkbox
-              label="Ghi nhớ tôi"
+              label="Ghi nhớ đăng nhập"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
             />
           ) : (
             <span />
           )}
-          <a
-            href="#forgot-password"
+          <Link
+            href="/forgot-password"
             className="text-xs font-bold text-brand-plum hover:underline"
           >
             Quên mật khẩu?
-          </a>
+          </Link>
         </div>
 
         {/* Submit Button */}

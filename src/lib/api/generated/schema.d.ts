@@ -157,6 +157,125 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/private/password-recovery-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List CMS password recovery requests */
+        get: operations["listPasswordRecoveryRequests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/password-recovery-requests/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve a CMS password recovery request and queue email */
+        post: operations["approvePasswordRecoveryRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/private/password-recovery-requests/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject a CMS password recovery request */
+        post: operations["rejectPasswordRecoveryRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/cms-auth/password-recovery-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create an approval-gated CMS password recovery request */
+        post: operations["requestCmsPasswordRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/cms-auth/password-resets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Consume an approved CMS recovery token and set a new password */
+        post: operations["resetCmsPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/password-recovery-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Request a Web password recovery email */
+        post: operations["requestWebPasswordRecovery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/password-resets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Consume a Web recovery token and set a new password */
+        post: operations["resetWebPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/private/permissions": {
         parameters: {
             query?: never;
@@ -2385,6 +2504,60 @@ export interface components {
             /** @example owner@example.com */
             email: string;
         };
+        PasswordRecoveryRequestResponseDto: {
+            decidedAt: string | null;
+            decidedBy: string | null;
+            decisionReason: string | null;
+            /** Format: email */
+            email: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            requestedAt: string;
+            /** @enum {string} */
+            status: "approved" | "expired" | "pending" | "rejected" | "replaced";
+            /** Format: uuid */
+            userId: string;
+            version: number;
+        };
+        PasswordRecoveryRequestListResponseDto: {
+            data: components["schemas"]["PasswordRecoveryRequestResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+            totalPages: number;
+        };
+        PasswordRecoveryDecisionDto: {
+            expectedVersion: number;
+        };
+        ApiErrorResponseDto: {
+            /** @example PERMISSION_DENIED */
+            code: string;
+            /** @example You do not have permission to perform this action. */
+            message: string;
+            details?: {
+                [key: string]: unknown;
+            };
+            requestId?: string;
+        };
+        RejectPasswordRecoveryDto: {
+            expectedVersion: number;
+            reason: string;
+        };
+        RequestPasswordRecoveryDto: {
+            /** @description Account email or username */
+            identifier: string;
+        };
+        PasswordRecoveryAcceptedDto: {
+            /** @example true */
+            accepted: boolean;
+        };
+        ResetPasswordDto: {
+            token: string;
+            password: string;
+        };
         PermissionDefinitionResponseDto: {
             /** @enum {string} */
             key: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run";
@@ -2420,16 +2593,6 @@ export interface components {
         UpdateUserOverridesDto: {
             overrides: components["schemas"]["PermissionOverrideItemDto"][];
             reason: string;
-        };
-        ApiErrorResponseDto: {
-            /** @example PERMISSION_DENIED */
-            code: string;
-            /** @example You do not have permission to perform this action. */
-            message: string;
-            details?: {
-                [key: string]: unknown;
-            };
-            requestId?: string;
         };
         PermissionDashboardSummaryResponseDto: {
             totalPermissions: number;
@@ -4776,6 +4939,211 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    listPasswordRecoveryRequests: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                status?: "approved" | "expired" | "pending" | "rejected" | "replaced";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordRecoveryRequestListResponseDto"];
+                };
+            };
+        };
+    };
+    approvePasswordRecoveryRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordRecoveryDecisionDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    rejectPasswordRecoveryRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectPasswordRecoveryDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    requestCmsPasswordRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestPasswordRecoveryDto"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordRecoveryAcceptedDto"];
+                };
+            };
+        };
+    };
+    resetCmsPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    requestWebPasswordRecovery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestPasswordRecoveryDto"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordRecoveryAcceptedDto"];
+                };
+            };
+        };
+    };
+    resetWebPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordDto"];
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
             };
         };
     };

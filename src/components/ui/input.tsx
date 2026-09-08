@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,8 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type = "text", label, icon, error, hint, ...props }, ref) => {
+    const generatedId = useId();
+    const inputId = props.id ?? generatedId;
     const [showPassword, setShowPassword] = useState(false);
     const isPassword = type === "password";
     const actualType = isPassword ? (showPassword ? "text" : "password") : type;
@@ -18,7 +20,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full space-y-1.5">
         {label && (
-          <label className="block text-xs font-bold text-brand-heading uppercase tracking-wider">
+          <label
+            className="block text-xs font-bold text-brand-heading uppercase tracking-wider"
+            htmlFor={inputId}
+          >
             {label}
           </label>
         )}
@@ -29,6 +34,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </div>
           )}
           <input
+            id={inputId}
             type={actualType}
             className={cn(
               "w-full rounded-xl border border-brand-border bg-brand-cream/60 px-4 py-3 text-sm text-brand-heading placeholder:text-brand-muted/60 focus:border-brand-plum focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-plum/10 transition-all font-medium relative",
