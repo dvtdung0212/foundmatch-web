@@ -4,16 +4,18 @@ import { LoginForm } from "@/features/auth/components/login-form";
 
 const replace = vi.fn();
 const refresh = vi.fn();
-const signInWithPasswordAction = vi.fn();
+const loginWeb = vi.fn();
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ replace, refresh }),
 }));
 
-vi.mock("@/features/auth/actions/auth.actions", () => ({
-  signInWithPasswordAction: (...args: unknown[]) =>
-    signInWithPasswordAction(...args),
-  signInWithDemoAccount: vi.fn(),
+vi.mock("@/features/auth/api/session-api", () => ({
+  getWebSessionPolicy: vi.fn().mockResolvedValue({
+    rememberLoginEnabled: true,
+  }),
+  loginWeb: (...args: unknown[]) => loginWeb(...args),
+  loginWebDemo: vi.fn(),
 }));
 
 describe("LoginForm navigation", () => {
@@ -21,7 +23,7 @@ describe("LoginForm navigation", () => {
     vi.useFakeTimers();
     replace.mockReset();
     refresh.mockReset();
-    signInWithPasswordAction.mockReset();
+    loginWeb.mockReset();
   });
 
   afterEach(() => {
@@ -30,16 +32,16 @@ describe("LoginForm navigation", () => {
   });
 
   it("replaces the login route with home and refreshes server auth state", async () => {
-    signInWithPasswordAction.mockResolvedValue({
-      success: true,
-      message: "Đăng nhập thành công!",
-    });
+    loginWeb.mockResolvedValue({ rememberLogin: false });
 
     render(<LoginForm />);
 
-    fireEvent.change(screen.getByPlaceholderText("Nhập email hoặc username của bạn"), {
-      target: { value: "member@example.com" },
-    });
+    fireEvent.change(
+      screen.getByPlaceholderText("Nhập email hoặc username của bạn"),
+      {
+        target: { value: "member@example.com" },
+      },
+    );
     fireEvent.change(screen.getByPlaceholderText("Nhập mật khẩu của bạn"), {
       target: { value: "password123" },
     });
@@ -48,7 +50,11 @@ describe("LoginForm navigation", () => {
       await Promise.resolve();
     });
 
-    expect(signInWithPasswordAction).toHaveBeenCalled();
+    expect(loginWeb).toHaveBeenCalledWith({
+      identifier: "member@example.com",
+      password: "password123",
+      rememberLogin: false,
+    });
 
     await act(async () => {
       await vi.runAllTimersAsync();

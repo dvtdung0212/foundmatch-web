@@ -32,6 +32,19 @@ export function createNextConfig(phase, environment = process.env) {
         },
       ],
     },
+    async rewrites() {
+      const target = (
+        environment.WEB_BACKEND_PROXY_TARGET ||
+        environment.NEXT_PUBLIC_API_URL ||
+        "http://localhost:3001"
+      ).replace(/\/$/, "");
+      return [
+        {
+          source: "/api/:path*",
+          destination: `${target}/api/:path*`,
+        },
+      ];
+    },
   };
 }
 

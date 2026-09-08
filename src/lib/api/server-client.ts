@@ -1,13 +1,12 @@
 import "server-only";
 
+import { cookies } from "next/headers";
 import { getApiClient } from "./client";
-import { createClient as createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function getServerApiClient() {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  return getApiClient(session?.access_token);
+  const cookieHeader = cookies()
+    .getAll()
+    .map(({ name, value }) => `${name}=${encodeURIComponent(value)}`)
+    .join("; ");
+  return getApiClient({ cookieHeader });
 }

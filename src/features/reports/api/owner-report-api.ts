@@ -1,5 +1,4 @@
 import { getApiClient } from "@/lib/api/client";
-import { createClient as createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 import type {
   OwnerReportApi,
@@ -164,20 +163,7 @@ export async function createAuthenticatedOwnerReportApi(): Promise<OwnerReportAp
 }
 
 async function getAuthenticatedApiClient(): Promise<ApiClient> {
-  const supabase = createSupabaseBrowserClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session?.access_token) {
-    throw new ReportApiError({
-      code: "UNAUTHORIZED",
-      message: "Bạn cần đăng nhập để tạo báo cáo.",
-      status: 401,
-    });
-  }
-
-  return getApiClient(session.access_token);
+  return getApiClient();
 }
 
 export async function getAuthenticatedOwnerReportView(
@@ -246,7 +232,11 @@ export async function closeOwnReport(
   idempotencyKey?: string,
 ) {
   const client = await getAuthenticatedApiClient();
-  const idKey = idempotencyKey || (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `close-${Date.now()}`);
+  const idKey =
+    idempotencyKey ||
+    (typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `close-${Date.now()}`);
   return call(() =>
     client.POST("/api/v1/public/item-declarations/{id}/close", {
       body: { expectedVersion, reason } as never,
@@ -265,7 +255,11 @@ export async function withdrawOwnReport(
   idempotencyKey?: string,
 ) {
   const client = await getAuthenticatedApiClient();
-  const idKey = idempotencyKey || (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `withdraw-${Date.now()}`);
+  const idKey =
+    idempotencyKey ||
+    (typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `withdraw-${Date.now()}`);
   return call(() =>
     client.POST("/api/v1/public/item-declarations/{id}/withdraw", {
       body: { expectedVersion, reason } as never,

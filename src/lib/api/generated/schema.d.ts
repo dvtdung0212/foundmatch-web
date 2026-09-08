@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get the public CMS session policy */
+        /** Get CMS session policy */
         get: operations["getCmsSessionPolicy"];
         put?: never;
         post?: never;
@@ -30,8 +30,25 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create a backend-managed CMS session */
+        /** Create a CMS cookie session */
         post: operations["loginCms"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/cms-auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Rotate CMS session credentials */
+        post: operations["refreshCmsSession"];
         delete?: never;
         options?: never;
         head?: never;
@@ -49,6 +66,91 @@ export interface paths {
         put?: never;
         /** Revoke the current CMS session */
         post: operations["logoutCms"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/policy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Web session policy */
+        get: operations["getWebSessionPolicy"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a Web cookie session */
+        post: operations["loginWeb"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/demo-login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a local-development Web demo session */
+        post: operations["loginWebDemo"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Rotate Web session credentials */
+        post: operations["refreshWebSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke the current Web session */
+        post: operations["logoutWeb"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2255,35 +2357,33 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        CmsSessionPolicyResponseDto: {
+        SessionPolicyResponseDto: {
+            /** @default 15 */
+            accessTokenTtlMinutes: number;
             /** @default false */
             rememberLoginEnabled: boolean;
             /** @default 30 */
-            maxSessionAgeDays: number;
+            rememberedSessionMaxAgeDays: number;
+            /** @default 24 */
+            sessionMaxAgeHours: number;
         };
-        CmsLoginRequestDto: {
-            /** @example admin@foundmatch.local */
-            email: string;
+        SessionLoginRequestDto: {
+            /** @example member@example.com */
+            identifier: string;
             password: string;
             /** @default false */
             rememberLogin: boolean;
         };
-        CmsLoginResponseDto: {
+        SessionResponseDto: {
             /** Format: date-time */
-            expiresAt: string;
-            /** @description Per-browser proof; never a Supabase token. */
-            proofToken: string;
+            absoluteExpiresAt: string;
+            /** Format: date-time */
+            accessExpiresAt: string;
             rememberLogin: boolean;
         };
-        ApiErrorResponseDto: {
-            /** @example PERMISSION_DENIED */
-            code: string;
-            /** @example You do not have permission to perform this action. */
-            message: string;
-            details?: {
-                [key: string]: unknown;
-            };
-            requestId?: string;
+        DemoSessionLoginRequestDto: {
+            /** @example owner@example.com */
+            email: string;
         };
         PermissionDefinitionResponseDto: {
             /** @enum {string} */
@@ -2320,6 +2420,16 @@ export interface components {
         UpdateUserOverridesDto: {
             overrides: components["schemas"]["PermissionOverrideItemDto"][];
             reason: string;
+        };
+        ApiErrorResponseDto: {
+            /** @example PERMISSION_DENIED */
+            code: string;
+            /** @example You do not have permission to perform this action. */
+            message: string;
+            details?: {
+                [key: string]: unknown;
+            };
+            requestId?: string;
         };
         PermissionDashboardSummaryResponseDto: {
             totalPermissions: number;
@@ -4359,7 +4469,7 @@ export interface components {
         };
         MatchCandidateCategoryResponseDto: {
             /** Format: uuid */
-            id?: Record<string, never> | null;
+            id?: string | null;
             name: string;
         };
         MatchCandidateCounterpartResponseDto: {
@@ -4405,6 +4515,7 @@ export interface components {
             title: string;
             /** @enum {string} */
             type: "FOUND" | "LOST";
+            version: number;
         };
         StaffMatchCandidateResponseDto: {
             components: components["schemas"]["MatchScoreComponentResponseDto"][];
@@ -4503,7 +4614,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CmsSessionPolicyResponseDto"];
+                    "application/json": components["schemas"]["SessionPolicyResponseDto"];
                 };
             };
         };
@@ -4517,7 +4628,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CmsLoginRequestDto"];
+                "application/json": components["schemas"]["SessionLoginRequestDto"];
             };
         };
         responses: {
@@ -4526,20 +4637,132 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CmsLoginResponseDto"];
+                    "application/json": components["schemas"]["SessionResponseDto"];
                 };
             };
-            401: {
+        };
+    };
+    refreshCmsSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                    "application/json": components["schemas"]["SessionResponseDto"];
                 };
             };
         };
     };
     logoutCms: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getWebSessionPolicy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionPolicyResponseDto"];
+                };
+            };
+        };
+    };
+    loginWeb: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SessionLoginRequestDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionResponseDto"];
+                };
+            };
+        };
+    };
+    loginWebDemo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DemoSessionLoginRequestDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionResponseDto"];
+                };
+            };
+        };
+    };
+    refreshWebSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionResponseDto"];
+                };
+            };
+        };
+    };
+    logoutWeb: {
         parameters: {
             query?: never;
             header?: never;

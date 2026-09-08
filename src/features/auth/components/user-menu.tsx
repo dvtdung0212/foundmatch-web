@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { signOutAction } from "../actions/auth.actions";
+import { useRouter } from "next/navigation";
+import { logoutWeb } from "../api/session-api";
 import type { UserProfileDTO } from "@/types/profile.types";
 import {
   User,
@@ -17,6 +18,7 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ profile }: UserMenuProps) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -109,7 +111,9 @@ export function UserMenu({ profile }: UserMenuProps) {
           <button
             onClick={async () => {
               setIsOpen(false);
-              await signOutAction();
+              await logoutWeb();
+              router.replace("/login");
+              router.refresh();
             }}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-destructive hover:bg-destructive/10 transition-colors"
           >

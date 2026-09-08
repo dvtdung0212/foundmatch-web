@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
-  signInWithPasswordAction,
-  signInWithDemoAccount,
-} from "../actions/auth.actions";
+  getWebSessionPolicy,
+  loginWeb,
+  loginWebDemo,
+} from "../api/session-api";
 import { DEMO_PERSONAS } from "@/types/auth.types";
 import {
   Mail,
@@ -28,7 +29,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const router = useRouter();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(true);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberLoginEnabled, setRememberLoginEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [demoLoading, setDemoLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<{
@@ -42,27 +44,44 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     router.refresh();
   };
 
+  useEffect(() => {
+    void getWebSessionPolicy()
+      .then((policy) =>
+        setRememberLoginEnabled(policy?.rememberLoginEnabled === true),
+      )
+      .catch(() => setRememberLoginEnabled(false));
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
 
-    const result = await signInWithPasswordAction({ identifier, password });
-    setLoading(false);
-
-    if (result.success) {
+    try {
+      await loginWeb({
+        identifier,
+        password,
+        rememberLogin: rememberLoginEnabled && rememberMe,
+      });
       setMessage({
         type: "success",
-        text: result.message || "Đăng nhập thành công!",
+        text: "Đăng nhập thành công!",
       });
       setTimeout(completeLogin, 500);
-    } else {
+    } catch (error) {
+      const candidate = error as {
+        data?: { message?: string };
+        message?: string;
+      };
       setMessage({
         type: "error",
         text:
-          result.error?.message ||
-          "Email / Username hoặc mật khẩu không chính xác.",
+          candidate.data?.message ??
+          candidate.message ??
+          "Email, tên đăng nhập hoặc mật khẩu không chính xác.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,20 +89,27 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     setDemoLoading(personaEmail);
     setMessage(null);
 
-    const result = await signInWithDemoAccount(personaEmail);
-    setDemoLoading(null);
-
-    if (result.success) {
+    try {
+      await loginWebDemo(personaEmail);
       setMessage({
         type: "success",
-        text: result.message || "Đăng nhập tài khoản Demo thành công!",
+        text: "Đăng nhập tài khoản Demo thành công!",
       });
       setTimeout(completeLogin, 500);
-    } else {
+    } catch (error) {
+      const candidate = error as {
+        data?: { message?: string };
+        message?: string;
+      };
       setMessage({
         type: "error",
-        text: result.error?.message || "Không thể đăng nhập tài khoản Demo.",
+        text:
+          candidate.data?.message ??
+          candidate.message ??
+          "Không thể đăng nhập tài khoản Demo.",
       });
+    } finally {
+      setDemoLoading(null);
     }
   };
 
@@ -140,11 +166,15 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
         {/* Remember me & Forgot password */}
         <div className="flex items-center justify-between pt-1">
-          <Checkbox
-            label="Ghi nhớ tôi"
-            checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
-          />
+          {rememberLoginEnabled ? (
+            <Checkbox
+              label="Ghi nhớ tôi"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+          ) : (
+            <span />
+          )}
           <a
             href="#forgot-password"
             className="text-xs font-bold text-brand-plum hover:underline"

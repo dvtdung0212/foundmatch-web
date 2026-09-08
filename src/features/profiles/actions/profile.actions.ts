@@ -1,7 +1,6 @@
 "use server";
 
 import "server-only";
-import { createClient } from "@/lib/supabase/server";
 import { getServerApiClient } from "@/lib/api/server-client";
 import { updateProfileSchema } from "../schemas/profile.schema";
 import type { UserProfileDTO, UpdateProfileInput } from "@/types/profile.types";
@@ -15,21 +14,10 @@ export async function getCurrentProfile(): Promise<
   AuthActionResult<UserProfileDTO | null>
 > {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError || !user) {
-      return {
-        success: true,
-        data: null,
-      };
-    }
-
     const apiClient = await getServerApiClient();
-    const { data: profileResponse, error: profileError } = await apiClient.GET("/api/v1/public/users/me");
+    const { data: profileResponse, error: profileError } = await apiClient.GET(
+      "/api/v1/public/users/me",
+    );
 
     if (profileError || !profileResponse) {
       return {
@@ -91,22 +79,6 @@ export async function updateProfile(
       };
     }
 
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError || !user) {
-      return {
-        success: false,
-        error: {
-          code: "UNAUTHORIZED",
-          message: "Bạn chưa đăng nhập",
-        },
-      };
-    }
-
     const updateData: Record<string, unknown> = {};
 
     if (validation.data.fullName !== undefined) {
@@ -120,16 +92,24 @@ export async function updateProfile(
     }
 
     const apiClient = await getServerApiClient();
-    const { data: updated, error: updateError } = await apiClient.PATCH("/api/v1/public/users/me/profile", {
-      body: updateData as any, // Cast because openapi-fetch types might complain if fields are strictly defined
-    });
+    const { data: updated, error: updateError } = await apiClient.PATCH(
+      "/api/v1/public/users/me/profile",
+      {
+        body: updateData as any, // Cast because openapi-fetch types might complain if fields are strictly defined
+      },
+    );
 
     if (updateError || !updated) {
       return {
         success: false,
         error: {
           code: "UPDATE_FAILED",
-          message: typeof updateError === "object" && updateError !== null && "message" in updateError ? (updateError.message as string) : "Cập nhật hồ sơ thất bại",
+          message:
+            typeof updateError === "object" &&
+            updateError !== null &&
+            "message" in updateError
+              ? (updateError.message as string)
+              : "Cập nhật hồ sơ thất bại",
         },
       };
     }

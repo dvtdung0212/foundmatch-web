@@ -1,4 +1,3 @@
-import { createClient as createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { getApiClient } from "@/lib/api/client";
 import type { components } from "@/lib/api/generated/schema";
 
@@ -76,18 +75,7 @@ export function createOwnerMatchCandidateApi(client: ApiClient) {
 }
 
 export async function getAuthenticatedOwnerMatchCandidateApi() {
-  const supabase = createSupabaseBrowserClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  if (!session?.access_token) {
-    throw new MatchCandidateApiError({
-      code: "AUTHENTICATION_REQUIRED",
-      message: "Bạn cần đăng nhập để xem các kết quả phù hợp.",
-      status: 401,
-    });
-  }
-  return createOwnerMatchCandidateApi(getApiClient(session.access_token));
+  return createOwnerMatchCandidateApi(getApiClient());
 }
 
 async function call<T>(operation: () => Promise<{ data?: T }>): Promise<T> {
