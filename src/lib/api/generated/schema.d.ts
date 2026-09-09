@@ -208,6 +208,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/private/users/{id}/password-reset-link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Queue a one-time password reset link for a CMS user */
+        post: operations["issueCmsUserPasswordResetLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/public/cms-auth/password-recovery-requests": {
         parameters: {
             query?: never;
@@ -756,23 +773,6 @@ export interface paths {
         put?: never;
         /** Reactivate a suspended user account */
         post: operations["reactivateUser"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/private/users/{id}/update-password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Update user password (Admin action) */
-        post: operations["updateUserPassword"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2614,13 +2614,13 @@ export interface components {
             expectedVersion: number;
             reason: string;
         };
-        RequestPasswordRecoveryDto: {
-            /** @description Account email or username */
-            identifier: string;
-        };
         PasswordRecoveryAcceptedDto: {
             /** @example true */
             accepted: boolean;
+        };
+        RequestPasswordRecoveryDto: {
+            /** @description Account email or username */
+            identifier: string;
         };
         ResetPasswordDto: {
             token: string;
@@ -2895,10 +2895,18 @@ export interface components {
             id: string;
             /** Format: email */
             email: string;
+            /** Format: date-time */
+            emailVerifiedAt: string | null;
             username: string | null;
             fullName: string | null;
             avatarUrl: string | null;
             phone: string | null;
+            /** Format: date-time */
+            phoneVerifiedAt: string | null;
+            twoFactorEnabled: boolean;
+            /** @example ACCOUNT_VERIFICATION_V1 */
+            verificationPolicyVersion: string;
+            verificationScore: number;
             role: string;
             /** @enum {string} */
             relayStatus: "none" | "pending" | "approved" | "rejected" | "suspended";
@@ -2943,10 +2951,18 @@ export interface components {
             id: string;
             /** Format: email */
             email: string;
+            /** Format: date-time */
+            emailVerifiedAt: string | null;
             username: string | null;
             fullName: string | null;
             avatarUrl: string | null;
             phone: string | null;
+            /** Format: date-time */
+            phoneVerifiedAt: string | null;
+            twoFactorEnabled: boolean;
+            /** @example ACCOUNT_VERIFICATION_V1 */
+            verificationPolicyVersion: string;
+            verificationScore: number;
             role: string;
             /** @enum {string} */
             relayStatus: "none" | "pending" | "approved" | "rejected" | "suspended";
@@ -3032,11 +3048,6 @@ export interface components {
         ChangeAccountStatusDto: {
             /** @enum {string} */
             expectedAccountStatus: "active" | "pending_verification" | "suspended" | "invited" | "force_reset";
-            reason: string;
-        };
-        UpdateUserPasswordDto: {
-            /** Format: password */
-            password: string;
             reason: string;
         };
         UpdateProfileDto: {
@@ -5142,6 +5153,51 @@ export interface operations {
             };
         };
     };
+    issueCmsUserPasswordResetLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PasswordRecoveryAcceptedDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
     requestCmsPasswordRecovery: {
         parameters: {
             query?: never;
@@ -6519,58 +6575,6 @@ export interface operations {
                 };
             };
             /** @description The user state is stale or unchanged. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponseDto"];
-                };
-            };
-        };
-    };
-    updateUserPassword: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateUserPasswordDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UserResponseDto"];
-                };
-            };
-            /** @description Authentication is required. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponseDto"];
-                };
-            };
-            /** @description Authority policy rejected the action. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponseDto"];
-                };
-            };
-            /** @description State or last-admin conflict. */
             409: {
                 headers: {
                     [name: string]: unknown;
