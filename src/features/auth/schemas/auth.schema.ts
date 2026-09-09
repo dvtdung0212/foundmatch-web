@@ -21,8 +21,8 @@ export const signUpSchema = z
         "Username chỉ được chứa chữ cái, số và dấu gạch dưới (_)",
       ),
     fullName: z.string().min(2, "Họ và tên phải từ 2 ký tự trở lên"),
-    password: z.string().min(6, "Mật khẩu phải chứa ít nhất 6 ký tự"),
-    confirmPassword: z.string().min(6, "Mật khẩu xác nhận không hợp lệ"),
+    password: z.string().min(12, "Mật khẩu phải chứa ít nhất 12 ký tự"),
+    confirmPassword: z.string().min(12, "Mật khẩu xác nhận không hợp lệ"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Mật khẩu nhập lại không trùng khớp",

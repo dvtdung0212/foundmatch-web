@@ -276,6 +276,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/public/web-auth/registrations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Register a pending Web account and send an email OTP */
+        post: operations["createWebRegistration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/email-verifications/{verificationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get safe email verification state */
+        get: operations["getWebEmailVerification"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/email-verifications/{verificationId}/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify a Web registration email OTP */
+        post: operations["verifyWebRegistrationEmail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/email-verifications/{verificationId}/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send a replacement Web registration email OTP */
+        post: operations["resendWebRegistrationEmailOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/private/permissions": {
         parameters: {
             query?: never;
@@ -2558,6 +2626,37 @@ export interface components {
             token: string;
             password: string;
         };
+        CreateWebRegistrationDto: {
+            /** Format: email */
+            email: string;
+            fullName: string;
+            password: string;
+            username: string;
+        };
+        EmailVerificationResponseDto: {
+            attemptsRemaining: number;
+            /** Format: date-time */
+            codeExpiresAt: string;
+            lockedUntil?: string | null;
+            /** @example us***@example.com */
+            maskedEmail: string;
+            /** Format: date-time */
+            resendAvailableAt: string;
+            /** Format: date-time */
+            sessionExpiresAt: string;
+            /** @enum {string} */
+            status: "PENDING" | "CODE_EXPIRED" | "LOCKED" | "VERIFIED" | "REGISTRATION_EXPIRED";
+            /** Format: uuid */
+            verificationId: string;
+        };
+        VerifyEmailOtpDto: {
+            /** @example 123456 */
+            code: string;
+        };
+        EmailVerifiedResponseDto: {
+            /** @example true */
+            verified: boolean;
+        };
         PermissionDefinitionResponseDto: {
             /** @enum {string} */
             key: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run";
@@ -2804,7 +2903,7 @@ export interface components {
             /** @enum {string} */
             relayStatus: "none" | "pending" | "approved" | "rejected" | "suspended";
             /** @enum {string} */
-            accountStatus: "active" | "suspended" | "invited" | "force_reset";
+            accountStatus: "active" | "pending_verification" | "suspended" | "invited" | "force_reset";
             score: number | null;
             isVerified: boolean;
             registrationSource: string | null;
@@ -2852,7 +2951,7 @@ export interface components {
             /** @enum {string} */
             relayStatus: "none" | "pending" | "approved" | "rejected" | "suspended";
             /** @enum {string} */
-            accountStatus: "active" | "suspended" | "invited" | "force_reset";
+            accountStatus: "active" | "pending_verification" | "suspended" | "invited" | "force_reset";
             score: number | null;
             isVerified: boolean;
             registrationSource: string | null;
@@ -2932,7 +3031,7 @@ export interface components {
         };
         ChangeAccountStatusDto: {
             /** @enum {string} */
-            expectedAccountStatus: "active" | "suspended" | "invited" | "force_reset";
+            expectedAccountStatus: "active" | "pending_verification" | "suspended" | "invited" | "force_reset";
             reason: string;
         };
         UpdateUserPasswordDto: {
@@ -5147,6 +5246,144 @@ export interface operations {
             };
         };
     };
+    createWebRegistration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateWebRegistrationDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailVerificationResponseDto"];
+                };
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getWebEmailVerification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                verificationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailVerificationResponseDto"];
+                };
+            };
+        };
+    };
+    verifyWebRegistrationEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                verificationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyEmailOtpDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailVerifiedResponseDto"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    resendWebRegistrationEmailOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                verificationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailVerificationResponseDto"];
+                };
+            };
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
     listPermissions: {
         parameters: {
             query?: {
@@ -5728,7 +5965,7 @@ export interface operations {
                 page?: number;
                 pageSize?: number;
                 role?: string;
-                accountStatus?: "active" | "suspended" | "invited" | "force_reset";
+                accountStatus?: "active" | "pending_verification" | "suspended" | "invited" | "force_reset";
                 search?: string;
                 sortBy?: "createdAt" | "email" | "fullName" | "role" | "accountStatus";
                 sortDirection?: "asc" | "desc";

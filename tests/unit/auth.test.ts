@@ -41,8 +41,8 @@ describe("Auth & Profile Schemas Validation", () => {
       email: "newuser@example.com",
       username: "newuser_99",
       fullName: "New User",
-      password: "password123",
-      confirmPassword: "password123",
+      password: "password1234",
+      confirmPassword: "password1234",
     });
     expect(validSignUp.success).toBe(true);
 
