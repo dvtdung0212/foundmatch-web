@@ -30,9 +30,8 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
           <div className="hidden lg:flex w-1/2 flex-col justify-between bg-[#FFF9F2] pt-12 xl:pt-16 border-r border-[#EFE8DF] relative">
             <div className="px-10 xl:px-16 w-full space-y-10 z-10 pb-8">
               <div className="space-y-4">
-                <h1 className="text-4xl xl:text-5xl font-extrabold tracking-tight text-[#2A1B17] leading-tight">
-                  Tham gia FoundMatch <br />
-                  và giúp trả lại đồ <br /> thất lạc
+                <h1 className="text-4xl xl:text-5xl font-extrabold tracking-tight text-[#2A1B17] !leading-tight">
+                  Tham gia FoundMatch và giúp trả lại đồ thất lạc
                 </h1>
                 <p className="text-base xl:text-lg text-[#7A6E67] font-medium leading-relaxed max-w-md">
                   Cùng cộng đồng hàng chục nghìn người tốt bụng, chúng ta có thể

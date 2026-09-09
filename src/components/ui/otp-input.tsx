@@ -157,8 +157,8 @@ export function OtpInput({
               autoFocus={autoFocus && isFirst}
               className={cn(
                 "h-12 w-11 sm:h-14 sm:w-13 text-center text-xl sm:text-2xl font-extrabold text-brand-light rounded-xl border border-brand-border bg-surface-page transition-all outline-none",
-                "focus:border-brand-plum focus:bg-surface-card focus:ring-4 focus:ring-primary/50",
-                digits[index] && "border-brand-plum bg-surface-card text-brand-light",
+                "focus:border-brand-plum focus:bg-surface-card focus:ring-4 focus:ring-primary/60",
+                digits[index] && "border-brand-plum border-2 bg-surface-card text-brand-light",
                 error && "border-brand-lost text-brand-lost focus:border-brand-lost focus:ring-destructive/25",
                 disabled && "cursor-not-allowed opacity-50 bg-surface-muted text-content-muted",
               )}
