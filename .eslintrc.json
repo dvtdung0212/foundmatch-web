@@ -1,3 +1,23 @@
 {
-  "extends": ["next/core-web-vitals"]
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "sonner",
+            "importNames": ["toast"],
+            "message": "Use the shared feedback feature instead of calling toast directly."
+          }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/features/feedback/**/*.{ts,tsx}"],
+      "rules": { "no-restricted-imports": "off" }
+    }
+  ]
 }

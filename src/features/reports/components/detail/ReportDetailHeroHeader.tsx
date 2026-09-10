@@ -18,7 +18,7 @@ import {
   Sparkles,
   Tag,
 } from "lucide-react";
-import { toast } from "sonner";
+import { appFeedback as toast } from "@/features/feedback";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import type { OwnerReportView } from "../../api/owner-report-view";
 

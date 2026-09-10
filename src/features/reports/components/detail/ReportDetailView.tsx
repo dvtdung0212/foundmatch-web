@@ -8,7 +8,7 @@ import {
   Tag,
   Users,
 } from "lucide-react";
-import { toast } from "sonner";
+import { appFeedback as toast } from "@/features/feedback";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { ReportDetailHeroHeader } from "./ReportDetailHeroHeader";
 import { OverviewTab } from "./tabs/OverviewTab";
@@ -66,9 +66,8 @@ export function ReportDetailView({ report: initialReport }: ReportDetailViewProp
       }
       const refreshed = await getAuthenticatedOwnerReportView(report.id);
       setReport(refreshed);
-    } catch (err: unknown) {
-      const error = err as Error;
-      toast.error(error.message || "Không thể thực hiện thao tác");
+    } catch (error: unknown) {
+      toast.error(error, { fallback: "Không thể thực hiện thao tác" });
     } finally {
       setDialogAction(null);
     }

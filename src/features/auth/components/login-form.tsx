@@ -7,6 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
+  FeedbackAlert,
+  getApiError,
+  normalizeApiError,
+  type AppError,
+} from "@/features/feedback";
+import {
   getWebSessionPolicy,
   loginWeb,
   loginWebDemo,
@@ -17,8 +23,6 @@ import {
   Lock,
   ShieldCheck,
   Loader2,
-  CheckCircle2,
-  AlertCircle,
 } from "lucide-react";
 
 interface LoginFormProps {
@@ -47,10 +51,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
   const [rememberLoginEnabled, setRememberLoginEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [demoLoading, setDemoLoading] = useState<string | null>(null);
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
+  const [message, setMessage] = useState<AppError | null>(null);
 
   const completeLogin = () => {
     if (onSuccess) onSuccess();
@@ -79,22 +80,11 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
       });
       completeLogin();
     } catch (error) {
-      const candidate = error as {
-        data?: {
-          code?: string;
-          details?: {
-            maskedEmail?: string;
-            verificationId?: string;
-          };
-          message?: string;
-        };
-        message?: string;
-      };
-
-      const verificationId = candidate.data?.details?.verificationId;
+      const apiError = getApiError(error);
+      const verificationId = apiError?.details?.verificationId;
       if (
-        candidate.data?.code === "EMAIL_VERIFICATION_REQUIRED" &&
-        verificationId
+        apiError?.code === "EMAIL_VERIFICATION_REQUIRED" &&
+        typeof verificationId === "string"
       ) {
         const params = new URLSearchParams({
           verificationId,
@@ -107,13 +97,12 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
         return;
       }
 
-      setMessage({
-        type: "error",
-        text:
-          candidate.data?.message ??
-          candidate.message ??
+      setMessage(
+        normalizeApiError(
+          error,
           "Email, tên đăng nhập hoặc mật khẩu không chính xác.",
-      });
+        ),
+      );
     } finally {
       setLoading(false);
     }
@@ -127,17 +116,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
       await loginWebDemo(personaEmail);
       completeLogin();
     } catch (error) {
-      const candidate = error as {
-        data?: { message?: string };
-        message?: string;
-      };
-      setMessage({
-        type: "error",
-        text:
-          candidate.data?.message ??
-          candidate.message ??
-          "Không thể đăng nhập tài khoản Demo.",
-      });
+      setMessage(normalizeApiError(error, "Không thể đăng nhập tài khoản Demo."));
     } finally {
       setDemoLoading(null);
     }
@@ -155,22 +134,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
         </p>
       </div>
 
-      {message && (
-        <div
-          className={`flex items-start gap-2.5 p-3.5 rounded-xl text-xs font-semibold border ${
-            message.type === "success"
-              ? "bg-brand-foundBg border-[#C4E1BE] text-brand-found"
-              : "bg-brand-lostBg border-[#FFC7BA] text-brand-lost"
-          }`}
-        >
-          {message.type === "success" ? (
-            <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
-          ) : (
-            <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
-          )}
-          <span>{message.text}</span>
-        </div>
-      )}
+      <FeedbackAlert error={message} />
 
       {/* Main Form */}
       <form onSubmit={handleSubmit} className="space-y-4">

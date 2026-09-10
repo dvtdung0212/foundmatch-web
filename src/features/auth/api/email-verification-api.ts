@@ -1,17 +1,31 @@
 import { getApiClient } from "@/lib/api/client";
 import type { components } from "@/lib/api/generated/schema";
+import {
+  ApiRequestError,
+  callApi,
+  normalizeApiError,
+  type ApiErrorPayload,
+} from "@/features/feedback";
 
 export type EmailVerification =
   components["schemas"]["EmailVerificationResponseDto"];
 
-export class EmailVerificationApiError extends Error {
+export class EmailVerificationApiError extends ApiRequestError {
   constructor(
     message: string,
-    readonly code?: string,
-    readonly field?: string,
-    readonly details?: Record<string, unknown>,
+    code = "EMAIL_VERIFICATION_REQUEST_FAILED",
+    field?: string,
+    details?: Record<string, unknown>,
+    requestId?: string,
+    status?: number,
   ) {
-    super(message);
+    const payload: ApiErrorPayload = {
+      code,
+      details: { ...details, ...(field ? { field } : {}) },
+      message,
+      requestId,
+    };
+    super(normalizeApiError({ data: payload, status }), payload);
     this.name = "EmailVerificationApiError";
   }
 }
@@ -67,28 +81,19 @@ export async function resendWebRegistrationEmailOtp(
 
 async function call<T>(operation: () => Promise<{ data?: T }>): Promise<T> {
   try {
-    const { data } = await operation();
-    if (data === undefined) throw new Error("EMPTY_API_RESPONSE");
-    return data;
-  } catch (error) {
-    const candidate = error as {
-      data?: {
-        code?: string;
-        details?: Record<string, unknown>;
-        message?: string;
-      };
-      message?: string;
-    };
-    const payload = candidate.data;
+    return await callApi(operation, {
+      emptyMessage: "Máy chủ không trả về dữ liệu xác minh email.",
+      fallback: "Không thể xử lý xác minh email.",
+    });
+  } catch (cause) {
+    const error = normalizeApiError(cause, "Không thể xử lý xác minh email.");
     throw new EmailVerificationApiError(
-      payload?.message ??
-        candidate.message ??
-        "Không thể xử lý xác minh email.",
-      payload?.code,
-      typeof payload?.details?.field === "string"
-        ? payload.details.field
-        : undefined,
-      payload?.details,
+      error.message,
+      error.code,
+      Object.keys(error.fieldErrors)[0],
+      cause instanceof ApiRequestError ? cause.details : undefined,
+      error.requestId,
+      error.status,
     );
   }
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AlertCircle, RefreshCw, Sparkles } from "lucide-react";
-import { toast } from "sonner";
+import { appFeedback as toast } from "@/features/feedback";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -175,8 +175,5 @@ function LoadingState() {
 }
 
 function showError(error: unknown) {
-  const value = error as { message?: string; requestId?: string };
-  toast.error(value.message ?? "Không thể cập nhật kết quả phù hợp.", {
-    description: value.requestId ? `Mã yêu cầu: ${value.requestId}` : undefined,
-  });
+  toast.error(error, { fallback: "Không thể cập nhật kết quả phù hợp." });
 }

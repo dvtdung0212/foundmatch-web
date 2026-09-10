@@ -1,4 +1,9 @@
 import { getApiClient } from "@/lib/api/client";
+import {
+  ApiRequestError,
+  getApiError,
+  normalizeApiError,
+} from "@/features/feedback";
 
 import type {
   OwnerReportApi,
@@ -18,12 +23,7 @@ type ApiErrorPayload = {
   requestId?: string;
 };
 
-export class ReportApiError extends Error {
-  readonly code: string;
-  readonly field?: string;
-  readonly requestId?: string;
-  readonly status?: number;
-
+export class ReportApiError extends ApiRequestError {
   constructor(input: {
     code?: string;
     field?: string;
@@ -31,24 +31,22 @@ export class ReportApiError extends Error {
     requestId?: string;
     status?: number;
   }) {
-    super(input.message);
+    const payload = {
+      code: input.code ?? "REPORT_REQUEST_FAILED",
+      details: input.field ? { field: input.field } : undefined,
+      message: input.message,
+      requestId: input.requestId,
+    };
+    super(normalizeApiError({ data: payload, status: input.status }), payload);
     this.name = "ReportApiError";
-    this.code = input.code ?? "REPORT_REQUEST_FAILED";
-    this.field = input.field;
-    this.requestId = input.requestId;
-    this.status = input.status;
   }
 }
 
 function toReportApiError(error: unknown): ReportApiError {
   if (error instanceof ReportApiError) return error;
 
-  const candidate = error as {
-    data?: ApiErrorPayload;
-    message?: string;
-    status?: number;
-  };
-  const payload = candidate?.data;
+  const candidate = error as { message?: string; status?: number };
+  const payload = getApiError(error) as ApiErrorPayload | null;
   return new ReportApiError({
     code: payload?.code,
     field: payload?.details?.field,

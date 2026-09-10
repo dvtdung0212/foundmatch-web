@@ -3,14 +3,19 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { AlertCircle, AtSign, Loader2, Lock, Mail, User } from "lucide-react";
+import { AtSign, Loader2, Lock, Mail, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
+  FeedbackAlert,
+  normalizeApiError,
+  resolveApiFormFieldErrors,
+  type AppError,
+} from "@/features/feedback";
+import {
   createWebRegistration,
-  EmailVerificationApiError,
 } from "../api/email-verification-api";
 
 interface SignUpFormProps {
@@ -30,7 +35,7 @@ export function SignUpForm({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<AppError | string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   async function handleSubmit(event: FormEvent) {
@@ -66,11 +71,9 @@ export function SignUpForm({
       if (nextUrl !== "/profile") params.set("next", nextUrl);
       router.replace(`/verify-email?${params.toString()}`);
     } catch (error) {
-      const apiError =
-        error instanceof EmailVerificationApiError ? error : null;
-      const message = translateError(apiError?.code);
-      if (apiError?.field) setFieldErrors({ [apiError.field]: message });
-      setFormError(message);
+      const normalized = normalizeApiError(error, "Không thể tạo tài khoản. Vui lòng thử lại.");
+      setFieldErrors(resolveApiFormFieldErrors(error));
+      setFormError(normalized);
     } finally {
       setLoading(false);
     }
@@ -87,15 +90,7 @@ export function SignUpForm({
         </p>
       </div>
 
-      {formError && (
-        <div
-          className="flex items-start gap-2.5 rounded-xl border border-brand-lostBorder bg-brand-lostBg p-3.5 text-xs font-semibold text-brand-lost"
-          role="alert"
-        >
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-          <span>{formError}</span>
-        </div>
-      )}
+      <FeedbackAlert error={formError} />
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         <Input
@@ -244,17 +239,4 @@ export function SignUpForm({
       </div>
     </div>
   );
-}
-
-function translateError(code?: string): string {
-  const messages: Record<string, string> = {
-    EMAIL_ALREADY_EXISTS: "Email này đã được sử dụng.",
-    EMAIL_VERIFICATION_PENDING:
-      "Email này đang chờ xác minh. Hãy tiếp tục với mã đã gửi.",
-    USERNAME_ALREADY_EXISTS: "Tên đăng nhập này đã được sử dụng.",
-    VALIDATION_FAILED: "Thông tin đăng ký chưa hợp lệ.",
-  };
-  return code
-    ? (messages[code] ?? "Không thể tạo tài khoản. Vui lòng thử lại.")
-    : "Không thể tạo tài khoản. Vui lòng thử lại.";
 }

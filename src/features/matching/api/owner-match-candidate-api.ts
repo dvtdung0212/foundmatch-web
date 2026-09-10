@@ -1,36 +1,14 @@
 import { getApiClient } from "@/lib/api/client";
 import type { components } from "@/lib/api/generated/schema";
+import { ApiRequestError, callApi } from "@/features/feedback";
 
 type ApiClient = ReturnType<typeof getApiClient>;
-type ApiErrorPayload = {
-  code?: string;
-  message?: string;
-  requestId?: string;
-};
-
 export type OwnerMatchCandidate =
   components["schemas"]["OwnerMatchCandidateResponseDto"];
 export type OwnerMatchCandidatePage =
   components["schemas"]["OwnerMatchCandidatePageResponseDto"];
 
-export class MatchCandidateApiError extends Error {
-  readonly code: string;
-  readonly requestId?: string;
-  readonly status?: number;
-
-  constructor(input: {
-    code?: string;
-    message: string;
-    requestId?: string;
-    status?: number;
-  }) {
-    super(input.message);
-    this.name = "MatchCandidateApiError";
-    this.code = input.code ?? "MATCH_CANDIDATE_REQUEST_FAILED";
-    this.requestId = input.requestId;
-    this.status = input.status;
-  }
-}
+export { ApiRequestError as MatchCandidateApiError };
 
 export function createOwnerMatchCandidateApi(client: ApiClient) {
   const action = (
@@ -79,29 +57,8 @@ export async function getAuthenticatedOwnerMatchCandidateApi() {
 }
 
 async function call<T>(operation: () => Promise<{ data?: T }>): Promise<T> {
-  try {
-    const response = await operation();
-    if (response.data === undefined) {
-      throw new MatchCandidateApiError({
-        message: "Máy chủ không trả về dữ liệu đối sánh.",
-      });
-    }
-    return response.data;
-  } catch (error: unknown) {
-    if (error instanceof MatchCandidateApiError) throw error;
-    const candidate = error as {
-      data?: ApiErrorPayload;
-      message?: string;
-      status?: number;
-    };
-    throw new MatchCandidateApiError({
-      code: candidate.data?.code,
-      message:
-        candidate.data?.message ??
-        candidate.message ??
-        "Không thể xử lý kết quả đối sánh lúc này.",
-      requestId: candidate.data?.requestId,
-      status: candidate.status,
-    });
-  }
+  return callApi(operation, {
+    emptyMessage: "Máy chủ không trả về dữ liệu đối sánh.",
+    fallback: "Không thể xử lý kết quả đối sánh lúc này.",
+  });
 }
