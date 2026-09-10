@@ -63,11 +63,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         password,
         rememberLogin: rememberLoginEnabled && rememberMe,
       });
-      setMessage({
-        type: "success",
-        text: "Đăng nhập thành công!",
-      });
-      setTimeout(completeLogin, 500);
+      completeLogin();
     } catch (error) {
       const candidate = error as {
         data?: { message?: string };
@@ -91,11 +87,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
     try {
       await loginWebDemo(personaEmail);
-      setMessage({
-        type: "success",
-        text: "Đăng nhập tài khoản Demo thành công!",
-      });
-      setTimeout(completeLogin, 500);
+      completeLogin();
     } catch (error) {
       const candidate = error as {
         data?: { message?: string };
