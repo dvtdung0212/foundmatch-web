@@ -7,6 +7,7 @@ import { AlertCircle, CheckCircle2, Loader2, MailCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { OtpInput } from "@/components/ui/otp-input";
+import { AuthOperationSuccess } from "./auth-operation-success";
 import {
   EmailVerificationApiError,
   getWebEmailVerification,
@@ -16,11 +17,13 @@ import {
 } from "../api/email-verification-api";
 
 interface EmailVerificationFormProps {
+  initialNotice?: string;
   nextUrl?: string;
   verificationId: string;
 }
 
 export function EmailVerificationForm({
+  initialNotice,
   nextUrl,
   verificationId,
 }: EmailVerificationFormProps) {
@@ -33,7 +36,8 @@ export function EmailVerificationForm({
   const [submitting, setSubmitting] = useState(false);
   const [resending, setResending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(initialNotice || null);
+  const [completed, setCompleted] = useState(false);
   const [now, setNow] = useState(() => Date.now());
 
   const loginUrl = useMemo(() => {
@@ -50,7 +54,7 @@ export function EmailVerificationForm({
       .then((result) => {
         if (!active) return;
         setVerification(result);
-        if (result.status === "VERIFIED") router.replace(loginUrl);
+        if (result.status === "VERIFIED") setCompleted(true);
       })
       .catch((cause) => {
         if (active) setError(toMessage(cause));
@@ -97,7 +101,7 @@ export function EmailVerificationForm({
     setNotice(null);
     try {
       await verifyWebRegistrationEmail(verificationId, code);
-      router.replace(loginUrl);
+      setCompleted(true);
     } catch (cause) {
       setError(toMessage(cause));
       await refreshState();
@@ -139,6 +143,17 @@ export function EmailVerificationForm({
       >
         <Loader2 className="h-5 w-5 animate-spin" /> Đang tải phiên xác minh...
       </div>
+    );
+  }
+
+  if (completed) {
+    return (
+      <AuthOperationSuccess
+        actionLabel="Tiếp tục đăng nhập"
+        description="Email của bạn đã được xác minh. Bây giờ bạn có thể đăng nhập và tiếp tục sử dụng FoundMatch."
+        destination={loginUrl}
+        title="Xác minh email thành công"
+      />
     );
   }
 

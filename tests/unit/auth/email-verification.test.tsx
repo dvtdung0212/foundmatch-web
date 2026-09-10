@@ -58,7 +58,7 @@ describe("Web email verification", () => {
     );
   });
 
-  it("verifies a six-digit code and returns to login without auto-login", async () => {
+  it("replaces the OTP form with success feedback before returning to login", async () => {
     api.getWebEmailVerification.mockResolvedValue({
       attemptsRemaining: 5,
       codeExpiresAt: new Date(Date.now() + 300_000).toISOString(),
@@ -81,9 +81,14 @@ describe("Web email verification", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: /xác minh email/i }));
 
-    await waitFor(() =>
-      expect(navigation.replace).toHaveBeenCalledWith("/login?emailVerified=1"),
-    );
+    expect(
+      await screen.findByRole("heading", { name: /xác minh email thành công/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("textbox", { name: /mã xác minh/i }),
+    ).not.toBeInTheDocument();
+    expect(navigation.replace).not.toHaveBeenCalled();
+    expect(screen.getByText(/tự động chuyển sau 3 giây/i)).toBeInTheDocument();
   });
 
   it("replaces an unavailable verification form with a registration action", async () => {

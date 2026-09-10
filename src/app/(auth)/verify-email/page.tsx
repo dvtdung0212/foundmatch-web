@@ -5,6 +5,7 @@ import Link from "next/link";
 interface VerifyEmailPageProps {
   searchParams?: {
     next?: string;
+    notice?: string;
     verificationId?: string;
   };
 }
@@ -13,11 +14,16 @@ export default function VerifyEmailPage({
   searchParams,
 }: VerifyEmailPageProps) {
   const verificationId = searchParams?.verificationId;
+  const initialNotice =
+    searchParams?.notice === "verification_required"
+      ? "Tài khoản của bạn cần xác minh email trước khi đăng nhập. Vui lòng kiểm tra hộp thư hoặc yêu cầu gửi lại mã OTP."
+      : undefined;
 
   return (
     <PasswordRecoveryPage>
       {verificationId ? (
         <EmailVerificationForm
+          initialNotice={initialNotice}
           nextUrl={searchParams?.next}
           verificationId={verificationId}
         />

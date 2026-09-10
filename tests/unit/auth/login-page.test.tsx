@@ -33,7 +33,7 @@ describe("LoginPage", () => {
       data: { id: "user-1", email: "member@example.com" },
     });
 
-    await expect(LoginPage()).rejects.toThrow("NEXT_REDIRECT");
+    await expect(LoginPage({})).rejects.toThrow("NEXT_REDIRECT");
     expect(mocks.redirect).toHaveBeenCalledWith("/");
   });
 });

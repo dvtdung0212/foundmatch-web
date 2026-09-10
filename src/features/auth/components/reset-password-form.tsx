@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import { CheckCircle2, KeyRound } from "lucide-react";
+import { KeyRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { resetWebPassword } from "../api/session-api";
+import { AuthOperationSuccess } from "./auth-operation-success";
 
 export function ResetPasswordForm({ token }: { token: string }) {
   const [password, setPassword] = useState("");
@@ -39,25 +40,12 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
   if (completed) {
     return (
-      <div className="space-y-6 text-center" role="status">
-        <CheckCircle2 className="mx-auto h-12 w-12 text-brand-found" />
-        <div className="space-y-2">
-          <h1 className="text-2xl font-extrabold text-brand-heading">
-            Đã đặt lại mật khẩu
-          </h1>
-          <p className="text-sm text-brand-muted">
-            Mọi phiên đăng nhập cũ đã được thu hồi để bảo vệ tài khoản.
-          </p>
-        </div>
-        <Button
-          fullWidth
-          onClick={() => window.location.assign("/login")}
-          size="lg"
-          type="button"
-        >
-          Đăng nhập lại
-        </Button>
-      </div>
+      <AuthOperationSuccess
+        actionLabel="Đăng nhập lại"
+        description="Mật khẩu đã được cập nhật và mọi phiên đăng nhập cũ đã được thu hồi để bảo vệ tài khoản."
+        destination="/login"
+        title="Đổi mật khẩu thành công"
+      />
     );
   }
 

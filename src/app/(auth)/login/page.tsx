@@ -6,9 +6,16 @@ import { ShieldCheck, Users, Lock } from "lucide-react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
-export default async function LoginPage() {
+interface LoginPageProps {
+  searchParams?: {
+    next?: string;
+  };
+}
+
+export default async function LoginPage(props: LoginPageProps) {
   const profileResult = await getCurrentProfile();
   const profile = profileResult.success ? profileResult.data : null;
+  const searchParams = props?.searchParams;
 
   if (profile) {
     redirect("/");
@@ -101,7 +108,7 @@ export default async function LoginPage() {
           {/* Right Half (Form) */}
           <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 xl:p-16 bg-white">
             <div className="w-full max-w-[480px]">
-              <LoginForm />
+              <LoginForm nextUrl={searchParams?.next} />
             </div>
           </div>
 

@@ -22,10 +22,24 @@ import {
 } from "lucide-react";
 
 interface LoginFormProps {
+  nextUrl?: string;
   onSuccess?: () => void;
 }
 
-export function LoginForm({ onSuccess }: LoginFormProps) {
+function resolveLoginDestination(nextUrl?: string): string {
+  if (!nextUrl || nextUrl === "/profile") return "/";
+
+  try {
+    const baseUrl = "https://foundmatch.local";
+    const candidate = new URL(nextUrl, baseUrl);
+    if (candidate.origin !== baseUrl) return "/";
+    return `${candidate.pathname}${candidate.search}${candidate.hash}`;
+  } catch {
+    return "/";
+  }
+}
+
+export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
   const router = useRouter();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +54,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
   const completeLogin = () => {
     if (onSuccess) onSuccess();
-    router.replace("/");
+    router.replace(resolveLoginDestination(nextUrl));
     router.refresh();
   };
 
@@ -66,9 +80,33 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       completeLogin();
     } catch (error) {
       const candidate = error as {
-        data?: { message?: string };
+        data?: {
+          code?: string;
+          details?: {
+            maskedEmail?: string;
+            verificationId?: string;
+          };
+          message?: string;
+        };
         message?: string;
       };
+
+      const verificationId = candidate.data?.details?.verificationId;
+      if (
+        candidate.data?.code === "EMAIL_VERIFICATION_REQUIRED" &&
+        verificationId
+      ) {
+        const params = new URLSearchParams({
+          verificationId,
+          notice: "verification_required",
+        });
+        if (nextUrl && nextUrl !== "/profile") {
+          params.set("next", nextUrl);
+        }
+        router.replace(`/verify-email?${params.toString()}`);
+        return;
+      }
+
       setMessage({
         type: "error",
         text:

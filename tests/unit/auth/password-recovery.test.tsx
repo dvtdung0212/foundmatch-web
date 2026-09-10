@@ -8,8 +8,10 @@ const api = vi.hoisted(() => ({
   requestWebPasswordRecovery: vi.fn(),
   resetWebPassword: vi.fn(),
 }));
+const navigation = vi.hoisted(() => ({ replace: vi.fn() }));
 
 vi.mock("@/features/auth/api/session-api", () => api);
+vi.mock("next/navigation", () => ({ useRouter: () => navigation }));
 
 describe("Web password recovery", () => {
   it("accepts an email or username and renders the generic response", async () => {
@@ -44,5 +46,26 @@ describe("Web password recovery", () => {
 
     expect(await screen.findByText(/không khớp/i)).toBeInTheDocument();
     expect(api.resetWebPassword).not.toHaveBeenCalled();
+  });
+
+  it("replaces the password form with success feedback after reset", async () => {
+    api.resetWebPassword.mockResolvedValue({ reset: true });
+    render(
+      <ResetPasswordForm token="recovery-token-with-at-least-thirty-two-characters" />,
+    );
+
+    fireEvent.change(screen.getByLabelText(/^mật khẩu mới$/i), {
+      target: { value: "a-secure-password" },
+    });
+    fireEvent.change(screen.getByLabelText(/xác nhận mật khẩu/i), {
+      target: { value: "a-secure-password" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /đặt lại mật khẩu/i }));
+
+    expect(
+      await screen.findByRole("heading", { name: /đổi mật khẩu thành công/i }),
+    ).toBeInTheDocument();
+    expect(screen.queryByLabelText(/^mật khẩu mới$/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/tự động chuyển sau 3 giây/i)).toBeInTheDocument();
   });
 });
