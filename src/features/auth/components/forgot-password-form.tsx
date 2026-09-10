@@ -6,6 +6,8 @@ import { ArrowLeft, CheckCircle2, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useZodFormValidation } from "@/features/feedback";
+import { passwordRecoverySchema } from "../schemas/auth.schema";
 import { requestWebPasswordRecovery } from "../api/session-api";
 
 const ACCEPTED_MESSAGE =
@@ -15,13 +17,15 @@ export function ForgotPasswordForm() {
   const [identifier, setIdentifier] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const validation = useZodFormValidation(passwordRecoverySchema);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (identifier.trim().length < 3) return;
+    const values = validation.validate({ identifier });
+    if (!values) return;
     setLoading(true);
     try {
-      await requestWebPasswordRecovery(identifier.trim());
+      await requestWebPasswordRecovery(values.identifier);
     } finally {
       setSubmitted(true);
       setLoading(false);
@@ -51,7 +55,7 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
+    <form noValidate className="space-y-6" onSubmit={handleSubmit}>
       <div className="space-y-2">
         <h1 className="text-2xl font-extrabold text-brand-heading">
           Quên mật khẩu?
@@ -67,7 +71,11 @@ export function ForgotPasswordForm() {
         label="Email hoặc Username"
         maxLength={320}
         minLength={3}
-        onChange={(event) => setIdentifier(event.target.value)}
+        onChange={(event) => {
+          setIdentifier(event.target.value);
+          validation.clearFieldError("identifier");
+        }}
+        error={validation.fieldErrors.identifier}
         placeholder="Nhập email hoặc username"
         required
         value={identifier}

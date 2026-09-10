@@ -7,6 +7,8 @@ import { AlertCircle, CheckCircle2, Loader2, MailCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { OtpInput } from "@/components/ui/otp-input";
+import { useZodFormValidation } from "@/features/feedback";
+import { emailOtpSchema } from "../schemas/auth.schema";
 import { AuthOperationSuccess } from "./auth-operation-success";
 import {
   EmailVerificationApiError,
@@ -39,6 +41,7 @@ export function EmailVerificationForm({
   const [notice, setNotice] = useState<string | null>(initialNotice || null);
   const [completed, setCompleted] = useState(false);
   const [now, setNow] = useState(() => Date.now());
+  const validation = useZodFormValidation(emailOtpSchema);
 
   const loginUrl = useMemo(() => {
     const params = new URLSearchParams({ emailVerified: "1" });
@@ -92,15 +95,13 @@ export function EmailVerificationForm({
 
   async function handleVerify(event: FormEvent) {
     event.preventDefault();
-    if (!/^\d{6}$/.test(code)) {
-      setError("Mã xác minh phải gồm đúng 6 chữ số.");
-      return;
-    }
+    const values = validation.validate({ code });
+    if (!values) return;
     setSubmitting(true);
     setError(null);
     setNotice(null);
     try {
-      await verifyWebRegistrationEmail(verificationId, code);
+      await verifyWebRegistrationEmail(verificationId, values.code);
       setCompleted(true);
     } catch (cause) {
       setError(toMessage(cause));
@@ -185,12 +186,13 @@ export function EmailVerificationForm({
           <CheckCircle2 className="h-4 w-4 shrink-0" /> {notice}
         </div>
       )}
-      {error && (
+      {(error || validation.fieldErrors.code) && (
         <div
           className="flex gap-2 rounded-xl border border-brand-lostBorder bg-brand-lostBg p-3.5 text-xs font-semibold text-brand-lost"
           role="alert"
         >
-          <AlertCircle className="h-4 w-4 shrink-0" /> {error}
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          {validation.fieldErrors.code ?? error}
         </div>
       )}
 
@@ -221,14 +223,17 @@ export function EmailVerificationForm({
           </Button>
         </div>
       ) : (
-        <form className="space-y-4" onSubmit={handleVerify}>
+        <form noValidate className="space-y-4" onSubmit={handleVerify}>
           <OtpInput
             autoFocus
             disabled={locked || submitting}
-            error={error ?? undefined}
+            error={validation.fieldErrors.code ?? error ?? undefined}
             label="Mã xác minh"
             length={6}
-            onChange={(newCode) => setCode(newCode)}
+            onChange={(newCode) => {
+              setCode(newCode);
+              validation.clearFieldError("code");
+            }}
             value={code}
           />
           <p className="text-xs text-brand-muted" id="otp-help">

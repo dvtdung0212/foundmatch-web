@@ -11,7 +11,9 @@ import {
   getApiError,
   normalizeApiError,
   type AppError,
+  useZodFormValidation,
 } from "@/features/feedback";
+import { signInWithPasswordSchema } from "../schemas/auth.schema";
 import {
   getWebSessionPolicy,
   loginWeb,
@@ -52,6 +54,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
   const [loading, setLoading] = useState(false);
   const [demoLoading, setDemoLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<AppError | null>(null);
+  const validation = useZodFormValidation(signInWithPasswordSchema);
 
   const completeLogin = () => {
     if (onSuccess) onSuccess();
@@ -69,13 +72,15 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const values = validation.validate({ identifier, password });
+    if (!values) return;
     setLoading(true);
     setMessage(null);
 
     try {
       await loginWeb({
-        identifier,
-        password,
+        identifier: values.identifier,
+        password: values.password,
         rememberLogin: rememberLoginEnabled && rememberMe,
       });
       completeLogin();
@@ -137,12 +142,16 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
       <FeedbackAlert error={message} />
 
       {/* Main Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form noValidate onSubmit={handleSubmit} className="space-y-4">
         <Input
           label="Email hoặc Username"
           type="text"
           value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
+          onChange={(e) => {
+            setIdentifier(e.target.value);
+            validation.clearFieldError("identifier");
+          }}
+          error={validation.fieldErrors.identifier}
           placeholder="Nhập email hoặc username của bạn"
           icon={<Mail className="h-4 w-4" />}
           required
@@ -152,7 +161,11 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
           label="Mật khẩu"
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            validation.clearFieldError("password");
+          }}
+          error={validation.fieldErrors.password}
           placeholder="Nhập mật khẩu của bạn"
           icon={<Lock className="h-4 w-4" />}
           required

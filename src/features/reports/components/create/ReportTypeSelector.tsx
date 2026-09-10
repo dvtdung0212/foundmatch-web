@@ -19,16 +19,18 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { quickSearchSchema } from "@/features/reports/schemas/report-search.schema";
+import { useZodFormValidation } from "@/features/feedback";
 
 export function ReportTypeSelector() {
   const router = useRouter();
   const [quickQuery, setQuickQuery] = useState("");
+  const validation = useZodFormValidation(quickSearchSchema);
 
   const handleQuickSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (quickQuery.trim()) {
-      router.push(`/find?q=${encodeURIComponent(quickQuery.trim())}`);
-    }
+    const values = validation.validate({ query: quickQuery });
+    if (values) router.push(`/find?q=${encodeURIComponent(values.query)}`);
   };
 
   return (
@@ -54,13 +56,18 @@ export function ReportTypeSelector() {
         </p>
 
         {/* Quick Search Bar */}
-        <form onSubmit={handleQuickSearch} className="pt-2 max-w-lg mx-auto">
+        <form noValidate onSubmit={handleQuickSearch} className="pt-2 max-w-lg mx-auto">
           <div className="relative flex items-center">
             <input
               type="text"
               placeholder="Bạn muốn tìm kiếm đồ thất lạc trước? (vd: Ví Pedro, AirPods...)"
               value={quickQuery}
-              onChange={(e) => setQuickQuery(e.target.value)}
+              onChange={(e) => {
+                setQuickQuery(e.target.value);
+                validation.clearFieldError("query");
+              }}
+              aria-invalid={Boolean(validation.fieldErrors.query)}
+              aria-describedby={validation.fieldErrors.query ? "quick-search-error" : undefined}
               className="w-full h-12 pl-11 pr-24 rounded-full border border-brand-border bg-white text-xs sm:text-sm font-medium text-brand-heading placeholder:text-brand-muted/70 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-plum/20 focus-visible:border-brand-plum transition-all"
             />
             <Search className="w-4 h-4 text-brand-muted absolute left-4 pointer-events-none" />
@@ -72,6 +79,11 @@ export function ReportTypeSelector() {
               Tìm nhanh
             </Button>
           </div>
+          {validation.fieldErrors.query ? (
+            <p id="quick-search-error" className="mt-2 text-left text-xs font-semibold text-red-500">
+              {validation.fieldErrors.query}
+            </p>
+          ) : null}
         </form>
       </div>
 

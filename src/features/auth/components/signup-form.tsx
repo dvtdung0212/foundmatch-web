@@ -13,7 +13,9 @@ import {
   normalizeApiError,
   resolveApiFormFieldErrors,
   type AppError,
+  useZodFormValidation,
 } from "@/features/feedback";
+import { signUpFormSchema } from "../schemas/auth.schema";
 import {
   createWebRegistration,
 } from "../api/email-verification-api";
@@ -36,33 +38,29 @@ export function SignUpForm({
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState<AppError | string | null>(null);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const validation = useZodFormValidation(signUpFormSchema);
+  const fieldErrors = validation.fieldErrors;
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setFormError(null);
-    setFieldErrors({});
-
-    if (!agreeTerms) {
-      setFormError(
-        "Vui lòng đồng ý với Điều khoản sử dụng và Chính sách bảo mật.",
-      );
-      return;
-    }
-    if (password !== confirmPassword) {
-      setFieldErrors({
-        confirmPassword: "Mật khẩu xác nhận không trùng khớp.",
-      });
-      return;
-    }
+    const values = validation.validate({
+      agreeTerms,
+      confirmPassword,
+      email,
+      fullName,
+      password,
+      username: username || email.split("@")[0],
+    });
+    if (!values) return;
 
     setLoading(true);
     try {
       const verification = await createWebRegistration({
-        email,
-        fullName,
-        password,
-        username: username || email.split("@")[0],
+        email: values.email,
+        fullName: values.fullName,
+        password: values.password,
+        username: values.username,
       });
       onSuccess?.();
       const params = new URLSearchParams({
@@ -72,7 +70,7 @@ export function SignUpForm({
       router.replace(`/verify-email?${params.toString()}`);
     } catch (error) {
       const normalized = normalizeApiError(error, "Không thể tạo tài khoản. Vui lòng thử lại.");
-      setFieldErrors(resolveApiFormFieldErrors(error));
+      validation.setFieldErrors(resolveApiFormFieldErrors(error));
       setFormError(normalized);
     } finally {
       setLoading(false);
@@ -92,7 +90,7 @@ export function SignUpForm({
 
       <FeedbackAlert error={formError} />
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
+      <form noValidate className="space-y-4" onSubmit={handleSubmit}>
         <Input
           autoComplete="name"
           error={fieldErrors.fullName}
@@ -100,7 +98,10 @@ export function SignUpForm({
           label="Họ và tên"
           maxLength={100}
           minLength={2}
-          onChange={(event) => setFullName(event.target.value)}
+          onChange={(event) => {
+            setFullName(event.target.value);
+            validation.clearFieldError("fullName");
+          }}
           placeholder="Nhập họ và tên của bạn"
           required
           value={fullName}
@@ -113,7 +114,10 @@ export function SignUpForm({
           label="Tên đăng nhập"
           maxLength={30}
           minLength={3}
-          onChange={(event) => setUsername(event.target.value)}
+          onChange={(event) => {
+            setUsername(event.target.value);
+            validation.clearFieldError("username");
+          }}
           pattern="[a-zA-Z0-9._-]+"
           placeholder="Ví dụ: nguyenvanan"
           value={username}
@@ -125,7 +129,10 @@ export function SignUpForm({
           icon={<Mail className="h-4 w-4" />}
           label="Email"
           maxLength={320}
-          onChange={(event) => setEmail(event.target.value)}
+          onChange={(event) => {
+            setEmail(event.target.value);
+            validation.clearFieldError("email");
+          }}
           placeholder="Nhập email của bạn"
           required
           type="email"
@@ -138,7 +145,10 @@ export function SignUpForm({
           icon={<Lock className="h-4 w-4" />}
           label="Mật khẩu"
           minLength={12}
-          onChange={(event) => setPassword(event.target.value)}
+          onChange={(event) => {
+            setPassword(event.target.value);
+            validation.clearFieldError("password");
+          }}
           placeholder="Tạo mật khẩu"
           required
           type="password"
@@ -150,7 +160,10 @@ export function SignUpForm({
           icon={<Lock className="h-4 w-4" />}
           label="Xác nhận mật khẩu"
           minLength={12}
-          onChange={(event) => setConfirmPassword(event.target.value)}
+          onChange={(event) => {
+            setConfirmPassword(event.target.value);
+            validation.clearFieldError("confirmPassword");
+          }}
           placeholder="Nhập lại mật khẩu"
           required
           type="password"
@@ -159,6 +172,7 @@ export function SignUpForm({
 
         <Checkbox
           checked={agreeTerms}
+          error={fieldErrors.agreeTerms}
           label={
             <span>
               Tôi đồng ý với{" "}
@@ -178,7 +192,10 @@ export function SignUpForm({
               .
             </span>
           }
-          onChange={(event) => setAgreeTerms(event.target.checked)}
+          onChange={(event) => {
+            setAgreeTerms(event.target.checked);
+            validation.clearFieldError("agreeTerms");
+          }}
         />
 
         <Button

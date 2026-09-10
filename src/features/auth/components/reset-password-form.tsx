@@ -6,6 +6,8 @@ import { KeyRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { FeedbackAlert, useZodFormValidation } from "@/features/feedback";
+import { resetPasswordSchema } from "../schemas/auth.schema";
 import { resetWebPassword } from "../api/session-api";
 import { AuthOperationSuccess } from "./auth-operation-success";
 
@@ -15,21 +17,16 @@ export function ResetPasswordForm({ token }: { token: string }) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const validation = useZodFormValidation(resetPasswordSchema);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setError(null);
-    if (password.length < 12) {
-      setError("Mật khẩu phải có ít nhất 12 ký tự.");
-      return;
-    }
-    if (password !== confirmation) {
-      setError("Mật khẩu xác nhận không khớp.");
-      return;
-    }
+    const values = validation.validate({ confirmation, password });
+    if (!values) return;
     setLoading(true);
     try {
-      await resetWebPassword(token, password);
+      await resetWebPassword(token, values.password);
       setCompleted(true);
     } catch {
       setError("Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.");
@@ -70,7 +67,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
   }
 
   return (
-    <form className="space-y-5" onSubmit={handleSubmit}>
+    <form noValidate className="space-y-5" onSubmit={handleSubmit}>
       <div className="space-y-2">
         <h1 className="text-2xl font-extrabold text-brand-heading">
           Đặt mật khẩu mới
@@ -79,19 +76,16 @@ export function ResetPasswordForm({ token }: { token: string }) {
           Mật khẩu mới cần có ít nhất 12 ký tự.
         </p>
       </div>
-      {error && (
-        <div
-          className="rounded-xl border border-brand-lostBorder bg-brand-lostBg p-3 text-sm font-semibold text-brand-lost"
-          role="alert"
-        >
-          {error}
-        </div>
-      )}
+      <FeedbackAlert error={error} />
       <Input
         autoComplete="new-password"
         label="Mật khẩu mới"
         minLength={12}
-        onChange={(event) => setPassword(event.target.value)}
+        onChange={(event) => {
+          setPassword(event.target.value);
+          validation.clearFieldError("password");
+        }}
+        error={validation.fieldErrors.password}
         required
         type="password"
         value={password}
@@ -100,7 +94,11 @@ export function ResetPasswordForm({ token }: { token: string }) {
         autoComplete="new-password"
         label="Xác nhận mật khẩu"
         minLength={12}
-        onChange={(event) => setConfirmation(event.target.value)}
+        onChange={(event) => {
+          setConfirmation(event.target.value);
+          validation.clearFieldError("confirmation");
+        }}
+        error={validation.fieldErrors.confirmation}
         required
         type="password"
         value={confirmation}
