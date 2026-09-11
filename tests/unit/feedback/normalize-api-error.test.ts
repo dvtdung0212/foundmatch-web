@@ -36,8 +36,8 @@ describe("web feedback error normalization", () => {
           code: "VALIDATION_FAILED",
           details: {
             fieldErrors: {
-              "profile.fullName": ["must not be empty"],
-              username: ["must be longer"],
+              email: ["email must be an email"],
+              "profile.fullName": ["fullName should not be empty"],
             },
           },
           message: "Validation failed.",
@@ -48,9 +48,39 @@ describe("web feedback error normalization", () => {
     );
 
     expect(errors).toEqual({
-      fullName: "Dữ liệu chưa hợp lệ.",
-      username: "Dữ liệu chưa hợp lệ.",
+      email: "Email không đúng định dạng.",
+      fullName: "Họ và tên không được để trống.",
     });
+  });
+
+  it("never exposes an untranslated backend message", () => {
+    const error = normalizeApiError({
+      data: {
+        code: "A_NEW_CONFLICT_CODE",
+        message:
+          "duplicate key value violates unique constraint users_email_key",
+        requestId: "request-id",
+      },
+      status: 409,
+    });
+
+    expect(error.message).toBe(
+      "Dữ liệu đã thay đổi hoặc xung đột. Vui lòng tải lại và thử lại.",
+    );
+    expect(error.message).not.toContain("unique constraint");
+    expect(error.requestId).toBe("request-id");
+  });
+
+  it("uses audience-specific Vietnamese copy for a known business error", () => {
+    const error = normalizeApiError({
+      data: {
+        code: "ITEM_DECLARATION_SELF_MODERATION_FORBIDDEN",
+        message: "Staff cannot moderate their own declaration.",
+      },
+      status: 403,
+    });
+
+    expect(error.message).toBe("Bạn không thể tự kiểm duyệt báo cáo của mình.");
   });
 
   it("wraps unknown transport errors in the shared error type", () => {
@@ -62,10 +92,10 @@ describe("web feedback error normalization", () => {
 
   it("uses the same error adapter for every API feature", async () => {
     await expect(
-      callApi(
-        async () => ({ data: undefined }),
-        { emptyMessage: "Không có dữ liệu.", fallback: "Không thể tải." },
-      ),
+      callApi(async () => ({ data: undefined }), {
+        emptyMessage: "Không có dữ liệu.",
+        fallback: "Không thể tải.",
+      }),
     ).rejects.toMatchObject({
       code: "EMPTY_API_RESPONSE",
       message: "Không có dữ liệu.",

@@ -11,8 +11,10 @@ export default function ErrorBoundary({
   reset: () => void;
 }) {
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.error("Application error captured:", error);
+    if (process.env.NODE_ENV === "development") {
+      // eslint-disable-next-line no-console
+      console.error("Application error captured:", error);
+    }
   }, [error]);
 
   return (
@@ -24,8 +26,7 @@ export default function ErrorBoundary({
         Đã xảy ra lỗi hệ thống
       </h2>
       <p className="mt-2 text-muted-foreground max-w-md text-sm">
-        {error.message ||
-          "Ứng dụng gặp sự cố ngoài dự kiến. Vui lòng thử lại hoặc tải lại trang."}
+        Ứng dụng gặp sự cố ngoài dự kiến. Vui lòng thử lại hoặc tải lại trang.
       </p>
       <button
         onClick={() => reset()}

@@ -1,0 +1,157 @@
+{
+  "errors": {
+    "AUTHENTICATION_REQUIRED": "Bạn cần đăng nhập để tiếp tục.",
+    "EMAIL_ALREADY_EXISTS": "Email này đã được sử dụng.",
+    "EMAIL_VERIFICATION_PENDING": "Email này đang chờ xác minh. Hãy tiếp tục với mã đã gửi.",
+    "EMAIL_VERIFICATION_REQUIRED": "Bạn cần xác minh email để tiếp tục.",
+    "INTERNAL_SERVER_ERROR": "Hệ thống gặp sự cố. Vui lòng thử lại sau.",
+    "INVALID_CREDENTIALS": "Email, tên đăng nhập hoặc mật khẩu không chính xác.",
+    "ITEM_DECLARATION_SELF_MODERATION_FORBIDDEN": "Bạn không thể tự kiểm duyệt báo cáo của mình.",
+    "NETWORK_ERROR": "Không thể kết nối đến hệ thống. Vui lòng kiểm tra mạng và thử lại.",
+    "OTP_INVALID": "Mã xác minh không chính xác.",
+    "OTP_LOCKED": "Phiên xác minh đang tạm khóa do nhập sai quá nhiều lần.",
+    "OTP_VERIFICATION_NOT_FOUND": "Phiên xác minh không khả dụng hoặc đã hết hạn.",
+    "RATE_LIMIT_EXCEEDED": "Bạn thao tác quá nhanh. Vui lòng thử lại sau.",
+    "UNAUTHORIZED": "Bạn cần đăng nhập để tiếp tục.",
+    "USERNAME_ALREADY_EXISTS": "Tên đăng nhập này đã được sử dụng.",
+    "VALIDATION_FAILED": "Thông tin đã nhập chưa hợp lệ."
+  },
+  "prefixes": {
+    "ATTRIBUTE_VALUE_": "Không thể xử lý giá trị thuộc tính này.",
+    "GEOGRAPHY_IMPORT_": "Không thể xử lý lần nhập dữ liệu địa lý này.",
+    "ITEM_DECLARATION_": "Không thể xử lý báo cáo ở trạng thái hiện tại.",
+    "PASSWORD_RECOVERY_": "Không thể xử lý yêu cầu đặt lại mật khẩu.",
+    "SYSTEM_ROLE_": "Bạn không có đủ quyền để thực hiện hành động này.",
+    "ACCOUNT_": "Không thể xử lý tài khoản này. Vui lòng kiểm tra và thử lại.",
+    "ADMIN_": "Bạn không có đủ quyền để thực hiện hành động này.",
+    "ATTRIBUTE_": "Không thể xử lý thuộc tính này.",
+    "AUTH_": "Phiên đăng nhập không hợp lệ hoặc đã hết hạn.",
+    "CANNOT_": "Chính sách hệ thống không cho phép thao tác này.",
+    "CATEGORY_": "Không thể xử lý danh mục này.",
+    "CMS_SESSION_": "Phiên đăng nhập không hợp lệ hoặc đã hết hạn.",
+    "DATABASE_": "Hệ thống tạm thời không khả dụng. Vui lòng thử lại sau.",
+    "EMAIL_": "Không thể xử lý địa chỉ email này.",
+    "EMPTY_PROFILE_": "Không có thông tin hồ sơ hợp lệ để cập nhật.",
+    "GEOGRAPHY_": "Không thể xử lý dữ liệu địa lý này.",
+    "IDEMPOTENCY_": "Yêu cầu đã cũ hoặc trùng với một thao tác trước đó. Vui lòng tải lại và thử lại.",
+    "IDENTITY_": "Không thể xử lý tài khoản này. Vui lòng kiểm tra và thử lại.",
+    "IMPORT_": "Không thể xử lý dữ liệu nhập vào ở trạng thái hiện tại.",
+    "INVALID_ROLE_": "Bạn không có đủ quyền để thực hiện hành động này.",
+    "ITEM_NOTICE_": "Không tìm thấy thông báo báo cáo được yêu cầu.",
+    "LOCATION_": "Không thể xử lý dữ liệu địa lý này.",
+    "MATCH_": "Không thể xử lý kết quả đối sánh này.",
+    "NOTIFICATION_": "Không thể xử lý thông báo này.",
+    "OTP_": "Không thể xác minh mã OTP. Vui lòng kiểm tra và thử lại.",
+    "PAYLOAD_": "Dữ liệu gửi lên chưa hợp lệ hoặc vượt quá giới hạn cho phép.",
+    "PERMISSION_": "Bạn không có đủ quyền để thực hiện hành động này.",
+    "PUBLIC_": "Thông tin công khai có thể chứa dữ liệu nhạy cảm. Vui lòng điều chỉnh nội dung.",
+    "REPORT_": "Không thể xử lý báo cáo ở trạng thái hiện tại.",
+    "REQUEST_": "Dữ liệu gửi lên chưa hợp lệ hoặc vượt quá giới hạn cho phép.",
+    "RESOURCE_CONFLICT": "Dữ liệu đã thay đổi hoặc xung đột. Vui lòng tải lại và thử lại.",
+    "RESOURCE_NOT_FOUND": "Không tìm thấy dữ liệu được yêu cầu.",
+    "ROLE_": "Bạn không có đủ quyền để thực hiện hành động này.",
+    "SERVICE_": "Hệ thống tạm thời không khả dụng. Vui lòng thử lại sau.",
+    "SESSION_": "Phiên đăng nhập không hợp lệ hoặc đã hết hạn.",
+    "STALE_": "Yêu cầu đã cũ hoặc trùng với một thao tác trước đó. Vui lòng tải lại và thử lại.",
+    "UNKNOWN_ROLE": "Vai trò tài khoản không hợp lệ.",
+    "USER_": "Không thể xử lý tài khoản này. Vui lòng kiểm tra và thử lại.",
+    "VIETNAM_MAP_": "Không thể tải dữ liệu bản đồ Việt Nam.",
+    "WEB_DEMO_": "Tài khoản dùng thử hiện không khả dụng."
+  },
+  "httpStatus": {
+    "0": "Không thể kết nối đến hệ thống. Vui lòng kiểm tra mạng và thử lại.",
+    "400": "Thông tin gửi lên chưa hợp lệ.",
+    "401": "Bạn cần đăng nhập để tiếp tục.",
+    "403": "Bạn không có quyền thực hiện hành động này.",
+    "404": "Không tìm thấy dữ liệu được yêu cầu.",
+    "409": "Dữ liệu đã thay đổi hoặc xung đột. Vui lòng tải lại và thử lại.",
+    "413": "Dữ liệu tải lên vượt quá giới hạn cho phép.",
+    "422": "Thông tin gửi lên chưa hợp lệ.",
+    "429": "Bạn thao tác quá nhanh. Vui lòng thử lại sau.",
+    "5xx": "Hệ thống gặp sự cố. Vui lòng thử lại sau.",
+    "default": "Không thể hoàn tất yêu cầu. Vui lòng thử lại."
+  },
+  "fields": {
+    "code": "Mã xác minh",
+    "confirmPassword": "Mật khẩu xác nhận",
+    "confirmation": "Mật khẩu xác nhận",
+    "description": "Mô tả",
+    "email": "Email",
+    "fullName": "Họ và tên",
+    "identifier": "Email hoặc tên đăng nhập",
+    "name": "Tên",
+    "password": "Mật khẩu",
+    "phone": "Số điện thoại",
+    "query": "Nội dung tìm kiếm",
+    "title": "Tiêu đề",
+    "username": "Tên đăng nhập"
+  },
+  "validationRules": [
+    {
+      "patterns": ["must be an email", "invalid email"],
+      "message": "{label} không đúng định dạng."
+    },
+    {
+      "patterns": [
+        "should not be empty",
+        "must not be empty",
+        "is required",
+        "required field"
+      ],
+      "message": "{label} không được để trống."
+    },
+    {
+      "patterns": ["must be a uuid", "invalid uuid"],
+      "message": "{label} không đúng định dạng định danh."
+    },
+    {
+      "patterns": ["must be a url", "invalid url"],
+      "message": "{label} không phải là đường dẫn hợp lệ."
+    },
+    {
+      "patterns": ["must be a boolean"],
+      "message": "{label} phải là giá trị có hoặc không."
+    },
+    {
+      "patterns": ["must be an integer"],
+      "message": "{label} phải là số nguyên."
+    },
+    { "patterns": ["must be a number"], "message": "{label} phải là số." },
+    {
+      "patterns": ["must be a string"],
+      "message": "{label} phải là chuỗi ký tự."
+    },
+    {
+      "patterns": ["must be an array"],
+      "message": "{label} phải là một danh sách."
+    },
+    {
+      "patterns": ["must be a valid enum value", "must be one of"],
+      "message": "{label} có giá trị không được hỗ trợ."
+    },
+    {
+      "patterns": [
+        "must be a valid iso 8601 date string",
+        "must be a valid date"
+      ],
+      "message": "{label} không đúng định dạng ngày giờ."
+    },
+    {
+      "patterns": [
+        "longer than or equal to (\\d+) characters",
+        "minimum length (?:is|of) (\\d+)",
+        "at least (\\d+) characters"
+      ],
+      "message": "{label} phải có ít nhất {value} ký tự."
+    },
+    {
+      "patterns": [
+        "shorter than or equal to (\\d+) characters",
+        "maximum length (?:is|of) (\\d+)",
+        "at most (\\d+) characters"
+      ],
+      "message": "{label} không được vượt quá {value} ký tự."
+    }
+  ],
+  "validationDefault": "{label} chưa hợp lệ."
+}

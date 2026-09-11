@@ -1,21 +1,51 @@
-const WEB_ERROR_MESSAGES: Record<string, string> = {
-  EMAIL_ALREADY_EXISTS: "Email này đã được sử dụng.",
-  EMAIL_VERIFICATION_PENDING:
-    "Email này đang chờ xác minh. Hãy tiếp tục với mã đã gửi.",
-  EMAIL_VERIFICATION_REQUIRED: "Bạn cần xác minh email để tiếp tục.",
-  INTERNAL_SERVER_ERROR: "Hệ thống gặp sự cố. Vui lòng thử lại sau.",
-  INVALID_CREDENTIALS: "Email, tên đăng nhập hoặc mật khẩu không chính xác.",
-  NETWORK_ERROR: "Không thể kết nối đến hệ thống. Vui lòng kiểm tra mạng và thử lại.",
-  OTP_INVALID: "Mã xác minh không chính xác.",
-  OTP_LOCKED: "Phiên xác minh đang tạm khóa do nhập sai quá nhiều lần.",
-  OTP_VERIFICATION_NOT_FOUND: "Phiên xác minh không khả dụng hoặc đã hết hạn.",
-  RATE_LIMIT_EXCEEDED: "Bạn thao tác quá nhanh. Vui lòng thử lại sau.",
-  UNAUTHORIZED: "Bạn cần đăng nhập để tiếp tục.",
-  USERNAME_ALREADY_EXISTS: "Tên đăng nhập này đã được sử dụng.",
-  VALIDATION_FAILED: "Thông tin đã nhập chưa hợp lệ.",
-};
+import vi from "./locales/vi.json";
 
-export function translateWebError(code: string): string | undefined {
-  return WEB_ERROR_MESSAGES[code];
+export type WebLocale = "vi";
+
+const catalogs = { vi } as const;
+
+export function translateWebError(
+  code: string,
+  locale: WebLocale = "vi",
+): string | undefined {
+  const catalog = catalogs[locale];
+  return (
+    getRecordValue(catalog.errors, code) ??
+    findPrefixMessage(catalog.prefixes, code)
+  );
 }
 
+export function hasExactWebErrorTranslation(
+  code: string,
+  locale: WebLocale = "vi",
+): boolean {
+  return Object.prototype.hasOwnProperty.call(catalogs[locale].errors, code);
+}
+
+export function getWebHttpErrorFallback(
+  status?: number,
+  locale: WebLocale = "vi",
+): string {
+  const messages = catalogs[locale].httpStatus;
+  if (status !== undefined) {
+    const exact = getRecordValue(messages, String(status));
+    if (exact) return exact;
+    if (status >= 500) return messages["5xx"];
+  }
+  return messages.default;
+}
+
+export function getWebTranslationCatalog(locale: WebLocale = "vi") {
+  return catalogs[locale];
+}
+
+function findPrefixMessage(prefixes: object, code: string): string | undefined {
+  return Object.entries(prefixes).find(([prefix]) =>
+    code.startsWith(prefix),
+  )?.[1];
+}
+
+function getRecordValue(record: object, key: string): string | undefined {
+  const value = (record as Record<string, unknown>)[key];
+  return typeof value === "string" ? value : undefined;
+}

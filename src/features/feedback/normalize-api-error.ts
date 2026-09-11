@@ -1,8 +1,12 @@
-import { translateWebError } from "./error-catalog";
+import {
+  getWebHttpErrorFallback,
+  hasExactWebErrorTranslation,
+  translateWebError,
+} from "./error-catalog";
 import type { ApiErrorPayload, AppError, AppErrorKind } from "./types";
+import { translateWebFieldValidation } from "./validation-translations";
 
 const DEFAULT_MESSAGE = "Không thể hoàn tất yêu cầu. Vui lòng thử lại.";
-const INVALID_FIELD_MESSAGE = "Dữ liệu chưa hợp lệ.";
 
 export class ApiRequestError extends Error {
   readonly apiError: ApiErrorPayload | null;
@@ -41,18 +45,27 @@ export function normalizeApiError(
 
   const payload = getApiError(error);
   const status = getStatus(error);
-  const code = payload?.code ?? getDirectString(error, "code") ?? inferCode(error, status);
+  const code =
+    payload?.code ?? getDirectString(error, "code") ?? inferCode(error, status);
+  const translatedMessage = translateWebError(code);
+  if (payload && !hasExactWebErrorTranslation(code)) {
+    reportMissingWebErrorTranslation(code, payload.message, status);
+  }
+  const localMessage =
+    typeof error === "string" && error.trim() ? error : undefined;
   const message =
-    translateWebError(code) ??
-    payload?.message ??
-    (typeof error === "string" ? error : undefined) ??
-    fallback;
+    translatedMessage ??
+    (payload ? getWebHttpErrorFallback(status) : (localMessage ?? fallback));
   const details = payload?.details ?? getDirectRecord(error, "details");
   const requestId = payload?.requestId ?? getDirectString(error, "requestId");
 
   return {
     code,
-    fieldErrors: normalizeFieldErrors(details, message, getDirectString(error, "field")),
+    fieldErrors: normalizeFieldErrors(
+      details,
+      message,
+      getDirectString(error, "field"),
+    ),
     kind: classifyError(code, status),
     message,
     ...(requestId ? { requestId } : {}),
@@ -74,7 +87,10 @@ export function toApiRequestError(
   fallback = DEFAULT_MESSAGE,
 ): ApiRequestError {
   if (error instanceof ApiRequestError) return error;
-  return new ApiRequestError(normalizeApiError(error, fallback), getApiError(error));
+  return new ApiRequestError(
+    normalizeApiError(error, fallback),
+    getApiError(error),
+  );
 }
 
 function normalizeFieldErrors(
@@ -85,12 +101,18 @@ function normalizeFieldErrors(
   const output: Record<string, string[]> = {};
   if (isRecord(details?.fieldErrors)) {
     for (const [field, messages] of Object.entries(details.fieldErrors)) {
-      if (Array.isArray(messages) && messages.some((item) => typeof item === "string")) {
-        output[field] = [INVALID_FIELD_MESSAGE];
+      if (
+        Array.isArray(messages) &&
+        messages.some((item) => typeof item === "string")
+      ) {
+        output[field] = messages
+          .filter((item): item is string => typeof item === "string")
+          .map((item) => translateWebFieldValidation(field, item));
       }
     }
   }
-  const field = typeof details?.field === "string" ? details.field : directField;
+  const field =
+    typeof details?.field === "string" ? details.field : directField;
   if (field && !output[field]) output[field] = [message];
   if (Array.isArray(details?.fields)) {
     for (const item of details.fields) {
@@ -100,9 +122,27 @@ function normalizeFieldErrors(
   return output;
 }
 
+const warnedMissingCodes = new Set<string>();
+
+function reportMissingWebErrorTranslation(
+  code: string,
+  sourceMessage: string,
+  status?: number,
+): void {
+  if (process.env.NODE_ENV !== "development" || warnedMissingCodes.has(code))
+    return;
+  warnedMissingCodes.add(code);
+  console.warn("[WEB][feedback.i18n] Thiếu bản dịch lỗi tiếng Việt.", {
+    code,
+    sourceMessage,
+    status,
+  });
+}
+
 function classifyError(code: string, status?: number): AppErrorKind {
   if (code === "NETWORK_ERROR" || status === 0) return "network";
-  if (code === "VALIDATION_FAILED" || status === 400 || status === 422) return "validation";
+  if (code === "VALIDATION_FAILED" || status === 400 || status === 422)
+    return "validation";
   if (status === 401) return "authentication";
   if (status === 403) return "authorization";
   if (status === 404) return "not-found";
@@ -114,21 +154,31 @@ function classifyError(code: string, status?: number): AppErrorKind {
 }
 
 function inferCode(error: unknown, status?: number): string {
-  if (status === 0 || (error instanceof TypeError && /fetch/i.test(error.message))) {
+  if (
+    status === 0 ||
+    (error instanceof TypeError && /fetch/i.test(error.message))
+  ) {
     return "NETWORK_ERROR";
   }
   return "UNKNOWN_ERROR";
 }
 
 function getStatus(error: unknown): number | undefined {
-  return isRecord(error) && typeof error.status === "number" ? error.status : undefined;
+  return isRecord(error) && typeof error.status === "number"
+    ? error.status
+    : undefined;
 }
 
 function getDirectString(error: unknown, key: string): string | undefined {
-  return isRecord(error) && typeof error[key] === "string" ? error[key] : undefined;
+  return isRecord(error) && typeof error[key] === "string"
+    ? error[key]
+    : undefined;
 }
 
-function getDirectRecord(error: unknown, key: string): Record<string, unknown> | undefined {
+function getDirectRecord(
+  error: unknown,
+  key: string,
+): Record<string, unknown> | undefined {
   const value = isRecord(error) ? error[key] : undefined;
   return isRecord(value) ? value : undefined;
 }

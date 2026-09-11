@@ -7,7 +7,7 @@ import { AlertCircle, CheckCircle2, Loader2, MailCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { OtpInput } from "@/components/ui/otp-input";
-import { useZodFormValidation } from "@/features/feedback";
+import { normalizeApiError, useZodFormValidation } from "@/features/feedback";
 import { emailOtpSchema } from "../schemas/auth.schema";
 import { AuthOperationSuccess } from "./auth-operation-success";
 import {
@@ -292,7 +292,9 @@ function toMessage(error: unknown): string {
       "Xác minh đang bị khóa tạm thời do nhập sai quá nhiều lần.",
     OTP_VERIFICATION_NOT_FOUND: "Không tìm thấy phiên xác minh email.",
   };
-  return error.code ? (messages[error.code] ?? error.message) : error.message;
+  return error.code
+    ? (messages[error.code] ?? normalizeApiError(error).message)
+    : normalizeApiError(error).message;
 }
 
 function formatTime(value?: string | null): string {

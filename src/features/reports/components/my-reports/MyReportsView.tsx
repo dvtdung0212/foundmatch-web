@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Pagination } from "@/components/ui/pagination";
 import { Select } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
+import { normalizeApiError } from "@/features/feedback";
 import { MyReportsTable } from "./my-reports-table";
 import { MyReportsCard } from "./my-reports-card";
 import { CloseReportDialog } from "../modals/CloseReportDialog";
@@ -17,7 +18,10 @@ import {
   closeOwnReport,
   withdrawOwnReport,
 } from "../../api/owner-report-api";
-import { getAllReportDrafts, deleteReportDraft } from "../../utils/report-drafts";
+import {
+  getAllReportDrafts,
+  deleteReportDraft,
+} from "../../utils/report-drafts";
 import type { OwnerItemDeclarationDto } from "./types";
 
 export function MyReportsView() {
@@ -42,7 +46,8 @@ export function MyReportsView() {
   });
 
   // Action Modals State
-  const [selectedReport, setSelectedReport] = useState<OwnerItemDeclarationDto | null>(null);
+  const [selectedReport, setSelectedReport] =
+    useState<OwnerItemDeclarationDto | null>(null);
   const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
@@ -60,7 +65,11 @@ export function MyReportsView() {
       const allDrafts = getAllReportDrafts();
       const filteredDrafts = allDrafts.filter((d) => {
         if (typeParam && d.type !== typeParam) return false;
-        if (searchQuery && !d.title?.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+        if (
+          searchQuery &&
+          !d.title?.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+          return false;
         return true;
       });
 
@@ -100,8 +109,12 @@ export function MyReportsView() {
         const lostDrafts = allDrafts.filter((d) => d.type === "LOST").length;
         const foundDrafts = allDrafts.filter((d) => d.type === "FOUND").length;
 
-        const lostCount = items.filter((item) => item.type === "LOST" && !item.isDraft).length + lostDrafts;
-        const foundCount = items.filter((item) => item.type === "FOUND" && !item.isDraft).length + foundDrafts;
+        const lostCount =
+          items.filter((item) => item.type === "LOST" && !item.isDraft).length +
+          lostDrafts;
+        const foundCount =
+          items.filter((item) => item.type === "FOUND" && !item.isDraft)
+            .length + foundDrafts;
         setCounts({
           all: total,
           lost: lostCount,
@@ -109,8 +122,12 @@ export function MyReportsView() {
         });
       }
     } catch (err: unknown) {
-      const errObj = err as { message?: string };
-      setError(errObj?.message || "Không thể tải danh sách báo cáo. Vui lòng thử lại.");
+      setError(
+        normalizeApiError(
+          err,
+          "Không thể tải danh sách báo cáo. Vui lòng thử lại.",
+        ).message,
+      );
     } finally {
       setLoading(false);
     }
@@ -160,7 +177,7 @@ export function MyReportsView() {
       await withdrawOwnReport(
         selectedReport.id,
         selectedReport.version,
-        "Người dùng chủ động rút báo cáo"
+        "Người dùng chủ động rút báo cáo",
       );
       setIsWithdrawModalOpen(false);
       setSelectedReport(null);
@@ -175,7 +192,11 @@ export function MyReportsView() {
 
   // Handle Delete Draft action
   const handleDeleteDraft = (report: OwnerItemDeclarationDto) => {
-    if (window.confirm(`Bạn có chắc muốn xóa bản nháp "${report.title || "này"}"?`)) {
+    if (
+      window.confirm(
+        `Bạn có chắc muốn xóa bản nháp "${report.title || "này"}"?`,
+      )
+    ) {
       deleteReportDraft(report.id);
       void fetchReports();
     }
@@ -213,13 +234,22 @@ export function MyReportsView() {
         <div className="overflow-x-auto hide-scrollbar pb-1">
           <Tabs value={activeTab} onValueChange={handleTabChange}>
             <TabsList className="p-0 gap-2">
-              <TabsTrigger value="ALL" badge={counts.all > 0 ? counts.all : undefined}>
+              <TabsTrigger
+                value="ALL"
+                badge={counts.all > 0 ? counts.all : undefined}
+              >
                 Tất cả
               </TabsTrigger>
-              <TabsTrigger value="LOST" badge={counts.lost > 0 ? counts.lost : undefined}>
+              <TabsTrigger
+                value="LOST"
+                badge={counts.lost > 0 ? counts.lost : undefined}
+              >
                 Thất lạc
               </TabsTrigger>
-              <TabsTrigger value="FOUND" badge={counts.found > 0 ? counts.found : undefined}>
+              <TabsTrigger
+                value="FOUND"
+                badge={counts.found > 0 ? counts.found : undefined}
+              >
                 Nhặt được
               </TabsTrigger>
             </TabsList>
@@ -286,7 +316,10 @@ export function MyReportsView() {
             <div className="h-6 bg-brand-cream/80 rounded-md w-1/4" />
             <div className="space-y-3 pt-2">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="h-14 bg-brand-cream/50 rounded-xl w-full" />
+                <div
+                  key={i}
+                  className="h-14 bg-brand-cream/50 rounded-xl w-full"
+                />
               ))}
             </div>
           </Card>
@@ -297,8 +330,12 @@ export function MyReportsView() {
               <AlertCircle className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-brand-heading">Có lỗi xảy ra</h3>
-              <p className="text-xs text-brand-muted mt-1 max-w-sm mx-auto">{error}</p>
+              <h3 className="text-base font-bold text-brand-heading">
+                Có lỗi xảy ra
+              </h3>
+              <p className="text-xs text-brand-muted mt-1 max-w-sm mx-auto">
+                {error}
+              </p>
             </div>
             <Button
               variant="outline"
@@ -322,8 +359,8 @@ export function MyReportsView() {
                 {activeTab === "ALL"
                   ? "Bạn chưa tạo báo cáo thất lạc hoặc nhặt được nào. Hãy tạo báo cáo để bắt đầu tìm kiếm hoặc hỗ trợ người khác."
                   : activeTab === "LOST"
-                  ? "Bạn chưa có báo cáo đồ thất lạc nào."
-                  : "Bạn chưa có báo cáo đồ nhặt được nào."}
+                    ? "Bạn chưa có báo cáo đồ thất lạc nào."
+                    : "Bạn chưa có báo cáo đồ nhặt được nào."}
               </p>
             </div>
             <Link href="/reports/create" className="inline-block pt-2">
