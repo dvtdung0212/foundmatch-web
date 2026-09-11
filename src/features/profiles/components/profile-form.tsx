@@ -23,6 +23,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { UserActivityPanel } from "@/features/activity/components/user-activity-panel";
 
 interface ProfileFormProps {
   profile: UserProfileDTO;
@@ -411,6 +412,8 @@ export function ProfileForm({ profile }: ProfileFormProps) {
 
           </div>
         </div>
+      ) : activeTab === "activity" ? (
+        <UserActivityPanel />
       ) : (
         <div className="bg-white rounded-[32px] p-12 border border-brand-border shadow-sm flex flex-col items-center justify-center text-center min-h-[400px]">
           <div className="h-16 w-16 bg-[#FAF7F2] rounded-full flex items-center justify-center text-brand-muted mb-4">

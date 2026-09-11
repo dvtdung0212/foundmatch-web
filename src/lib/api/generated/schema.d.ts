@@ -2540,6 +2540,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/private/audit-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List privacy-redacted business and security audit events */
+        get: operations["listCmsAuditEvents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/activity-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List the current user safe successful activity for 12 months */
+        get: operations["listCurrentUserActivityEvents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2659,7 +2693,7 @@ export interface components {
         };
         PermissionDefinitionResponseDto: {
             /** @enum {string} */
-            key: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run";
+            key: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run" | "operations.audit.read" | "operations.audit.export";
             label: string;
             description: string;
             module: string;
@@ -2685,7 +2719,7 @@ export interface components {
         };
         PermissionOverrideItemDto: {
             /** @enum {string} */
-            permissionKey: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run";
+            permissionKey: "identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run" | "operations.audit.read" | "operations.audit.export";
             /** @enum {string} */
             effect: "allow" | "deny";
         };
@@ -2829,7 +2863,7 @@ export interface components {
             label: string;
             description: string;
             rank: number;
-            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
+            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run" | "operations.audit.read" | "operations.audit.export")[];
             usersCount: number;
             isSystem: boolean;
             status: string;
@@ -2859,7 +2893,7 @@ export interface components {
             label: string;
             description: string;
             rank: number;
-            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
+            permissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run" | "operations.audit.read" | "operations.audit.export")[];
             usersCount: number;
             isSystem: boolean;
             status: string;
@@ -2867,20 +2901,20 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
+            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run" | "operations.audit.read" | "operations.audit.export")[];
         };
         CreateRoleDto: {
             name: string;
             description: string;
             rank: number;
-            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
+            basePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run" | "operations.audit.read" | "operations.audit.export")[];
         };
         UpdateRoleDto: {
             name?: string;
             status?: string;
             description?: string;
             rank?: number;
-            basePermissions?: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
+            basePermissions?: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run" | "operations.audit.read" | "operations.audit.export")[];
         };
         InviteUserDto: {
             /** Format: email */
@@ -2991,7 +3025,7 @@ export interface components {
             devicesCount: number | null;
             activeSessions: number | null;
             avgActiveTimeMinutes: number | null;
-            effectivePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run")[];
+            effectivePermissions: ("identity.users.read" | "identity.users.create" | "identity.users.invite" | "identity.users.update" | "identity.users.change_email" | "identity.users.assign_role" | "identity.users.suspend" | "identity.users.delete" | "identity.users.reset_password" | "identity.users.read_own" | "identity.users.update_own" | "identity.roles.manage" | "identity.roles.read" | "identity.roles.create" | "identity.roles.update" | "identity.roles.delete" | "identity.permissions.read" | "content.categories.manage" | "content.categories.read" | "content.categories.create" | "content.categories.update" | "content.categories.delete" | "content.attributes.manage" | "content.attributes.read" | "content.attributes.create" | "content.attributes.update" | "content.attributes.delete" | "content.attribute_values.read" | "content.attribute_values.create" | "content.attribute_values.review" | "content.attribute_values.update" | "content.attribute_values.archive" | "content.attribute_values.reorder" | "content.attribute_values.delete" | "geography.geographies.read" | "geography.geographies.create" | "geography.geographies.update" | "geography.locations.read" | "geography.locations.create" | "geography.locations.update" | "geography.groups.read" | "geography.groups.create" | "geography.groups.update" | "geography.imports.read" | "geography.imports.create" | "geography.imports.edit_staging" | "geography.imports.apply" | "geography.imports.rollback" | "geography.imports.download" | "geography.imports.export_errors" | "geography.statistics.read" | "geography.statistics.create" | "item_declarations.registry.read" | "item_declarations.registry.export" | "item_declarations.moderation.hide" | "item_declarations.moderation.review" | "item_declarations.moderation.request_information" | "item_declarations.moderation.restore" | "item_declarations.sensitive_data.read" | "matching.review.read" | "matching.review.confirm" | "matching.review.dismiss" | "matching.operations.run" | "operations.audit.read" | "operations.audit.export")[];
             roleRank: number;
         };
         UserListResponseDto: {
@@ -4863,6 +4897,60 @@ export interface components {
         UnreadCountResponseDto: {
             /** @example 3 */
             unreadCount: number;
+        };
+        ActivityActorResponseDto: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+        };
+        ActivityEventResponseDto: {
+            action: string;
+            actor?: components["schemas"]["ActivityActorResponseDto"] | null;
+            /** @enum {string} */
+            category: "ACCOUNT_SECURITY" | "PERSONAL_DATA" | "REPORT" | "MATCHING" | "ADMINISTRATION" | "MODERATION" | "SECURITY" | "SYSTEM";
+            /** Format: date-time */
+            createdAt: string;
+            description: string;
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            outcome: "DENIED" | "FAILURE" | "SUCCESS";
+            requestId?: string | null;
+            /** @enum {string} */
+            severity: "ERROR" | "INFO" | "WARNING";
+            /** Format: uuid */
+            targetId?: string | null;
+            targetType: string;
+            title: string;
+        };
+        ActivityPageResponseDto: {
+            items: components["schemas"]["ActivityEventResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
+        };
+        UserActivityEventResponseDto: {
+            /** @enum {string} */
+            category: "ACCOUNT_SECURITY" | "PERSONAL_DATA" | "REPORT" | "MATCHING" | "ADMINISTRATION" | "MODERATION" | "SECURITY" | "SYSTEM";
+            /** Format: date-time */
+            createdAt: string;
+            description: string;
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            outcome: "DENIED" | "FAILURE" | "SUCCESS";
+            /** @enum {string} */
+            severity: "ERROR" | "INFO" | "WARNING";
+            /** Format: uuid */
+            targetId?: string | null;
+            targetType: string;
+            title: string;
+        };
+        UserActivityPageResponseDto: {
+            items: components["schemas"]["UserActivityEventResponseDto"][];
+            page: number;
+            pageSize: number;
+            total: number;
         };
     };
     responses: never;
@@ -10953,6 +11041,81 @@ export interface operations {
                 };
             };
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    listCmsAuditEvents: {
+        parameters: {
+            query?: {
+                category?: "ACCOUNT_SECURITY" | "PERSONAL_DATA" | "REPORT" | "MATCHING" | "ADMINISTRATION" | "MODERATION" | "SECURITY" | "SYSTEM";
+                page?: number;
+                pageSize?: number;
+                action?: string;
+                dateFrom?: string;
+                dateTo?: string;
+                outcome?: "DENIED" | "FAILURE" | "SUCCESS";
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivityPageResponseDto"];
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    listCurrentUserActivityEvents: {
+        parameters: {
+            query?: {
+                category?: "ACCOUNT_SECURITY" | "PERSONAL_DATA" | "REPORT" | "MATCHING" | "ADMINISTRATION" | "MODERATION" | "SECURITY" | "SYSTEM";
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserActivityPageResponseDto"];
+                };
+            };
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };
