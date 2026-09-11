@@ -25,6 +25,7 @@ import {
   Lock,
   ShieldCheck,
   Loader2,
+  AtSign,
 } from "lucide-react";
 
 interface LoginFormProps {
@@ -153,7 +154,13 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
           }}
           error={validation.fieldErrors.identifier}
           placeholder="Nhập email hoặc username của bạn"
-          icon={<Mail className="h-4 w-4" />}
+          icon={
+            identifier.includes("@") ? (
+              <Mail className="h-4 w-4 animate-in fade-in zoom-in-75 duration-200" />
+            ) : (
+              <AtSign className="h-4 w-4 animate-in fade-in zoom-in-75 duration-200" />
+            )
+          }
           required
         />
 

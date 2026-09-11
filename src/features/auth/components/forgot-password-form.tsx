@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import { ArrowLeft, CheckCircle2, Mail } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Mail, AtSign } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,7 +67,13 @@ export function ForgotPasswordForm() {
       </div>
       <Input
         autoComplete="username"
-        icon={<Mail className="h-4 w-4" />}
+        icon={
+          identifier.includes("@") ? (
+            <Mail className="h-4 w-4 animate-in fade-in zoom-in-75 duration-200" />
+          ) : (
+            <AtSign className="h-4 w-4 animate-in fade-in zoom-in-75 duration-200" />
+          )
+        }
         label="Email hoặc Username"
         maxLength={320}
         minLength={3}

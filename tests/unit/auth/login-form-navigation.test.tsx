@@ -118,4 +118,34 @@ describe("LoginForm navigation", () => {
 
     expect(replace).toHaveBeenCalledWith("/");
   });
+
+  it("switches identifier icon from AtSign to Mail when typing an email with @", () => {
+    const { container } = render(<LoginForm />);
+    const input = screen.getByPlaceholderText("Nhập email hoặc username của bạn");
+
+    // Initially without @: shows at-sign icon
+    expect(container.querySelector(".lucide-at-sign")).toBeInTheDocument();
+    expect(container.querySelector(".lucide-mail")).not.toBeInTheDocument();
+
+    // Type a username without @: remains at-sign icon
+    act(() => {
+      fireEvent.change(input, { target: { value: "johndoe" } });
+    });
+    expect(container.querySelector(".lucide-at-sign")).toBeInTheDocument();
+    expect(container.querySelector(".lucide-mail")).not.toBeInTheDocument();
+
+    // Type an email with @: switches to mail icon
+    act(() => {
+      fireEvent.change(input, { target: { value: "johndoe@gmail.com" } });
+    });
+    expect(container.querySelector(".lucide-mail")).toBeInTheDocument();
+    expect(container.querySelector(".lucide-at-sign")).not.toBeInTheDocument();
+
+    // Clear back to username without @: switches back to at-sign icon
+    act(() => {
+      fireEvent.change(input, { target: { value: "johndoe" } });
+    });
+    expect(container.querySelector(".lucide-at-sign")).toBeInTheDocument();
+    expect(container.querySelector(".lucide-mail")).not.toBeInTheDocument();
+  });
 });
