@@ -83,6 +83,20 @@ describe("web feedback error normalization", () => {
     expect(error.message).toBe("Bạn không thể tự kiểm duyệt báo cáo của mình.");
   });
 
+  it("translates WEB_LOGIN_INVALID to invalid credentials message", () => {
+    const error = normalizeApiError({
+      data: {
+        code: "WEB_LOGIN_INVALID",
+        message: "The identifier or password is incorrect.",
+        requestId: "req-123",
+      },
+      status: 401,
+    });
+
+    expect(error.message).toBe("Email, tên đăng nhập hoặc mật khẩu không chính xác.");
+    expect(error.requestId).toBe("req-123");
+  });
+
   it("wraps unknown transport errors in the shared error type", () => {
     const error = toApiRequestError(new TypeError("fetch failed"));
 

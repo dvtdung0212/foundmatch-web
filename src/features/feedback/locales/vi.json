@@ -14,7 +14,12 @@
     "RATE_LIMIT_EXCEEDED": "Bạn thao tác quá nhanh. Vui lòng thử lại sau.",
     "UNAUTHORIZED": "Bạn cần đăng nhập để tiếp tục.",
     "USERNAME_ALREADY_EXISTS": "Tên đăng nhập này đã được sử dụng.",
-    "VALIDATION_FAILED": "Thông tin đã nhập chưa hợp lệ."
+    "VALIDATION_FAILED": "Thông tin đã nhập chưa hợp lệ.",
+    "WEB_DEMO_LOGIN_DISABLED": "Đăng nhập bằng tài khoản demo hiện không khả dụng.",
+    "WEB_DEMO_LOGIN_INVALID": "Tài khoản demo không hợp lệ hoặc không xác thực được.",
+    "WEB_LOGIN_INVALID": "Email, tên đăng nhập hoặc mật khẩu không chính xác.",
+    "WEB_REMEMBER_LOGIN_DISABLED": "Tính năng ghi nhớ đăng nhập hiện không khả dụng.",
+    "WEB_SESSION_REFRESH_REQUIRED": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại."
   },
   "prefixes": {
     "ATTRIBUTE_VALUE_": "Không thể xử lý giá trị thuộc tính này.",
@@ -56,7 +61,8 @@
     "UNKNOWN_ROLE": "Vai trò tài khoản không hợp lệ.",
     "USER_": "Không thể xử lý tài khoản này. Vui lòng kiểm tra và thử lại.",
     "VIETNAM_MAP_": "Không thể tải dữ liệu bản đồ Việt Nam.",
-    "WEB_DEMO_": "Tài khoản dùng thử hiện không khả dụng."
+    "WEB_DEMO_": "Tài khoản dùng thử hiện không khả dụng.",
+    "WEB_SESSION_": "Phiên đăng nhập không hợp lệ hoặc đã hết hạn."
   },
   "httpStatus": {
     "0": "Không thể kết nối đến hệ thống. Vui lòng kiểm tra mạng và thử lại.",

@@ -21,7 +21,7 @@ describe("Web password recovery", () => {
     fireEvent.change(screen.getByLabelText(/email hoặc username/i), {
       target: { value: "member-name" },
     });
-    fireEvent.click(screen.getByRole("button", { name: /gửi hướng dẫn/i }));
+    fireEvent.click(screen.getByRole("button", { name: /đặt lại mật khẩu/i }));
 
     await waitFor(() =>
       expect(api.requestWebPasswordRecovery).toHaveBeenCalledWith(

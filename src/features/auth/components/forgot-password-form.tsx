@@ -61,8 +61,8 @@ export function ForgotPasswordForm() {
           Quên mật khẩu?
         </h1>
         <p className="text-sm leading-6 text-brand-muted">
-          Nhập email hoặc username. Vì lý do bảo mật, chúng tôi không xác nhận
-          tài khoản có tồn tại hay không.
+          Nhập email hoặc username để nhận hướng dẫn đặt lại mật khẩu. Vì lý
+          do bảo mật, chúng tôi không xác nhận tài khoản có tồn tại hay không.
         </p>
       </div>
       <Input
@@ -87,7 +87,7 @@ export function ForgotPasswordForm() {
         value={identifier}
       />
       <Button fullWidth loading={loading} size="lg" type="submit">
-        Gửi hướng dẫn
+        Đặt lại mật khẩu
       </Button>
       <div className="text-center">
         <Link
