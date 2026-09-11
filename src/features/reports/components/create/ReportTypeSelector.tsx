@@ -68,7 +68,7 @@ export function ReportTypeSelector() {
               }}
               aria-invalid={Boolean(validation.fieldErrors.query)}
               aria-describedby={validation.fieldErrors.query ? "quick-search-error" : undefined}
-              className="w-full h-12 pl-11 pr-24 rounded-full border border-brand-border bg-white text-xs sm:text-sm font-medium text-brand-heading placeholder:text-brand-muted/70 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-plum/20 focus-visible:border-brand-plum transition-all"
+              className="w-full h-12 pl-11 pr-24 rounded-full border border-brand-border bg-white text-xs sm:text-sm font-medium text-brand-heading placeholder:text-brand-muted/70 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-brand-plum transition-all"
             />
             <Search className="w-4 h-4 text-brand-muted absolute left-4 pointer-events-none" />
             <Button

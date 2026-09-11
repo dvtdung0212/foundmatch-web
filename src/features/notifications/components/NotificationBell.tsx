@@ -108,7 +108,7 @@ export function NotificationBell() {
         <button
           type="button"
           aria-label="Thông báo"
-          className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-[#F8F9FA] border border-[#E5E7EB] flex items-center justify-center text-brand-muted hover:text-brand-plum hover:border-[#FFC7BA] transition-all shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-plum/20"
+          className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-[#F8F9FA] border border-[#E5E7EB] flex items-center justify-center text-brand-muted hover:text-brand-plum hover:border-[#FFC7BA] transition-all shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"
         >
           <Bell className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
           {unreadCount > 0 && (

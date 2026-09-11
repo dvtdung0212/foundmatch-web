@@ -135,7 +135,7 @@ export function HoldingPointDrawer({
                     onClick={() => setSelectedId(branch.id)}
                     className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col gap-2 ${
                       isSelected
-                        ? "border-brand-plum bg-brand-soft/30 shadow-xs ring-1 ring-brand-plum/30"
+                        ? "border-brand-plum bg-brand-soft/30 shadow-xs ring-1 ring-primary/30"
                         : "border-brand-border bg-white hover:bg-brand-cream/40"
                     }`}
                   >

@@ -128,10 +128,10 @@ export function Select({
           aria-expanded={open}
           onClick={() => setOpen((prev) => !prev)}
           className={cn(
-            "flex h-11 w-full items-center justify-between rounded-xl border border-brand-border bg-white px-3.5 py-2 text-sm font-semibold text-brand-heading transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-plum/20 focus:border-brand-plum disabled:cursor-not-allowed disabled:opacity-50",
+            "flex h-11 w-full items-center justify-between rounded-xl border border-brand-border bg-white px-3.5 py-2 text-sm font-semibold text-brand-heading transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-brand-plum disabled:cursor-not-allowed disabled:opacity-50",
             icon && "pl-10",
-            error && "border-brand-lost focus:ring-brand-lost/20",
-            open && "border-brand-plum ring-2 ring-brand-plum/20",
+            error && "border-brand-lost focus:ring-destructive/20",
+            open && "border-brand-plum ring-2 ring-primary/20",
             triggerClassName
           )}
         >

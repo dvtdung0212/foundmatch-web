@@ -51,7 +51,7 @@ export function ReportStepper({
                     isCompleted
                       ? `${activeBg} border-transparent shadow-xs`
                       : isCurrent
-                      ? `${activeBg} border-white ring-4 ring-brand-plum/10 shadow-sm`
+                      ? `${activeBg} border-white ring-4 ring-primary/15 shadow-sm`
                       : "bg-white border-brand-border text-brand-muted"
                   )}
                 >

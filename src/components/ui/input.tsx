@@ -37,10 +37,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={actualType}
             className={cn(
-              "w-full rounded-xl border border-brand-border bg-brand-cream/60 px-4 py-3 text-sm text-brand-heading placeholder:text-brand-muted/60 focus:border-brand-plum focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-plum/10 transition-all font-medium relative",
+              "w-full rounded-xl border border-brand-border bg-brand-cream/60 px-4 py-3 text-sm text-brand-heading placeholder:text-brand-muted/60 focus:border-brand-plum focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium relative",
               icon && "pl-11",
               isPassword && "pr-11",
-              error && "border-red-500 focus:ring-red-500/10",
+              error && "border-red-500 focus:ring-red-500/20",
               className,
             )}
             ref={ref}
