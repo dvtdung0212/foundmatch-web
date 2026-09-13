@@ -2,10 +2,69 @@
 
 import "server-only";
 import { getServerApiClient } from "@/lib/api/server-client";
+import type { components } from "@/lib/api/generated/schema";
 import { updateProfileSchema } from "../schemas/profile.schema";
 import type { UserProfileDTO, UpdateProfileInput } from "@/types/profile.types";
-import type { AuthActionResult } from "@/types/auth.types";
-import { revalidatePath } from "next/cache";
+import type {
+  AuthActionResult,
+  RelayMemberStatus,
+  UserRole,
+} from "@/types/auth.types";
+
+type OwnerProfileResponse = components["schemas"]["OwnerProfileResponseDto"];
+type UpdateProfileRequest = components["schemas"]["UpdateProfileDto"];
+
+const USER_ROLES: readonly UserRole[] = [
+  "guest",
+  "user",
+  "relay_member",
+  "moderator",
+  "admin",
+];
+
+const RELAY_MEMBER_STATUSES: readonly RelayMemberStatus[] = [
+  "none",
+  "pending",
+  "approved",
+  "rejected",
+  "suspended",
+];
+
+function isUserRole(value: string): value is UserRole {
+  return USER_ROLES.includes(value as UserRole);
+}
+
+function isRelayMemberStatus(value: string): value is RelayMemberStatus {
+  return RELAY_MEMBER_STATUSES.includes(value as RelayMemberStatus);
+}
+
+function mapOwnerProfile(profile: OwnerProfileResponse): UserProfileDTO {
+  return {
+    id: profile.id,
+    email: profile.email,
+    username: profile.username,
+    fullName: profile.fullName,
+    avatarUrl: profile.avatarUrl,
+    avatarMediaAssetId: profile.avatarMediaAssetId,
+    phone: profile.phone,
+    dateOfBirth: profile.dateOfBirth,
+    gender: profile.gender,
+    address: profile.address,
+    addressLine: profile.addressLine,
+    country: profile.country,
+    countryCode: profile.countryCode,
+    administrativeAreaLevel1Id: profile.administrativeAreaLevel1Id,
+    administrativeAreaLevel2Id: profile.administrativeAreaLevel2Id,
+    localityGeographyId: profile.localityGeographyId,
+    occupation: profile.occupation,
+    role: isUserRole(profile.role) ? profile.role : "user",
+    relayStatus: isRelayMemberStatus(profile.relayStatus)
+      ? profile.relayStatus
+      : "none",
+    createdAt: profile.createdAt,
+    updatedAt: profile.updatedAt,
+  };
+}
 
 /**
  * Lấy Profile của User hiện tại đang đăng nhập
@@ -29,38 +88,23 @@ export async function getCurrentProfile(): Promise<
       };
     }
 
-    // backend returns CurrentUserResponseDto which extends UserResponseDto
-    // mapping it to UserProfileDTO
-    const dto: UserProfileDTO = {
-      id: profileResponse.id,
-      email: profileResponse.email,
-      username: null, // Note: update backend if username is supported
-      fullName: profileResponse.fullName,
-      avatarUrl: profileResponse.avatarUrl,
-      phone: profileResponse.phone,
-      role: profileResponse.role as any,
-      relayStatus: profileResponse.relayStatus as any,
-      createdAt: profileResponse.createdAt,
-      updatedAt: profileResponse.updatedAt,
-    };
-
     return {
       success: true,
-      data: dto,
+      data: mapOwnerProfile(profileResponse),
     };
-  } catch (err) {
+  } catch {
     return {
       success: false,
       error: {
         code: "SERVER_ERROR",
-        message: err instanceof Error ? err.message : "Đã xảy ra lỗi máy chủ",
+        message: "Không thể tải hồ sơ lúc này. Vui lòng thử lại.",
       },
     };
   }
 }
 
 /**
- * Cập nhật thông tin cá nhân (fullName, avatarUrl, phone)
+ * Cập nhật các trường hồ sơ chủ tài khoản được phép chỉnh sửa.
  */
 export async function updateProfile(
   input: UpdateProfileInput,
@@ -75,72 +119,81 @@ export async function updateProfile(
           message:
             validation.error.errors[0]?.message ||
             "Thông tin nhập không hợp lệ",
+          details: {
+            fieldErrors: validation.error.flatten().fieldErrors,
+          },
         },
       };
     }
 
-    const updateData: Record<string, unknown> = {};
+    const updateData: UpdateProfileRequest = {};
 
     if (validation.data.fullName !== undefined) {
       updateData.fullName = validation.data.fullName;
     }
-    if (validation.data.avatarUrl !== undefined) {
-      updateData.avatarUrl = validation.data.avatarUrl || null;
-    }
     if (validation.data.phone !== undefined) {
       updateData.phone = validation.data.phone || null;
     }
+    if (validation.data.dateOfBirth !== undefined) {
+      updateData.dateOfBirth = validation.data.dateOfBirth || null;
+    }
+    if (validation.data.gender !== undefined) {
+      updateData.gender = validation.data.gender;
+    }
+    if (validation.data.addressLine !== undefined) {
+      updateData.addressLine = validation.data.addressLine || null;
+    }
+    if (validation.data.countryCode !== undefined) {
+      updateData.countryCode = validation.data.countryCode || null;
+    }
+    if (validation.data.administrativeAreaLevel1Id !== undefined) {
+      updateData.administrativeAreaLevel1Id =
+        validation.data.administrativeAreaLevel1Id;
+    }
+    if (validation.data.administrativeAreaLevel2Id !== undefined) {
+      updateData.administrativeAreaLevel2Id =
+        validation.data.administrativeAreaLevel2Id;
+    }
+    if (validation.data.localityGeographyId !== undefined) {
+      updateData.localityGeographyId = validation.data.localityGeographyId;
+    }
+    if (validation.data.occupation !== undefined) {
+      updateData.occupation = validation.data.occupation || null;
+    }
 
     const apiClient = await getServerApiClient();
-    const { data: updated, error: updateError } = await apiClient.PATCH(
-      "/api/v1/public/users/me/profile",
-      {
-        body: updateData as any, // Cast because openapi-fetch types might complain if fields are strictly defined
-      },
-    );
+    const {
+      data: updated,
+      error: updateError,
+      response,
+    } = await apiClient.PATCH("/api/v1/public/users/me/profile", {
+      body: updateData,
+    });
 
     if (updateError || !updated) {
       return {
         success: false,
         error: {
-          code: "UPDATE_FAILED",
-          message:
-            typeof updateError === "object" &&
-            updateError !== null &&
-            "message" in updateError
-              ? (updateError.message as string)
-              : "Cập nhật hồ sơ thất bại",
+          code: updateError?.code ?? "UPDATE_FAILED",
+          message: updateError?.message ?? "Cập nhật hồ sơ thất bại",
+          details: updateError?.details,
+          requestId: updateError?.requestId,
+          status: response.status,
         },
       };
     }
 
-    revalidatePath("/profile");
-    revalidatePath("/", "layout");
-
-    const dto: UserProfileDTO = {
-      id: updated.id,
-      email: updated.email,
-      username: null,
-      fullName: updated.fullName,
-      avatarUrl: updated.avatarUrl,
-      phone: updated.phone,
-      role: updated.role as any,
-      relayStatus: updated.relayStatus as any,
-      createdAt: updated.createdAt,
-      updatedAt: updated.updatedAt,
-    };
-
     return {
       success: true,
       message: "Cập nhật hồ sơ cá nhân thành công!",
-      data: dto,
+      data: mapOwnerProfile(updated),
     };
-  } catch (err) {
+  } catch {
     return {
       success: false,
       error: {
         code: "SERVER_ERROR",
-        message: err instanceof Error ? err.message : "Đã xảy ra lỗi máy chủ",
+        message: "Không thể cập nhật hồ sơ lúc này. Vui lòng thử lại.",
       },
     };
   }

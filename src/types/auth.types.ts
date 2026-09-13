@@ -19,6 +19,9 @@ export interface AuthActionResult<T = unknown> {
   error?: {
     code: string;
     message: string;
+    details?: Record<string, unknown>;
+    requestId?: string;
+    status?: number;
   };
 }
 

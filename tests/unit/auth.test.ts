@@ -83,9 +83,43 @@ describe("Auth & Profile Schemas Validation", () => {
     const validProfile = updateProfileSchema.safeParse({
       fullName: "Nguyen Van A",
       phone: "0912345678",
-      avatarUrl: "https://example.com/avatar.jpg",
+      addressLine: "24 Dang Tat",
+      administrativeAreaLevel1Id: "22222222-2222-4222-8222-222222222222",
+      countryCode: "vn",
+      localityGeographyId: "33333333-3333-4333-8333-333333333333",
+      occupation: "Engineer",
     });
     expect(validProfile.success).toBe(true);
+    if (validProfile.success) {
+      expect(validProfile.data.countryCode).toBe("VN");
+    }
+
+    const rawAvatarUrl = updateProfileSchema.safeParse({
+      avatarUrl: "https://example.com/avatar.jpg",
+    });
+    expect(rawAvatarUrl.success).toBe(false);
+  });
+
+  it("requires a valid structured geography hierarchy", () => {
+    const localityWithoutProvince = updateProfileSchema.safeParse({
+      countryCode: "VN",
+      localityGeographyId: "33333333-3333-4333-8333-333333333333",
+    });
+    expect(localityWithoutProvince.success).toBe(false);
+
+    const provinceWithoutCountry = updateProfileSchema.safeParse({
+      administrativeAreaLevel1Id: "22222222-2222-4222-8222-222222222222",
+    });
+    expect(provinceWithoutCountry.success).toBe(false);
+  });
+
+  it("rejects invalid calendar dates and malformed Vietnamese phone prefixes", () => {
+    expect(
+      updateProfileSchema.safeParse({ dateOfBirth: "2026-02-31" }).success,
+    ).toBe(false);
+    expect(
+      updateProfileSchema.safeParse({ phone: "0|012345678" }).success,
+    ).toBe(false);
   });
 
   it("contains 4 pre-configured demo personas", () => {
