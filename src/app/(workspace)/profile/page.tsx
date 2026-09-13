@@ -1,7 +1,6 @@
 import { getCurrentProfile } from "@/features/profiles/actions/profile.actions";
 import { ProfileForm } from "@/features/profiles/components/profile-form";
 import { ProfileHeaderCard } from "@/features/profiles/components/profile-header-card";
-import { ProfileQuoteCard } from "@/features/profiles/components/profile-quote-card";
 import { ProfileStatsRow } from "@/features/profiles/components/profile-stats-row";
 import { ProfileSidebar } from "@/features/profiles/components/profile-sidebar";
 import { Card } from "@/components/ui/card";
@@ -18,7 +17,7 @@ export default async function ProfilePage() {
   const profile = result.data;
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div className="w-full px-4 sm:px-6 lg:px-8 pt-6 pb-48 space-y-6">
       {/* Breadcrumb & Title */}
         <div className="space-y-1">
           <div className="text-[13px] text-brand-muted font-semibold flex items-center gap-1.5">

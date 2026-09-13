@@ -1,32 +1,55 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { UserProfileDTO } from "@/types/profile.types";
 import { ShieldCheck, CheckCircle2 } from "lucide-react";
-
-import { ProfileQuoteCard } from "./profile-quote-card";
 
 interface ProfileHeaderCardProps {
   profile: UserProfileDTO;
 }
 
 export function ProfileHeaderCard({ profile }: ProfileHeaderCardProps) {
+  const [currentProfile, setCurrentProfile] = useState<UserProfileDTO>(profile);
+
+  useEffect(() => {
+    setCurrentProfile(profile);
+  }, [profile]);
+
+  useEffect(() => {
+    const handleProfileUpdated = (event: Event) => {
+      const customEvent = event as CustomEvent<UserProfileDTO>;
+      if (customEvent.detail) {
+        setCurrentProfile((prev) => ({
+          ...prev,
+          ...customEvent.detail,
+        }));
+      }
+    };
+
+    window.addEventListener("profile-updated", handleProfileUpdated);
+    return () => {
+      window.removeEventListener("profile-updated", handleProfileUpdated);
+    };
+  }, []);
   return (
     <div className="flex flex-col lg:flex-row gap-6 items-stretch justify-between relative overflow-hidden">
       
-      {/* Left Column (Info + Quote) */}
-      <div className="flex-1 flex flex-col justify-between gap-5 w-full">
+      {/* Left Column (Info) */}
+      <div className="flex-1 flex flex-col justify-center gap-5 w-full">
         {/* Profile Info */}
         <div className="flex flex-col sm:flex-row gap-5 items-start">
           {/* Avatar */}
           <div className="relative shrink-0">
             <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden bg-brand-cream border-[3px] border-white shadow-md flex items-center justify-center text-3xl font-bold text-brand-plum">
-              {profile.avatarUrl ? (
+              {currentProfile.avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={profile.avatarUrl}
-                  alt={profile.fullName || profile.email}
+                  src={currentProfile.avatarUrl}
+                  alt={currentProfile.fullName || currentProfile.email}
                   className="h-full w-full object-cover"
                 />
               ) : (
-                (profile.fullName || profile.email).charAt(0).toUpperCase()
+                (currentProfile.fullName || currentProfile.email).charAt(0).toUpperCase()
               )}
             </div>
             <button className="absolute bottom-0 right-0 h-7 w-7 bg-brand-muted text-white rounded-full flex items-center justify-center border-2 border-white hover:bg-brand-heading transition-colors shadow-sm">
@@ -38,7 +61,7 @@ export function ProfileHeaderCard({ profile }: ProfileHeaderCardProps) {
           <div className="flex-1 space-y-2.5 pt-1">
             <div className="flex flex-wrap items-center gap-2.5">
               <h2 className="text-xl sm:text-[22px] font-extrabold text-brand-heading tracking-tight leading-none">
-                {profile.fullName || "Người dùng"}
+                {currentProfile.fullName || "Người dùng"}
               </h2>
               <button className="h-6 w-6 rounded-full bg-[#F9ECE3] text-brand-plum flex items-center justify-center hover:bg-brand-plum hover:text-white transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
@@ -56,30 +79,26 @@ export function ProfileHeaderCard({ profile }: ProfileHeaderCardProps) {
               </span>
               <span className="hidden sm:inline text-brand-muted/50">•</span>
               <span>
-                Thành viên từ {new Date(profile.createdAt).toLocaleDateString("vi-VN")}
+                Thành viên từ {new Date(currentProfile.createdAt).toLocaleDateString("vi-VN")}
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 pt-1.5 text-[13px] font-semibold text-brand-heading">
               <div className="flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand-muted shrink-0"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                <span className="truncate">{profile.email}</span>
+                <span className="truncate">{currentProfile.email}</span>
               </div>
               <div className="flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand-muted shrink-0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                <span>{profile.phone || "Chưa cập nhật"}</span>
+                <span>{currentProfile.phone || "Chưa cập nhật"}</span>
               </div>
               <div className="flex items-center gap-2 sm:col-span-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand-muted shrink-0"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>Quận 1, TP. Hồ Chí Minh</span> 
-                <span className="text-[9px] text-brand-plum bg-brand-cream px-1.5 py-0.5 rounded font-bold uppercase tracking-wider ml-1">Mock</span>
+                <span>{currentProfile.address || "Chưa cập nhật"}</span>
               </div>
             </div>
           </div>
         </div>
-        
-        {/* Quote Card inside the Left Column */}
-        <ProfileQuoteCard />
       </div>
 
       {/* Right Column (Trust Score Sub-Card) */}
