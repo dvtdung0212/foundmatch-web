@@ -157,6 +157,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/public/web-auth/change-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Change password for the authenticated user and optionally revoke other sessions */
+        post: operations["changeWebPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List active web sessions for the authenticated user */
+        get: operations["getWebSessions"];
+        put?: never;
+        post?: never;
+        /** Revoke all other active web sessions for the authenticated user */
+        delete: operations["revokeOtherWebSessions"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/sessions/{sessionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke a specific active web session for the authenticated user */
+        delete: operations["revokeWebSession"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/private/password-recovery-requests": {
         parameters: {
             query?: never;
@@ -355,6 +407,74 @@ export interface paths {
         put?: never;
         /** Send a replacement Web registration email OTP */
         post: operations["resendWebRegistrationEmailOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/email-change/request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Request email change with current password and send OTP code to new email */
+        post: operations["requestWebEmailChange"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/email-change/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify OTP code and complete email change */
+        post: operations["verifyWebEmailChange"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/email-change/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resend OTP verification code to new email address */
+        post: operations["resendWebEmailChangeOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/email-change/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel pending email change request */
+        post: operations["cancelWebEmailChange"];
         delete?: never;
         options?: never;
         head?: never;
@@ -803,7 +923,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get the authenticated owner profile */
+        get: operations["getCurrentUserProfile"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2606,6 +2727,93 @@ export interface components {
             /** @example owner@example.com */
             email: string;
         };
+        ChangePasswordRequestDto: {
+            /**
+             * @description Current account password
+             * @example OldPassword123!
+             */
+            currentPassword: string;
+            /**
+             * @description New account password (at least 12 characters)
+             * @example NewSecurePassword123!
+             */
+            newPassword: string;
+            /**
+             * @description Whether to revoke all other active Web sessions
+             * @default true
+             */
+            revokeOtherSessions: boolean;
+        };
+        ChangePasswordResponseDto: {
+            /** @example true */
+            success: boolean;
+            /** @example Đổi mật khẩu thành công. */
+            message: string;
+        };
+        WebSessionItemDto: {
+            /**
+             * @description Unique session identifier
+             * @example d9b3fa12-3456-4789-abcd-1234567890ab
+             */
+            id: string;
+            /**
+             * @description Device and operating system name
+             * @example MacBook Pro 16" (macOS)
+             */
+            deviceName: string;
+            /**
+             * @description Web client or browser version
+             * @example Safari 17
+             */
+            clientName: string;
+            /**
+             * @description Approximate sign-in location when a trusted source is available
+             * @example TP. Hồ Chí Minh, Việt Nam
+             */
+            location: string | null;
+            /**
+             * Format: date-time
+             * @description Creation timestamp of the session
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Last activity timestamp
+             */
+            lastSeenAt: string;
+            /**
+             * @description Whether this session matches the active request session
+             * @example true
+             */
+            isCurrent: boolean;
+            /**
+             * @description Icon classification type for the device
+             * @example laptop
+             * @enum {string}
+             */
+            deviceType: "laptop" | "phone" | "desktop";
+        };
+        WebSessionsResponseDto: {
+            /** @description List of active web sessions */
+            sessions: components["schemas"]["WebSessionItemDto"][];
+            /**
+             * @description Total active sessions count
+             * @example 3
+             */
+            totalCount: number;
+        };
+        RevokeSessionResponseDto: {
+            /**
+             * @description Whether the session was successfully revoked
+             * @example true
+             */
+            success: boolean;
+            /**
+             * @description Human-readable result message
+             * @example Đã đăng xuất thiết bị thành công.
+             */
+            message: string;
+        };
         PasswordRecoveryRequestResponseDto: {
             decidedAt: string | null;
             decidedBy: string | null;
@@ -2690,6 +2898,71 @@ export interface components {
         EmailVerifiedResponseDto: {
             /** @example true */
             verified: boolean;
+        };
+        RequestEmailChangeDto: {
+            /**
+             * @description Current account password for verification
+             * @example SecurePassword123!
+             */
+            currentPassword: string;
+            /**
+             * @description New email address to bind to this account
+             * @example new.email@example.com
+             */
+            newEmail: string;
+        };
+        RequestEmailChangeResponseDto: {
+            /** @example 3fa85f64-5717-4562-b3fc-2c963f66afa6 */
+            verificationId: string;
+            /** @example 2026-09-13T04:00:00.000Z */
+            expiresAt: string;
+            /** @example 2026-09-13T03:01:00.000Z */
+            resendAvailableAt: string;
+            /** @example new.email@example.com */
+            newEmail: string;
+            /** @example Mã xác thực đã được gửi đến địa chỉ email mới. */
+            message: string;
+        };
+        VerifyEmailChangeDto: {
+            /** @example 3fa85f64-5717-4562-b3fc-2c963f66afa6 */
+            verificationId: string;
+            /**
+             * @description 6-digit OTP code
+             * @example 123456
+             */
+            code: string;
+        };
+        VerifyEmailChangeResponseDto: {
+            /** @example true */
+            success: boolean;
+            /** @example new.email@example.com */
+            email: string;
+            /** @example Đổi email thành công. */
+            message: string;
+        };
+        ResendEmailChangeOtpDto: {
+            /** @example 3fa85f64-5717-4562-b3fc-2c963f66afa6 */
+            verificationId: string;
+        };
+        ResendEmailChangeOtpResponseDto: {
+            /** @example 3fa85f64-5717-4562-b3fc-2c963f66afa6 */
+            verificationId: string;
+            /** @example 2026-09-13T04:00:00.000Z */
+            expiresAt: string;
+            /** @example 2026-09-13T03:02:00.000Z */
+            resendAvailableAt: string;
+            /** @example Mã xác thực mới đã được gửi. */
+            message: string;
+        };
+        CancelEmailChangeDto: {
+            /** @example 3fa85f64-5717-4562-b3fc-2c963f66afa6 */
+            verificationId: string;
+        };
+        CancelEmailChangeResponseDto: {
+            /** @example true */
+            success: boolean;
+            /** @example Yêu cầu đổi email đã được hủy. */
+            message: string;
         };
         PermissionDefinitionResponseDto: {
             /** @enum {string} */
@@ -2945,7 +3218,7 @@ export interface components {
             /** @enum {string} */
             relayStatus: "none" | "pending" | "approved" | "rejected" | "suspended";
             /** @enum {string} */
-            accountStatus: "active" | "pending_verification" | "suspended" | "invited" | "force_reset";
+            accountStatus: "active" | "pending_verification" | "suspended" | "invited" | "force_reset" | "pending_deletion" | "policy_suspended" | "dispute_suspended" | "anonymized";
             score: number | null;
             isVerified: boolean;
             registrationSource: string | null;
@@ -3001,7 +3274,7 @@ export interface components {
             /** @enum {string} */
             relayStatus: "none" | "pending" | "approved" | "rejected" | "suspended";
             /** @enum {string} */
-            accountStatus: "active" | "pending_verification" | "suspended" | "invited" | "force_reset";
+            accountStatus: "active" | "pending_verification" | "suspended" | "invited" | "force_reset" | "pending_deletion" | "policy_suspended" | "dispute_suspended" | "anonymized";
             score: number | null;
             isVerified: boolean;
             registrationSource: string | null;
@@ -3081,13 +3354,74 @@ export interface components {
         };
         ChangeAccountStatusDto: {
             /** @enum {string} */
-            expectedAccountStatus: "active" | "pending_verification" | "suspended" | "invited" | "force_reset";
+            expectedAccountStatus: "active" | "pending_verification" | "suspended" | "invited" | "force_reset" | "pending_deletion" | "policy_suspended" | "dispute_suspended" | "anonymized";
             reason: string;
+        };
+        OwnerProfileResponseDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: email */
+            email: string;
+            username: string | null;
+            fullName: string | null;
+            avatarUrl: string | null;
+            /** Format: uuid */
+            avatarMediaAssetId: string | null;
+            phone: string | null;
+            /** Format: date */
+            dateOfBirth: string | null;
+            /** @enum {string|null} */
+            gender: "male" | "female" | "other" | "prefer_not_to_say" | null;
+            address: string | null;
+            addressLine: string | null;
+            country: string | null;
+            /** @example VN */
+            countryCode: string | null;
+            /** Format: uuid */
+            administrativeAreaLevel1Id: string | null;
+            /** Format: uuid */
+            administrativeAreaLevel2Id: string | null;
+            /** Format: uuid */
+            localityGeographyId: string | null;
+            occupation: string | null;
+            /** Format: date-time */
+            emailVerifiedAt: string | null;
+            role: string;
+            /** @enum {string} */
+            relayStatus: "none" | "pending" | "approved" | "rejected" | "suspended";
+            /** @enum {string} */
+            accountStatus: "active" | "pending_verification" | "suspended" | "invited" | "force_reset" | "pending_deletion" | "policy_suspended" | "dispute_suspended" | "anonymized";
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            effectivePermissions: string[];
         };
         UpdateProfileDto: {
             fullName?: string | null;
-            avatarUrl?: string | null;
             phone?: string | null;
+            /**
+             * Format: date
+             * @example 1995-08-25
+             */
+            dateOfBirth?: string | null;
+            /** @enum {string|null} */
+            gender?: "male" | "female" | "other" | "prefer_not_to_say" | null;
+            /**
+             * @deprecated
+             * @description Legacy combined address accepted during structured-address migration
+             */
+            address?: string | null;
+            addressLine?: string | null;
+            /** @example VN */
+            countryCode?: string | null;
+            /** Format: uuid */
+            administrativeAreaLevel1Id?: string | null;
+            /** Format: uuid */
+            administrativeAreaLevel2Id?: string | null;
+            /** Format: uuid */
+            localityGeographyId?: string | null;
+            occupation?: string | null;
         };
         CompletePasswordSetupDto: {
             /** Format: password */
@@ -5140,6 +5474,89 @@ export interface operations {
             };
         };
     };
+    changeWebPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangePasswordRequestDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChangePasswordResponseDto"];
+                };
+            };
+        };
+    };
+    getWebSessions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebSessionsResponseDto"];
+                };
+            };
+        };
+    };
+    revokeOtherWebSessions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevokeSessionResponseDto"];
+                };
+            };
+        };
+    };
+    revokeWebSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description ID of the session to revoke */
+                sessionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevokeSessionResponseDto"];
+                };
+            };
+        };
+    };
     listPasswordRecoveryRequests: {
         parameters: {
             query?: {
@@ -5524,6 +5941,98 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    requestWebEmailChange: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestEmailChangeDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RequestEmailChangeResponseDto"];
+                };
+            };
+        };
+    };
+    verifyWebEmailChange: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyEmailChangeDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VerifyEmailChangeResponseDto"];
+                };
+            };
+        };
+    };
+    resendWebEmailChangeOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResendEmailChangeOtpDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResendEmailChangeOtpResponseDto"];
+                };
+            };
+        };
+    };
+    cancelWebEmailChange: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CancelEmailChangeDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CancelEmailChangeResponseDto"];
                 };
             };
         };
@@ -6109,7 +6618,7 @@ export interface operations {
                 page?: number;
                 pageSize?: number;
                 role?: string;
-                accountStatus?: "active" | "pending_verification" | "suspended" | "invited" | "force_reset";
+                accountStatus?: "active" | "pending_verification" | "suspended" | "invited" | "force_reset" | "pending_deletion" | "policy_suspended" | "dispute_suspended" | "anonymized";
                 search?: string;
                 sortBy?: "createdAt" | "email" | "fullName" | "role" | "accountStatus";
                 sortDirection?: "asc" | "desc";
@@ -6687,7 +7196,35 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CurrentUserResponseDto"];
+                    "application/json": components["schemas"]["OwnerProfileResponseDto"];
+                };
+            };
+            /** @description Authentication is required. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponseDto"];
+                };
+            };
+        };
+    };
+    getCurrentUserProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerProfileResponseDto"];
                 };
             };
             /** @description Authentication is required. */
@@ -6719,7 +7256,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CurrentUserResponseDto"];
+                    "application/json": components["schemas"]["OwnerProfileResponseDto"];
                 };
             };
             /** @description Authentication is required. */
@@ -11054,11 +11591,11 @@ export interface operations {
         parameters: {
             query?: {
                 category?: "ACCOUNT_SECURITY" | "PERSONAL_DATA" | "REPORT" | "MATCHING" | "ADMINISTRATION" | "MODERATION" | "SECURITY" | "SYSTEM";
+                dateFrom?: string;
+                dateTo?: string;
                 page?: number;
                 pageSize?: number;
                 action?: string;
-                dateFrom?: string;
-                dateTo?: string;
                 outcome?: "DENIED" | "FAILURE" | "SUCCESS";
                 search?: string;
             };
@@ -11098,6 +11635,8 @@ export interface operations {
         parameters: {
             query?: {
                 category?: "ACCOUNT_SECURITY" | "PERSONAL_DATA" | "REPORT" | "MATCHING" | "ADMINISTRATION" | "MODERATION" | "SECURITY" | "SYSTEM";
+                dateFrom?: string;
+                dateTo?: string;
                 page?: number;
                 pageSize?: number;
             };
