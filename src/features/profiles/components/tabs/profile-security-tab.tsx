@@ -29,12 +29,15 @@ import {
 import { changePasswordAction } from "../../actions/security.actions";
 import { DeviceSessionsCard } from "./device-sessions-card";
 import { ChangeEmailDialog } from "./change-email-dialog";
+import { AccountDeletionCard } from "./account-deletion-card";
 
 interface ProfileSecurityTabProps {
   email?: string;
 }
 
-export function ProfileSecurityTab({ email = "" }: ProfileSecurityTabProps = {}) {
+export function ProfileSecurityTab({
+  email = "",
+}: ProfileSecurityTabProps = {}) {
   const [currentEmail, setCurrentEmail] = useState(email);
   const [isChangeEmailOpen, setIsChangeEmailOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -137,7 +140,8 @@ export function ProfileSecurityTab({ email = "" }: ProfileSecurityTabProps = {})
                   Đổi mật khẩu
                 </h3>
                 <p className="text-[13px] font-semibold text-brand-muted mt-0.5">
-                  Cập nhật mật khẩu định kỳ giúp bảo vệ tài khoản của bạn tốt hơn.
+                  Cập nhật mật khẩu định kỳ giúp bảo vệ tài khoản của bạn tốt
+                  hơn.
                 </p>
               </div>
             </div>
@@ -210,7 +214,9 @@ export function ProfileSecurityTab({ email = "" }: ProfileSecurityTabProps = {})
                   <div className="space-y-3 text-xs font-medium">
                     <div
                       className={`flex items-center gap-2.5 transition-colors ${
-                        hasMinLength ? "text-[#2E7D32] font-semibold" : "text-brand-muted"
+                        hasMinLength
+                          ? "text-[#2E7D32] font-semibold"
+                          : "text-brand-muted"
                       }`}
                     >
                       <div
@@ -227,7 +233,9 @@ export function ProfileSecurityTab({ email = "" }: ProfileSecurityTabProps = {})
 
                     <div
                       className={`flex items-center gap-2.5 transition-colors ${
-                        isDifferent ? "text-[#2E7D32] font-semibold" : "text-brand-muted"
+                        isDifferent
+                          ? "text-[#2E7D32] font-semibold"
+                          : "text-brand-muted"
                       }`}
                     >
                       <div
@@ -244,7 +252,9 @@ export function ProfileSecurityTab({ email = "" }: ProfileSecurityTabProps = {})
 
                     <div
                       className={`flex items-center gap-2.5 transition-colors ${
-                        isMatching ? "text-[#2E7D32] font-semibold" : "text-brand-muted"
+                        isMatching
+                          ? "text-[#2E7D32] font-semibold"
+                          : "text-brand-muted"
                       }`}
                     >
                       <div
@@ -262,7 +272,8 @@ export function ProfileSecurityTab({ email = "" }: ProfileSecurityTabProps = {})
                 </div>
 
                 <p className="text-[11px] text-brand-muted/80 leading-relaxed pt-3 border-t border-brand-border/40">
-                  Mật khẩu mạnh bảo vệ an toàn cho tài khoản và các dữ liệu của bạn trên FoundMatch.
+                  Mật khẩu mạnh bảo vệ an toàn cho tài khoản và các dữ liệu của
+                  bạn trên FoundMatch.
                 </p>
               </div>
             </div>
@@ -281,7 +292,8 @@ export function ProfileSecurityTab({ email = "" }: ProfileSecurityTabProps = {})
                   Email đăng nhập
                 </h3>
                 <p className="text-[13px] font-semibold text-brand-muted mt-0.5">
-                  Địa chỉ email chính dùng để đăng nhập và nhận các thông báo bảo mật quan trọng.
+                  Địa chỉ email chính dùng để đăng nhập và nhận các thông báo
+                  bảo mật quan trọng.
                 </p>
               </div>
             </div>
@@ -313,6 +325,8 @@ export function ProfileSecurityTab({ email = "" }: ProfileSecurityTabProps = {})
 
         {/* Card: Thiết bị đã đăng nhập */}
         <DeviceSessionsCard />
+
+        <AccountDeletionCard />
       </div>
 
       {/* Right Column: Bảo mật & Khuyến nghị (col-span-4) */}
@@ -337,10 +351,14 @@ export function ProfileSecurityTab({ email = "" }: ProfileSecurityTabProps = {})
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-brand-heading">
             <ShieldAlert className="h-4 w-4 text-brand-plum shrink-0" />
-            <span className="text-[13px] font-bold">Bảo vệ mật khẩu cá nhân</span>
+            <span className="text-[13px] font-bold">
+              Bảo vệ mật khẩu cá nhân
+            </span>
           </div>
           <p className="text-[12px] leading-relaxed text-brand-muted font-medium pl-6">
-            Không sử dụng lại mật khẩu từ các website hoặc ứng dụng khác. Không chia sẻ thông tin đăng nhập với bất kỳ ai, kể cả nhân viên hỗ trợ FoundMatch.
+            Không sử dụng lại mật khẩu từ các website hoặc ứng dụng khác. Không
+            chia sẻ thông tin đăng nhập với bất kỳ ai, kể cả nhân viên hỗ trợ
+            FoundMatch.
           </p>
         </div>
 
@@ -348,16 +366,21 @@ export function ProfileSecurityTab({ email = "" }: ProfileSecurityTabProps = {})
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-brand-heading">
             <Laptop className="h-4 w-4 text-brand-found shrink-0" />
-            <span className="text-[13px] font-bold">Đăng xuất khỏi thiết bị lạ</span>
+            <span className="text-[13px] font-bold">
+              Đăng xuất khỏi thiết bị lạ
+            </span>
           </div>
           <p className="text-[12px] leading-relaxed text-brand-muted font-medium pl-6">
-            Mỗi khi đổi mật khẩu, bạn có thể chọn đăng xuất khỏi tất cả các thiết bị khác để đảm bảo không còn ai đang truy cập trái phép.
+            Mỗi khi đổi mật khẩu, bạn có thể chọn đăng xuất khỏi tất cả các
+            thiết bị khác để đảm bảo không còn ai đang truy cập trái phép.
           </p>
         </div>
 
         {/* Security item 3 */}
         <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-brand-border/60 text-[11px] text-brand-muted font-semibold leading-relaxed">
-          FoundMatch áp dụng cơ chế xác thực phiên hai lớp (Cookie session cô lập), tự động xoay mã token (Token rotation) để chống đánh cắp phiên làm việc.
+          FoundMatch áp dụng cơ chế xác thực phiên hai lớp (Cookie session cô
+          lập), tự động xoay mã token (Token rotation) để chống đánh cắp phiên
+          làm việc.
         </div>
       </div>
 
@@ -384,7 +407,8 @@ export function ProfileSecurityTab({ email = "" }: ProfileSecurityTabProps = {})
                 }
               />
               <p className="text-[11px] text-brand-muted font-medium mt-1.5 pl-7">
-                Khuyến nghị bật để đảm bảo an toàn nếu bạn nghi ngờ tài khoản bị lộ mật khẩu cũ.
+                Khuyến nghị bật để đảm bảo an toàn nếu bạn nghi ngờ tài khoản bị
+                lộ mật khẩu cũ.
               </p>
             </div>
           </div>

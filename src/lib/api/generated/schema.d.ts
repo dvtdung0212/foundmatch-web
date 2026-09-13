@@ -481,6 +481,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/public/users/me/account-deletion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Schedule deletion of the authenticated Web account */
+        post: operations["requestWebAccountDeletion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/account-reactivation/{verificationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a safe account reactivation challenge */
+        get: operations["getWebAccountReactivation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/account-reactivation/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resend the account reactivation OTP */
+        post: operations["resendWebAccountReactivationOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/web-auth/account-reactivation/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify OTP and cancel a pending account deletion */
+        post: operations["verifyWebAccountReactivation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/private/permissions": {
         parameters: {
             query?: never;
@@ -2962,6 +3030,56 @@ export interface components {
             /** @example true */
             success: boolean;
             /** @example Yêu cầu đổi email đã được hủy. */
+            message: string;
+        };
+        RequestAccountDeletionDto: {
+            currentPassword: string;
+            /**
+             * @example true
+             * @enum {boolean}
+             */
+            confirmation: true;
+        };
+        AccountDeletionResponseDto: {
+            /** Format: uuid */
+            requestId: string;
+            /** @enum {string} */
+            status: "pending";
+            /** @example 30 */
+            gracePeriodDays: number;
+            /** Format: date-time */
+            scheduledFor: string;
+        };
+        AccountReactivationContextDto: {
+            /** Format: uuid */
+            verificationId: string;
+            /** @example me***@example.com */
+            maskedEmail: string;
+            /** Format: date-time */
+            codeExpiresAt: string;
+            /** Format: date-time */
+            resendAvailableAt: string;
+            /** Format: date-time */
+            recoveryExpiresAt: string;
+        };
+        AccountReactivationLookupDto: {
+            /** Format: uuid */
+            verificationId: string;
+        };
+        VerifyAccountReactivationDto: {
+            /** Format: uuid */
+            verificationId: string;
+            code: string;
+            /**
+             * @example true
+             * @enum {boolean}
+             */
+            confirmation: true;
+        };
+        AccountReactivationCompletedDto: {
+            /** @example true */
+            success: boolean;
+            /** @example Tài khoản đã được khôi phục. Vui lòng đăng nhập lại. */
             message: string;
         };
         PermissionDefinitionResponseDto: {
@@ -6033,6 +6151,96 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CancelEmailChangeResponseDto"];
+                };
+            };
+        };
+    };
+    requestWebAccountDeletion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestAccountDeletionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountDeletionResponseDto"];
+                };
+            };
+        };
+    };
+    getWebAccountReactivation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                verificationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountReactivationContextDto"];
+                };
+            };
+        };
+    };
+    resendWebAccountReactivationOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountReactivationLookupDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountReactivationContextDto"];
+                };
+            };
+        };
+    };
+    verifyWebAccountReactivation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyAccountReactivationDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountReactivationCompletedDto"];
                 };
             };
         };

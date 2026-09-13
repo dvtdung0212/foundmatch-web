@@ -3,3 +3,4 @@ export * from "./profile-security-tab";
 export * from "./profile-notifications-tab";
 export * from "./profile-activity-tab";
 export * from "./device-sessions-card";
+export * from "./account-deletion-card";

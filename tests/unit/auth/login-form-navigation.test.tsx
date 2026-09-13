@@ -100,6 +100,35 @@ describe("LoginForm navigation", () => {
     );
   });
 
+  it("redirects to OTP recovery without creating a session when deletion is pending", async () => {
+    loginWeb.mockRejectedValue({
+      data: {
+        code: "ACCOUNT_REACTIVATION_REQUIRED",
+        details: { verificationId: "1c12830f-4219-4f08-a7fd-fdd6e5c4f837" },
+        message: "Account reactivation is required.",
+      },
+    });
+
+    render(<LoginForm />);
+
+    fireEvent.change(
+      screen.getByPlaceholderText("Nhập email hoặc username của bạn"),
+      { target: { value: "member@example.com" } },
+    );
+    fireEvent.change(screen.getByPlaceholderText("Nhập mật khẩu của bạn"), {
+      target: { value: "password123" },
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Đăng nhập" }));
+      await Promise.resolve();
+    });
+
+    expect(replace).toHaveBeenCalledWith(
+      "/reactivate-account?verificationId=1c12830f-4219-4f08-a7fd-fdd6e5c4f837",
+    );
+    expect(refresh).not.toHaveBeenCalled();
+  });
+
   it("rejects an external post-login destination", async () => {
     loginWeb.mockResolvedValue({ rememberLogin: false });
     render(<LoginForm nextUrl="https://attacker.example/collect" />);
@@ -121,7 +150,9 @@ describe("LoginForm navigation", () => {
 
   it("switches identifier icon from AtSign to Mail when typing an email with @", () => {
     const { container } = render(<LoginForm />);
-    const input = screen.getByPlaceholderText("Nhập email hoặc username của bạn");
+    const input = screen.getByPlaceholderText(
+      "Nhập email hoặc username của bạn",
+    );
 
     // Initially without @: shows at-sign icon
     expect(container.querySelector(".lucide-at-sign")).toBeInTheDocument();

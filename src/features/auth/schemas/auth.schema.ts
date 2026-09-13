@@ -45,7 +45,10 @@ export const signUpFormSchema = signUpSchema.and(
 );
 
 export const passwordRecoverySchema = z.object({
-  identifier: z.string().trim().min(3, "Email hoặc Username phải có ít nhất 3 ký tự"),
+  identifier: z
+    .string()
+    .trim()
+    .min(3, "Email hoặc Username phải có ít nhất 3 ký tự"),
 });
 
 export const resetPasswordSchema = z
@@ -109,3 +112,15 @@ export const verifyEmailChangeSchema = z.object({
 
 export type RequestEmailChangeInput = z.infer<typeof requestEmailChangeSchema>;
 export type VerifyEmailChangeInput = z.infer<typeof verifyEmailChangeSchema>;
+
+export const requestAccountDeletionSchema = z.object({
+  currentPassword: z.string().min(1, "Vui lòng nhập mật khẩu hiện tại."),
+  confirmation: z.boolean().refine((value) => value, {
+    message: "Bạn cần xác nhận đã hiểu hậu quả trước khi tiếp tục.",
+  }),
+});
+
+export const accountReactivationSchema = z.object({
+  verificationId: z.string().uuid("Phiên khôi phục không hợp lệ."),
+  code: z.string().regex(/^\d{6}$/, "Mã xác minh phải gồm đúng 6 chữ số."),
+});

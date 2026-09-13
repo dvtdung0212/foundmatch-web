@@ -1,6 +1,14 @@
 {
   "errors": {
     "AUTHENTICATION_REQUIRED": "Bạn cần đăng nhập để tiếp tục.",
+    "ACCOUNT_DELETION_ALREADY_PENDING": "Tài khoản đã có một yêu cầu xóa đang chờ xử lý.",
+    "ACCOUNT_DELETION_PASSWORD_INVALID": "Mật khẩu hiện tại không chính xác.",
+    "ACCOUNT_DELETION_STATE_NOT_ALLOWED": "Không thể xóa tài khoản trong trạng thái hiện tại.",
+    "ACCOUNT_REACTIVATION_ADMIN_REQUIRED": "Tài khoản bị khóa do chính sách hoặc tranh chấp. Vui lòng liên hệ quản trị viên.",
+    "ACCOUNT_REACTIVATION_CONTEXT_INVALID": "Phiên xác minh này không thể dùng để khôi phục tài khoản.",
+    "ACCOUNT_REACTIVATION_EXPIRED": "Thời hạn tự khôi phục tài khoản đã kết thúc.",
+    "ACCOUNT_REACTIVATION_OTP_REQUIRED": "Bạn cần nhập mã OTP hợp lệ để khôi phục tài khoản.",
+    "ACCOUNT_REACTIVATION_REQUIRED": "Tài khoản đang chờ xóa và cần được khôi phục trước khi đăng nhập.",
     "EMAIL_ALREADY_EXISTS": "Email này đã được sử dụng.",
     "EMAIL_VERIFICATION_PENDING": "Email này đang chờ xác minh. Hãy tiếp tục với mã đã gửi.",
     "EMAIL_VERIFICATION_REQUIRED": "Bạn cần xác minh email để tiếp tục.",
@@ -88,7 +96,8 @@
   "fields": {
     "code": "Mã xác minh",
     "confirmPassword": "Mật khẩu xác nhận",
-    "confirmation": "Mật khẩu xác nhận",
+    "confirmation": "Xác nhận",
+    "currentPassword": "Mật khẩu hiện tại",
     "description": "Mô tả",
     "email": "Email",
     "fullName": "Họ và tên",

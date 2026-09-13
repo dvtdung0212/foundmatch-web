@@ -20,13 +20,7 @@ import {
   loginWebDemo,
 } from "../api/session-api";
 import { DEMO_PERSONAS } from "@/types/auth.types";
-import {
-  Mail,
-  Lock,
-  ShieldCheck,
-  Loader2,
-  AtSign,
-} from "lucide-react";
+import { Mail, Lock, ShieldCheck, Loader2, AtSign } from "lucide-react";
 
 interface LoginFormProps {
   nextUrl?: string;
@@ -102,6 +96,15 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
         router.replace(`/verify-email?${params.toString()}`);
         return;
       }
+      if (
+        apiError?.code === "ACCOUNT_REACTIVATION_REQUIRED" &&
+        typeof verificationId === "string"
+      ) {
+        router.replace(
+          `/reactivate-account?verificationId=${encodeURIComponent(verificationId)}`,
+        );
+        return;
+      }
 
       setMessage(
         normalizeApiError(
@@ -122,7 +125,9 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
       await loginWebDemo(personaEmail);
       completeLogin();
     } catch (error) {
-      setMessage(normalizeApiError(error, "Không thể đăng nhập tài khoản Demo."));
+      setMessage(
+        normalizeApiError(error, "Không thể đăng nhập tài khoản Demo."),
+      );
     } finally {
       setDemoLoading(null);
     }
