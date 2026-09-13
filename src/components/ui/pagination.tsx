@@ -14,6 +14,7 @@ interface PaginationProps {
   onPageSizeChange?: (pageSize: number) => void;
   pageSizeOptions?: number[];
   className?: string;
+  itemLabel?: string;
 }
 
 export function Pagination({
@@ -25,6 +26,7 @@ export function Pagination({
   onPageSizeChange,
   pageSizeOptions = [10, 20, 50],
   className,
+  itemLabel = "báo cáo",
 }: PaginationProps) {
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, totalItems);
@@ -52,7 +54,7 @@ export function Pagination({
       <div>
         Hiển thị <span className="font-bold text-brand-heading">{startItem}</span> đến{" "}
         <span className="font-bold text-brand-heading">{endItem}</span> trong tổng số{" "}
-        <span className="font-bold text-brand-heading">{totalItems}</span> báo cáo
+        <span className="font-bold text-brand-heading">{totalItems}</span> {itemLabel}
       </div>
 
       {/* Controls */}

@@ -7,7 +7,7 @@ import { AlertCircle, CheckCircle2, Loader2, MailCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { OtpInput } from "@/components/ui/otp-input";
-import { normalizeApiError, useZodFormValidation } from "@/features/feedback";
+import { FeedbackAlert, normalizeApiError, useZodFormValidation } from "@/features/feedback";
 import { emailOtpSchema } from "../schemas/auth.schema";
 import { AuthOperationSuccess } from "./auth-operation-success";
 import {
@@ -178,23 +178,15 @@ export function EmailVerificationForm({
         </div>
       </div>
 
-      {notice && (
-        <div
-          className="flex gap-2 rounded-xl border border-brand-foundBorder bg-brand-foundBg p-3.5 text-xs font-semibold text-brand-found"
-          role="status"
-        >
-          <CheckCircle2 className="h-4 w-4 shrink-0" /> {notice}
-        </div>
-      )}
-      {(error || validation.fieldErrors.code) && (
-        <div
-          className="flex gap-2 rounded-xl border border-brand-lostBorder bg-brand-lostBg p-3.5 text-xs font-semibold text-brand-lost"
-          role="alert"
-        >
-          <AlertCircle className="h-4 w-4 shrink-0" />
-          {validation.fieldErrors.code ?? error}
-        </div>
-      )}
+      <FeedbackAlert
+        variant="success"
+        message={notice}
+        onClose={() => setNotice(null)}
+      />
+      <FeedbackAlert
+        error={validation.fieldErrors.code ?? error}
+        onClose={() => setError(null)}
+      />
 
       {!verification ? (
         <div className="space-y-4 text-center">

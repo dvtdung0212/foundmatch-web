@@ -145,10 +145,30 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "fm-fade-in": {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        "fm-fade-out": {
+          from: { opacity: "1" },
+          to: { opacity: "0" },
+        },
+        "fm-modal-in": {
+          "0%": { opacity: "0", transform: "scale(0.94) translateY(12px)" },
+          "100%": { opacity: "1", transform: "scale(1) translateY(0)" },
+        },
+        "fm-modal-out": {
+          "0%": { opacity: "1", transform: "scale(1) translateY(0)" },
+          "100%": { opacity: "0", transform: "scale(0.96) translateY(8px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fm-fade-in": "fm-fade-in 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "fm-fade-out": "fm-fade-out 180ms cubic-bezier(0.4, 0, 1, 1) forwards",
+        "fm-modal-in": "fm-modal-in 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "fm-modal-out": "fm-modal-out 180ms cubic-bezier(0.4, 0, 1, 1) forwards",
       },
     },
   },

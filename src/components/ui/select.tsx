@@ -53,29 +53,49 @@ export function Select({
   const [open, setOpen] = React.useState(false);
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? "");
   const [menuAlign, setMenuAlign] = React.useState<"left" | "right">("left");
+  const [menuPlacement, setMenuPlacement] = React.useState<"bottom" | "top">("bottom");
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const selectedValue = value !== undefined ? value : internalValue;
   const selectedOption = options.find((opt) => opt.value === selectedValue);
 
-  // Auto detect best alignment (prevent overflowing off-screen)
+  // Auto detect best alignment and vertical placement (prevent overflowing off-screen)
   React.useEffect(() => {
     if (!open) return;
 
-    if (align === "left" || align === "right") {
-      setMenuAlign(align);
-      return;
-    }
-
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      if (rect.left + 240 > viewportWidth || rect.right > viewportWidth - 60) {
-        setMenuAlign("right");
-      } else {
-        setMenuAlign("left");
+    const updatePosition = () => {
+      if (align === "left" || align === "right") {
+        setMenuAlign(align);
+      } else if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        if (rect.left + 240 > viewportWidth || rect.right > viewportWidth - 60) {
+          setMenuAlign("right");
+        } else {
+          setMenuAlign("left");
+        }
       }
-    }
+
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const spaceBelow = viewportHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        if (spaceBelow < 240 && spaceAbove > spaceBelow) {
+          setMenuPlacement("top");
+        } else {
+          setMenuPlacement("bottom");
+        }
+      }
+    };
+
+    updatePosition();
+    window.addEventListener("scroll", updatePosition, { passive: true });
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("scroll", updatePosition);
+      window.removeEventListener("resize", updatePosition);
+    };
   }, [open, align]);
 
   // Close on click outside
@@ -128,7 +148,7 @@ export function Select({
           aria-expanded={open}
           onClick={() => setOpen((prev) => !prev)}
           className={cn(
-            "flex h-11 w-full items-center justify-between rounded-xl border border-brand-border bg-white px-3.5 py-2 text-sm font-semibold text-brand-heading transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-brand-plum disabled:cursor-not-allowed disabled:opacity-50",
+            "flex h-11 w-full items-center justify-between rounded-xl border border-brand-border bg-white px-3.5 py-2 text-sm font-semibold text-brand-heading transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-brand-plum disabled:cursor-not-allowed disabled:bg-slate-100/80 disabled:border-slate-200 disabled:text-slate-500 disabled:opacity-75 disabled:shadow-none",
             icon && "pl-10",
             error && "border-brand-lost focus:ring-destructive/20",
             open && "border-brand-plum ring-2 ring-primary/20",
@@ -168,7 +188,8 @@ export function Select({
         {open && (
           <div
             className={cn(
-              "absolute z-[100] mt-1.5 min-w-full w-max max-w-[min(24rem,calc(100vw-2rem))] max-h-72 overflow-y-auto rounded-xl border border-brand-border bg-white p-1.5 shadow-xl animate-in fade-in zoom-in-95 duration-100 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+              "absolute z-[100] min-w-full w-max max-w-[min(24rem,calc(100vw-2rem))] max-h-72 overflow-y-auto rounded-xl border border-brand-border bg-white p-1.5 shadow-xl animate-in fade-in zoom-in-95 duration-100 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+              menuPlacement === "top" ? "bottom-full mb-1.5" : "top-full mt-1.5",
               menuAlign === "right" ? "right-0" : "left-0",
               menuClassName
             )}

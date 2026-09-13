@@ -62,5 +62,50 @@ export const emailOtpSchema = z.object({
   code: z.string().regex(/^\d{6}$/, "Mã xác minh phải gồm đúng 6 chữ số."),
 });
 
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Vui lòng nhập mật khẩu hiện tại."),
+    newPassword: z.string().min(12, "Mật khẩu mới phải có ít nhất 12 ký tự."),
+    confirmPassword: z.string().min(1, "Vui lòng xác nhận lại mật khẩu mới."),
+    revokeOtherSessions: z.boolean().default(true),
+  })
+  .refine((data) => data.newPassword !== data.currentPassword, {
+    message: "Mật khẩu mới không được trùng với mật khẩu hiện tại.",
+    path: ["newPassword"],
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Mật khẩu xác nhận không trùng khớp.",
+    path: ["confirmPassword"],
+  });
+
 export type SignUpInput = z.infer<typeof signUpSchema>;
 export type SignInWithPasswordInput = z.infer<typeof signInWithPasswordSchema>;
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+
+export const requestEmailChangeSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Vui lòng nhập mật khẩu hiện tại."),
+    newEmail: z
+      .string()
+      .trim()
+      .min(1, "Vui lòng nhập địa chỉ email mới.")
+      .email("Địa chỉ email không đúng định dạng."),
+    currentEmail: z.string().optional(),
+  })
+  .refine(
+    (data) =>
+      !data.currentEmail ||
+      data.newEmail.toLowerCase() !== data.currentEmail.toLowerCase(),
+    {
+      message: "Địa chỉ email mới không được trùng với email hiện tại.",
+      path: ["newEmail"],
+    },
+  );
+
+export const verifyEmailChangeSchema = z.object({
+  verificationId: z.string().min(1, "Thiếu mã định danh xác thực."),
+  code: z.string().regex(/^\d{6}$/, "Mã xác minh phải gồm đúng 6 chữ số."),
+});
+
+export type RequestEmailChangeInput = z.infer<typeof requestEmailChangeSchema>;
+export type VerifyEmailChangeInput = z.infer<typeof verifyEmailChangeSchema>;

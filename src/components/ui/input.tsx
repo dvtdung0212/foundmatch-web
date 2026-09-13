@@ -1,4 +1,4 @@
-import React, { useId, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -17,11 +17,22 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const isPassword = type === "password";
     const actualType = isPassword ? (showPassword ? "text" : "password") : type;
 
+    const [displayedText, setDisplayedText] = useState(error ?? hint);
+
+    useEffect(() => {
+      if (error || hint) {
+        setDisplayedText(error ?? hint);
+      }
+    }, [error, hint]);
+
+    const hasContent = Boolean(error || hint);
+    const isError = Boolean(error);
+
     return (
-      <div className="w-full space-y-1.5">
+      <div className="w-full">
         {label && (
           <label
-            className="block text-xs font-bold text-brand-heading uppercase tracking-wider"
+            className="block text-xs font-bold text-brand-heading uppercase tracking-wider mb-1.5"
             htmlFor={inputId}
           >
             {label}
@@ -37,7 +48,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             type={actualType}
             className={cn(
-              "w-full rounded-xl border border-brand-border bg-brand-cream/60 px-4 py-3 text-sm text-brand-heading placeholder:text-brand-muted/60 focus:border-brand-plum focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium relative",
+              "w-full rounded-xl border border-brand-border bg-brand-cream/60 px-4 py-3 text-sm text-brand-heading placeholder:text-brand-muted/60 focus:border-brand-plum focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium relative disabled:cursor-not-allowed disabled:bg-slate-100/80 disabled:border-slate-200 disabled:text-slate-500 disabled:opacity-75 disabled:shadow-none",
               icon && "pl-11",
               isPassword && "pr-11",
               error && "border-red-500 focus:ring-red-500/20",
@@ -64,12 +75,26 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </button>
           )}
         </div>
-        {error && (
-          <p className="text-xs font-semibold text-red-500 mt-1">{error}</p>
-        )}
-        {hint && !error && (
-          <p className="text-[11px] text-brand-muted mt-1">{hint}</p>
-        )}
+        <div
+          className={cn(
+            "grid transition-[grid-template-rows,opacity,margin] duration-200 ease-out",
+            hasContent
+              ? "grid-rows-[1fr] opacity-100 mt-1.5"
+              : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none",
+          )}
+          aria-live="polite"
+        >
+          <div className="overflow-hidden">
+            <p
+              className={cn(
+                "text-xs font-semibold leading-tight",
+                isError ? "text-red-500" : "text-brand-muted text-[11px]",
+              )}
+            >
+              {displayedText}
+            </p>
+          </div>
+        </div>
       </div>
     );
   },

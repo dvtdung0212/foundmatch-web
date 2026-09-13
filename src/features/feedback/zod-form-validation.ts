@@ -45,5 +45,25 @@ export function useZodFormValidation<TOutput, TInput = TOutput>(
     [schema],
   );
 
-  return { clearFieldError, fieldErrors, setFieldErrors, validate };
+  const validateField = useCallback(
+    (field: string, input: TInput): string | null => {
+      const result = parseZodForm(schema, input);
+      const error = result.fieldErrors[field] || null;
+      setFieldErrors((current) => {
+        if (error) {
+          if (current[field] === error) return current;
+          return { ...current, [field]: error };
+        } else {
+          if (!current[field]) return current;
+          const next = { ...current };
+          delete next[field];
+          return next;
+        }
+      });
+      return error;
+    },
+    [schema],
+  );
+
+  return { clearFieldError, fieldErrors, setFieldErrors, validate, validateField };
 }

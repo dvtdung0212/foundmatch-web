@@ -31,6 +31,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { FeedbackAlert } from "@/features/feedback";
 import { buildReportSubmission } from "../../api/report-form-mapper";
 import { useReportComposer } from "../../hooks/use-report-composer";
 import type { ReportAttributeAnswerInput } from "../../api/report-submission";
@@ -75,6 +76,7 @@ export function FoundReportWizard() {
     loadFormConfiguration,
     persist,
     removeImage,
+    setError: setSubmissionError,
   } = useReportComposer("FOUND");
 
   // Form State
@@ -713,14 +715,12 @@ export function FoundReportWizard() {
           )}
 
           {/* Form Actions Footer */}
-          {submissionError && (
-            <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-              <strong>Không thể lưu báo cáo.</strong> {submissionError.message}
-              {submissionError.requestId && (
-                <span className="mt-1 block text-xs">Mã yêu cầu: {submissionError.requestId}</span>
-              )}
-            </div>
-          )}
+          <FeedbackAlert
+            error={submissionError}
+            title="Không thể lưu báo cáo."
+            showRequestId={Boolean(submissionError?.requestId)}
+            onClose={() => setSubmissionError(null)}
+          />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3">
             <div className="flex items-center gap-2 w-full sm:w-auto">
               {currentStep > 1 && (

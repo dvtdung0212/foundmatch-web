@@ -37,41 +37,81 @@ export function DialogContent({
 }) {
   const context = React.useContext(DialogContext);
   const [mounted, setMounted] = React.useState(false);
+  const [isRendered, setIsRendered] = React.useState(Boolean(context?.open));
+  const [isClosing, setIsClosing] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
+  }, []);
+
+  React.useEffect(() => {
     if (context?.open) {
+      setIsRendered(true);
+      setIsClosing(false);
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
+    } else if (isRendered) {
+      setIsClosing(true);
+      const timer = setTimeout(() => {
+        setIsRendered(false);
+        setIsClosing(false);
+        document.body.style.overflow = "";
+      }, 180);
+      return () => {
+        clearTimeout(timer);
+      };
     }
+  }, [context?.open, isRendered]);
+
+  // Handle ESC key for accessible modal closing
+  React.useEffect(() => {
+    if (!context?.open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        context.onOpenChange(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [context?.open, context]);
+
+  React.useEffect(() => {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [context?.open]);
+  }, []);
 
-  if (!mounted || !context?.open) return null;
+  if (!mounted || !isRendered) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+      role="dialog"
+      aria-modal="true"
+    >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-brand-dark/40 backdrop-blur-xs transition-opacity animate-in fade-in"
-        onClick={() => context.onOpenChange(false)}
+        className={cn(
+          "fixed inset-0 bg-brand-dark/45 backdrop-blur-[3px]",
+          isClosing ? "animate-fm-fade-out pointer-events-none" : "animate-fm-fade-in"
+        )}
+        onClick={() => context?.onOpenChange(false)}
+        aria-hidden="true"
       />
 
       {/* Content */}
       <div
         className={cn(
-          "relative z-50 w-full rounded-2xl bg-white p-6 shadow-xl border border-brand-border animate-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto",
+          "relative z-50 w-full rounded-[28px] bg-white p-6 sm:p-8 shadow-2xl border border-brand-border max-h-[90vh] overflow-y-auto will-change-transform",
+          isClosing ? "animate-fm-modal-out pointer-events-none" : "animate-fm-modal-in",
           maxWidth,
           className
         )}
       >
         <button
           type="button"
-          onClick={() => context.onOpenChange(false)}
-          className="absolute right-4 top-4 rounded-full p-1 text-brand-muted hover:bg-brand-cream hover:text-brand-heading transition-colors"
+          onClick={() => context?.onOpenChange(false)}
+          className="absolute right-5 top-5 rounded-xl p-1.5 text-brand-muted hover:bg-brand-cream/80 hover:text-brand-heading transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-plum cursor-pointer"
+          aria-label="Đóng"
         >
           <X className="h-4 w-4" />
           <span className="sr-only">Đóng</span>

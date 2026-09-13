@@ -88,7 +88,7 @@ export function SignUpForm({
         </p>
       </div>
 
-      <FeedbackAlert error={formError} />
+      <FeedbackAlert error={formError} onClose={() => setFormError(null)} />
 
       <form noValidate className="space-y-4" onSubmit={handleSubmit}>
         <Input

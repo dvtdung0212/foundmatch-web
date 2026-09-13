@@ -129,9 +129,9 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="w-full">
       {/* Title & Subtitle */}
-      <div className="space-y-1.5">
+      <div className="space-y-1.5 mb-6">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-heading">
           Đăng nhập
         </h2>
@@ -140,7 +140,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
         </p>
       </div>
 
-      <FeedbackAlert error={message} />
+      <FeedbackAlert error={message} onClose={() => setMessage(null)} />
 
       {/* Main Form */}
       <form noValidate onSubmit={handleSubmit} className="space-y-4">

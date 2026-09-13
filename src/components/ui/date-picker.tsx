@@ -21,6 +21,7 @@ export interface DatePickerProps {
   error?: string;
   id?: string;
   label?: string;
+  labelClassName?: string;
   required?: boolean;
   name?: string;
 }
@@ -35,6 +36,7 @@ export function DatePicker({
   error,
   id,
   label,
+  labelClassName,
   required,
   name,
 }: DatePickerProps) {
@@ -82,7 +84,10 @@ export function DatePicker({
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-xs font-bold text-brand-heading"
+          className={cn(
+            "block text-xs font-bold text-brand-heading uppercase tracking-wider",
+            labelClassName
+          )}
         >
           {label} {required && <span className="text-brand-lost">*</span>}
         </label>
@@ -95,7 +100,7 @@ export function DatePicker({
             id={inputId}
             disabled={disabled}
             className={cn(
-              "flex h-11 w-full items-center justify-between rounded-xl border border-brand-border bg-white px-3.5 text-sm font-medium text-brand-heading transition-all hover:border-brand-plum/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-brand-plum disabled:cursor-not-allowed disabled:opacity-50",
+              "flex h-11 w-full items-center justify-between rounded-xl border border-brand-border bg-white px-3.5 text-sm font-medium text-brand-heading transition-all hover:border-brand-plum/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-brand-plum disabled:cursor-not-allowed disabled:bg-slate-100/80 disabled:border-slate-200 disabled:text-slate-500 disabled:opacity-75 disabled:shadow-none",
               !dateValue && "text-brand-muted font-normal",
               error && "border-brand-lost focus:ring-destructive/20",
               className

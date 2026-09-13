@@ -101,7 +101,7 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
           </div>
 
           {/* Right Half (Form) */}
-          <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 xl:p-16 bg-white">
+          <div className="w-full lg:w-1/2 flex items-start justify-center p-8 sm:p-12 xl:p-16 bg-white">
             <div className="w-full max-w-[480px]">
               <SignUpForm nextUrl={nextUrl} />
             </div>

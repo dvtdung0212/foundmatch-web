@@ -76,7 +76,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
           Mật khẩu mới cần có ít nhất 12 ký tự.
         </p>
       </div>
-      <FeedbackAlert error={error} />
+      <FeedbackAlert error={error} onClose={() => setError(null)} />
       <Input
         autoComplete="new-password"
         label="Mật khẩu mới"

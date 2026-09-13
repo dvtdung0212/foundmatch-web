@@ -1,13 +1,13 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { FeedbackAlert } from "@/features/feedback";
 import type { AppError } from "@/features/feedback";
 
 describe("FeedbackAlert", () => {
-  it("renders nothing when error is null", () => {
+  it("renders collapsed when error is null", () => {
     const { container } = render(<FeedbackAlert error={null} />);
-    expect(container.firstChild).toBeNull();
+    expect(container.firstChild).toHaveClass("grid-rows-[0fr]");
   });
 
   it("renders plain string error without requestId", () => {
@@ -92,5 +92,39 @@ describe("FeedbackAlert", () => {
 
     render(<FeedbackAlert error={systemError} showRequestId={false} />);
     expect(screen.queryByText(/Mã yêu cầu/)).toBeNull();
+  });
+
+  it("renders success variant with message and check icon", () => {
+    render(<FeedbackAlert variant="success" message="Đổi email thành công!" />);
+    expect(screen.getByRole("alert")).toHaveTextContent("Đổi email thành công!");
+    expect(screen.getByRole("alert")).toHaveClass("grid-rows-[1fr]");
+  });
+
+  it("renders close button when onClose is provided and triggers callback", async () => {
+    let closed = false;
+    render(
+      <FeedbackAlert
+        error="Có lỗi xảy ra"
+        onClose={() => {
+          closed = true;
+        }}
+      />,
+    );
+
+    const closeBtn = screen.getByTitle("Đóng thông báo");
+    expect(closeBtn).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.click(closeBtn);
+    });
+
+    // Verify collapse animation initiated
+    expect(screen.getByRole("alert", { hidden: true })).toHaveClass("grid-rows-[0fr]");
+
+    // Wait for the exit animation duration to verify callback
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 350));
+    });
+    expect(closed).toBe(true);
   });
 });
