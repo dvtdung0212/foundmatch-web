@@ -16,6 +16,7 @@
     "INVALID_CREDENTIALS": "Email, tên đăng nhập hoặc mật khẩu không chính xác.",
     "INVALID_DATE_OF_BIRTH": "Ngày sinh không hợp lệ hoặc vượt quá ngày hiện tại.",
     "ITEM_DECLARATION_SELF_MODERATION_FORBIDDEN": "Bạn không thể tự kiểm duyệt báo cáo của mình.",
+    "LAST_ADMIN_PROTECTED": "Không thể xóa quản trị viên cuối cùng còn hiệu lực.",
     "NETWORK_ERROR": "Không thể kết nối đến hệ thống. Vui lòng kiểm tra mạng và thử lại.",
     "OTP_INVALID": "Mã xác minh không chính xác.",
     "OTP_LOCKED": "Phiên xác minh đang tạm khóa do nhập sai quá nhiều lần.",
