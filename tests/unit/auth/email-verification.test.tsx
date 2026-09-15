@@ -113,4 +113,45 @@ describe("Web email verification", () => {
     fireEvent.click(screen.getByRole("button", { name: /đăng ký lại/i }));
     expect(navigation.replace).toHaveBeenCalledWith("/signup");
   });
+
+  it("displays invalid OTP error and remaining attempts only in FeedbackAlert without repeating below OtpInput", async () => {
+    const ApiError = (
+      await import("@/features/auth/api/email-verification-api")
+    ).EmailVerificationApiError;
+    api.getWebEmailVerification.mockResolvedValue({
+      attemptsRemaining: 5,
+      codeExpiresAt: new Date(Date.now() + 300_000).toISOString(),
+      lockedUntil: null,
+      maskedEmail: "me***@example.com",
+      resendAvailableAt: new Date(Date.now() - 1_000).toISOString(),
+      sessionExpiresAt: new Date(Date.now() + 86_400_000).toISOString(),
+      status: "PENDING",
+      verificationId: "verification-id",
+    });
+    api.verifyWebRegistrationEmail.mockRejectedValue(
+      new ApiError("Invalid code", "OTP_CODE_INVALID", "code", {
+        attemptsRemaining: 4,
+      }),
+    );
+
+    render(<EmailVerificationForm verificationId="verification-id" />);
+    expect(await screen.findByText("me***@example.com")).toBeInTheDocument();
+
+    // Initial state does not display redundant "Còn X lần nhập"
+    expect(screen.queryByText(/còn \d+ lần nhập/i)).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByRole("textbox", { name: /mã xác minh/i }), {
+      target: { value: "123456" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /xác minh email/i }));
+
+    // Error is displayed exactly once in FeedbackAlert
+    const errorMessages = await screen.findAllByText(
+      /mã xác minh không đúng\. còn 4 lần nhập\./i,
+    );
+    expect(errorMessages).toHaveLength(1);
+
+    // No extra helper text repeating "Còn 4 lần nhập."
+    expect(screen.queryByText("Còn 4 lần nhập.")).not.toBeInTheDocument();
+  });
 });

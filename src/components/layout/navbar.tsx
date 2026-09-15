@@ -38,7 +38,7 @@ export function Navbar({ profile }: NavbarProps) {
         <div className="flex items-center gap-3">
           {profile ? (
             <div className="flex items-center gap-3">
-              <NotificationBell />
+              <NotificationBell enabled={Boolean(profile)} />
               <UserMenu profile={profile} />
             </div>
           ) : (

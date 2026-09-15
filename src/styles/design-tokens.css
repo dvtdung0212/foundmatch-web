@@ -14,10 +14,10 @@
   --fm-brand-muted: #7A6E67;
 
   /* --- Domain Specific (Lost & Found) --- */
-  --fm-lost: #BF403F;
-  --fm-lost-subtle: #FFF4F1;
-  --fm-lost-border: #FFDCD3;
-  --fm-lost-hover: #A32F2E;
+  --fm-lost: #A63836;
+  --fm-lost-subtle: #FAF1F0;
+  --fm-lost-border: #F5D3D0;
+  --fm-lost-hover: #8C2C2A;
 
   --fm-found: #37783C;
   --fm-found-subtle: #F3F9F1;
@@ -29,8 +29,8 @@
   --fm-success-subtle: #E4F7E8;
   --fm-warning: #D97706;
   --fm-warning-subtle: #FFFBEB;
-  --fm-danger: #E03131;
-  --fm-danger-subtle: #FDEBEC;
+  --fm-danger: #9E2A2B;
+  --fm-danger-subtle: #FDF2F2;
   --fm-info: #2563EB;
   --fm-info-subtle: #EFF6FF;
 
@@ -65,8 +65,10 @@
   --fm-radius-pill: 9999px;
 
   /* --- Shadcn UI / HSL Mapping for Compatibility --- */
-  --background: 210 20% 98%; /* #F8F9FA Clean Crisp Light */
-  --foreground: 12 28% 13%; /* #2A1B17 Deep Heading */
+  --background: 210 20% 98%;
+  /* #F8F9FA Clean Crisp Light */
+  --foreground: 12 28% 13%;
+  /* #2A1B17 Deep Heading */
 
   --card: 0 0% 100%;
   --card-foreground: 12 28% 13%;
@@ -74,28 +76,34 @@
   --popover: 0 0% 100%;
   --popover-foreground: 12 28% 13%;
 
-  --primary: 335 74% 21%; /* #5B0E2D Plum Maroon */
+  --primary: 335 74% 21%;
+  /* #5B0E2D Plum Maroon */
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 220 13% 91%; /* #E5E7EB */
+  --secondary: 220 13% 91%;
+  /* #E5E7EB */
   --secondary-foreground: 12 28% 13%;
 
-  --muted: 220 14% 96%; /* #F1F3F5 */
-  --muted-foreground: 20 8% 44%; /* #7A6E67 */
+  --muted: 220 14% 96%;
+  /* #F1F3F5 */
+  --muted-foreground: 20 8% 44%;
+  /* #7A6E67 */
 
   --accent: 335 50% 96%;
   --accent-foreground: 335 74% 21%;
 
-  --destructive: 0 72% 51%;
+  --destructive: 358 58% 39%;
   --destructive-foreground: 0 0% 100%;
 
-  --success: 126 37% 35%; /* #37783C */
+  --success: 126 37% 35%;
+  /* #37783C */
   --success-foreground: 0 0% 100%;
 
   --warning: 32 90% 47%;
   --warning-foreground: 0 0% 100%;
 
-  --border: 220 13% 91%; /* #E5E7EB */
+  --border: 220 13% 91%;
+  /* #E5E7EB */
   --input: 220 13% 91%;
   --ring: 335 74% 21%;
 
@@ -124,7 +132,7 @@
   --accent: 12 20% 20%;
   --accent-foreground: 36 33% 97%;
 
-  --destructive: 0 62.8% 30.6%;
+  --destructive: 358 50% 35%;
   --destructive-foreground: 0 0% 100%;
 
   --success: 126 37% 45%;

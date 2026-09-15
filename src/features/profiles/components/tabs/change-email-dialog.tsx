@@ -246,13 +246,13 @@ export function ChangeEmailDialog({
         <FeedbackAlert
           error={error}
           onClose={() => setError(null)}
-          className="mt-2"
+          className="mb-4"
         />
         <FeedbackAlert
           variant="success"
           message={success}
           onClose={() => setSuccess(null)}
-          className="mt-2"
+          className="mb-4"
         />
 
         {step === 1 ? (
@@ -353,7 +353,10 @@ export function ChangeEmailDialog({
             <div className="py-2">
               <OtpPinInput
                 value={otp}
-                onChange={setOtp}
+                onChange={(val) => {
+                  setOtp(val);
+                  if (error) setError(null);
+                }}
                 disabled={isVerifying || Boolean(success)}
                 error={Boolean(error)}
               />

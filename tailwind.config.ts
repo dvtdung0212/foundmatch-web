@@ -154,12 +154,12 @@ const config: Config = {
           to: { opacity: "0" },
         },
         "fm-modal-in": {
-          "0%": { opacity: "0", transform: "scale(0.94) translateY(12px)" },
-          "100%": { opacity: "1", transform: "scale(1) translateY(0)" },
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
         },
         "fm-modal-out": {
-          "0%": { opacity: "1", transform: "scale(1) translateY(0)" },
-          "100%": { opacity: "0", transform: "scale(0.96) translateY(8px)" },
+          "0%": { opacity: "1", transform: "scale(1)" },
+          "100%": { opacity: "0", transform: "scale(0.95)" },
         },
       },
       animation: {

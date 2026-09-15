@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
+import { TopProgressBar } from "@/components/ui/top-progress-bar";
 
 const geologica = localFont({
   src: "../../public/fonts/Geologica/Geologica-VariableFont_CRSV,SHRP,slnt,wght.ttf",
@@ -23,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="vi" className={geologica.variable}>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased selection:bg-primary/20 selection:text-primary">
+        <TopProgressBar />
         <Providers>{children}</Providers>
       </body>
     </html>

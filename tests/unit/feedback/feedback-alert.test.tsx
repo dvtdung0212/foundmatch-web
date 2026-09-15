@@ -127,4 +127,54 @@ describe("FeedbackAlert", () => {
     });
     expect(closed).toBe(true);
   });
+
+  it("auto closes after duration when onClose is provided", async () => {
+    let closed = false;
+    render(
+      <FeedbackAlert
+        error="Lỗi tự đóng"
+        autoClose={100}
+        onClose={() => {
+          closed = true;
+        }}
+      />,
+    );
+
+    expect(screen.getByText("Lỗi tự đóng")).toBeInTheDocument();
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 450));
+    });
+
+    expect(closed).toBe(true);
+  });
+
+  it("pauses auto-close on hover and resumes on mouse leave", async () => {
+    let closed = false;
+    render(
+      <FeedbackAlert
+        error="Lỗi tạm dừng"
+        autoClose={200}
+        onClose={() => {
+          closed = true;
+        }}
+      />,
+    );
+
+    const alert = screen.getByRole("alert");
+    fireEvent.mouseEnter(alert);
+
+    // Wait 250ms while hovered - should NOT close
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    });
+    expect(closed).toBe(false);
+
+    // Leave hover - should resume and close
+    fireEvent.mouseLeave(alert);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 550));
+    });
+    expect(closed).toBe(true);
+  });
 });

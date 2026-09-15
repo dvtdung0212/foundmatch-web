@@ -84,6 +84,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
         onChange={(event) => {
           setPassword(event.target.value);
           validation.clearFieldError("password");
+          if (error) setError(null);
         }}
         error={validation.fieldErrors.password}
         required
@@ -97,6 +98,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
         onChange={(event) => {
           setConfirmation(event.target.value);
           validation.clearFieldError("confirmation");
+          if (error) setError(null);
         }}
         error={validation.fieldErrors.confirmation}
         required

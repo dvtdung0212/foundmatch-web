@@ -5,12 +5,18 @@ import { cn } from "@/lib/utils";
 export interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: React.ReactNode;
   error?: string;
+  variant?: "default" | "destructive";
 }
 
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ className, error, label, checked, onChange, id, ...props }, ref) => {
+  ({ className, error, label, checked, onChange, id, variant = "default", ...props }, ref) => {
     const generatedId = React.useId();
     const inputId = id || generatedId;
+
+    const checkedVariantClass =
+      variant === "destructive"
+        ? "peer-checked:bg-destructive peer-checked:border-destructive peer-focus-visible:ring-destructive/20"
+        : "peer-checked:bg-brand-plum peer-checked:border-brand-plum peer-focus-visible:ring-primary/20";
 
     return (
       <div>
@@ -25,7 +31,13 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               ref={ref}
               {...props}
             />
-            <div className="h-5 w-5 rounded-[4px] border border-[#D7C6BE] bg-white peer-checked:bg-brand-plum peer-checked:border-brand-plum peer-focus-visible:ring-2 peer-focus-visible:ring-primary/20 transition-all flex items-center justify-center shadow-sm [&_svg]:opacity-0 peer-checked:[&_svg]:opacity-100">
+            <div
+              className={cn(
+                "h-5 w-5 rounded-[4px] border border-[#D7C6BE] bg-white transition-all flex items-center justify-center shadow-sm [&_svg]:opacity-0 peer-checked:[&_svg]:opacity-100",
+                checkedVariantClass,
+                className
+              )}
+            >
               <Check className="h-3.5 w-3.5 text-white transition-opacity stroke-[3]" />
             </div>
           </div>

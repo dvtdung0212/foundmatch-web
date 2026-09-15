@@ -74,11 +74,11 @@ export function AccountDeletionCard() {
   return (
     <section
       aria-labelledby="account-deletion-title"
-      className="rounded-[32px] border border-red-200 bg-white p-6 sm:p-8"
+      className="rounded-[32px] border border-[#F5D3D0] bg-white p-6 sm:p-8"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-red-50 text-red-600">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#FAF1F0] text-[#9E2A2B]">
             <Trash2 className="h-5 w-5" />
           </div>
           <div>
@@ -97,9 +97,10 @@ export function AccountDeletionCard() {
           </div>
         </div>
         <Button
-          className="shrink-0 bg-red-600 text-white hover:bg-red-700"
+          className="shrink-0"
           onClick={() => setOpen(true)}
           type="button"
+          variant="destructive"
         >
           Yêu cầu xóa tài khoản
         </Button>
@@ -113,7 +114,7 @@ export function AccountDeletionCard() {
           <form noValidate onSubmit={handleSubmit}>
             <DialogHeader>
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FAF1F0] text-[#9E2A2B]">
                   <AlertTriangle className="h-5 w-5" />
                 </div>
                 <div>
@@ -127,7 +128,7 @@ export function AccountDeletionCard() {
               </div>
             </DialogHeader>
 
-            <div className="space-y-4 py-5">
+            <div className="space-y-4 pb-1">
               <FeedbackAlert error={error} onClose={() => setError(null)} />
               <Input
                 autoComplete="current-password"
@@ -136,12 +137,13 @@ export function AccountDeletionCard() {
                 onChange={(event) => {
                   setCurrentPassword(event.target.value);
                   validation.clearFieldError("currentPassword");
+                  if (error) setError(null);
                 }}
                 placeholder="Nhập mật khẩu để xác nhận"
                 type="password"
                 value={currentPassword}
               />
-              <div className="rounded-xl border border-red-100 bg-red-50/60 p-4">
+              <div className="rounded-xl border border-[#F5D3D0] bg-[#FAF1F0]/70 p-4">
                 <Checkbox
                   checked={confirmation}
                   label="Tôi hiểu tài khoản sẽ bị vô hiệu hóa ngay và dữ liệu cá nhân sẽ được ẩn danh sau thời gian chờ."
@@ -149,15 +151,8 @@ export function AccountDeletionCard() {
                     setConfirmation(event.target.checked);
                     validation.clearFieldError("confirmation");
                   }}
+                  variant="destructive"
                 />
-                {validation.fieldErrors.confirmation ? (
-                  <p
-                    className="mt-2 text-xs font-medium text-red-600"
-                    role="alert"
-                  >
-                    {validation.fieldErrors.confirmation}
-                  </p>
-                ) : null}
               </div>
             </div>
 
@@ -171,9 +166,11 @@ export function AccountDeletionCard() {
                 Hủy
               </Button>
               <Button
-                className="bg-red-600 text-white hover:bg-red-700"
+                className="disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled={!confirmation || submitting}
                 loading={submitting}
                 type="submit"
+                variant="destructive"
               >
                 Xác nhận xóa
               </Button>

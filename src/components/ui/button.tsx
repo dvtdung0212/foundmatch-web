@@ -13,6 +13,8 @@ const buttonVariants = cva(
           "border border-brand-border bg-white text-brand-plum hover:bg-brand-cream rounded-xl",
         outline:
           "border border-brand-plum bg-transparent text-brand-plum hover:bg-brand-plum/5 rounded-xl",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-[#852324] shadow-sm rounded-xl",
         ghost: "bg-transparent text-brand-heading hover:bg-brand-plum/5 rounded-xl",
         google:
           "border border-brand-border bg-white text-brand-heading hover:bg-brand-cream shadow-sm rounded-xl",

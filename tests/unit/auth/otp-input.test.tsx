@@ -92,4 +92,19 @@ describe("OtpInput component", () => {
     render(<ControlledOtpWrapper error="Mã xác minh không hợp lệ" />);
     expect(screen.getByText("Mã xác minh không hợp lệ")).toBeInTheDocument();
   });
+
+  it("hides error message text when hideErrorMessage is true while preserving aria-invalid", () => {
+    render(
+      <OtpInput
+        error="Mã xác minh không đúng"
+        hideErrorMessage
+        label="Mã xác minh"
+        onChange={vi.fn()}
+        value="123"
+      />,
+    );
+    expect(screen.queryByText("Mã xác minh không đúng")).not.toBeInTheDocument();
+    const inputs = screen.getAllByRole("textbox");
+    expect(inputs[0]).toHaveAttribute("aria-invalid", "true");
+  });
 });

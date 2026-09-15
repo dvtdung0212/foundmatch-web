@@ -72,14 +72,13 @@ export function SignUpForm({
       const normalized = normalizeApiError(error, "Không thể tạo tài khoản. Vui lòng thử lại.");
       validation.setFieldErrors(resolveApiFormFieldErrors(error));
       setFormError(normalized);
-    } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-1.5">
+    <div className="w-full">
+      <div className="space-y-1.5 mb-5">
         <h2 className="text-2xl font-extrabold text-brand-heading sm:text-3xl">
           Tạo tài khoản
         </h2>
@@ -88,7 +87,11 @@ export function SignUpForm({
         </p>
       </div>
 
-      <FeedbackAlert error={formError} onClose={() => setFormError(null)} />
+      <FeedbackAlert
+        error={formError}
+        onClose={() => setFormError(null)}
+        className="mb-5"
+      />
 
       <form noValidate className="space-y-4" onSubmit={handleSubmit}>
         <Input
@@ -101,6 +104,7 @@ export function SignUpForm({
           onChange={(event) => {
             setFullName(event.target.value);
             validation.clearFieldError("fullName");
+            if (formError) setFormError(null);
           }}
           placeholder="Nhập họ và tên của bạn"
           required
@@ -117,6 +121,7 @@ export function SignUpForm({
           onChange={(event) => {
             setUsername(event.target.value);
             validation.clearFieldError("username");
+            if (formError) setFormError(null);
           }}
           pattern="[a-zA-Z0-9._-]+"
           placeholder="Ví dụ: nguyenvanan"
@@ -132,6 +137,7 @@ export function SignUpForm({
           onChange={(event) => {
             setEmail(event.target.value);
             validation.clearFieldError("email");
+            if (formError) setFormError(null);
           }}
           placeholder="Nhập email của bạn"
           required
@@ -148,6 +154,7 @@ export function SignUpForm({
           onChange={(event) => {
             setPassword(event.target.value);
             validation.clearFieldError("password");
+            if (formError) setFormError(null);
           }}
           placeholder="Tạo mật khẩu"
           required
@@ -163,6 +170,7 @@ export function SignUpForm({
           onChange={(event) => {
             setConfirmPassword(event.target.value);
             validation.clearFieldError("confirmPassword");
+            if (formError) setFormError(null);
           }}
           placeholder="Nhập lại mật khẩu"
           required
@@ -216,13 +224,15 @@ export function SignUpForm({
         </Button>
       </form>
 
-      <div className="relative flex items-center justify-center">
+      {/* Divider */}
+      <div className="relative flex items-center justify-center my-5">
         <div className="w-full border-t border-brand-border" />
         <span className="absolute bg-white px-3 text-[11px] font-semibold uppercase text-brand-muted">
           hoặc
         </span>
       </div>
 
+      {/* Google Auth Button */}
       <Button fullWidth size="md" type="button" variant="google">
         <svg aria-hidden="true" className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path
@@ -245,7 +255,8 @@ export function SignUpForm({
         Tiếp tục với Google
       </Button>
 
-      <div className="text-center text-xs text-brand-muted">
+      {/* Login link */}
+      <div className="mt-5 text-center text-xs text-brand-muted">
         Đã có tài khoản?{" "}
         <Link
           className="font-bold text-brand-plum hover:underline"

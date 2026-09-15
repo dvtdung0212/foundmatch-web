@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/features/profiles/actions/profile.actions", () => ({
@@ -14,6 +14,16 @@ vi.mock("@/features/activity/components/user-activity-panel", () => ({
     <div data-testid="user-activity-panel">Lịch sử hoạt động mock</div>
   ),
 }));
+vi.mock(
+  "@/features/profiles/actions/notification-preferences.actions",
+  () => ({
+    getNotificationPreferencesAction: vi.fn().mockResolvedValue({
+      success: true,
+      items: [],
+    }),
+    updateNotificationPreferenceAction: vi.fn(),
+  }),
+);
 
 import { ProfileForm } from "@/features/profiles/components/profile-form";
 import type { UserProfileDTO } from "@/types/profile.types";
@@ -71,13 +81,15 @@ describe("Profile Tabs and Modular Components", () => {
     expect(screen.getByText("Trung tâm Bảo mật")).toBeDefined();
   });
 
-  it("instantly switches to ProfileNotificationsTab without URL latency", () => {
+  it("instantly switches to ProfileNotificationsTab without URL latency", async () => {
     render(<ProfileForm profile={mockProfile} />);
 
     const notifBtn = screen.getByRole("button", { name: /Thông báo/i });
     fireEvent.click(notifBtn);
 
-    expect(screen.getByText("Cài đặt Thông báo")).toBeDefined();
+    await waitFor(() => {
+      expect(screen.getByText("Cài đặt Thông báo")).toBeDefined();
+    });
   });
 
   it("instantly switches to ProfileActivityTab without URL latency", () => {

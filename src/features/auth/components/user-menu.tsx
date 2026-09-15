@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   ChevronDown,
   BadgeCheck,
+  Loader2,
 } from "lucide-react";
 
 interface UserMenuProps {
@@ -20,6 +21,7 @@ interface UserMenuProps {
 export function UserMenu({ profile }: UserMenuProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

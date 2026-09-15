@@ -163,6 +163,14 @@ export function ProfileInfoTab({ profile }: ProfileInfoTabProps) {
   const dateOfBirth = watch("dateOfBirth") ?? "";
   const gender = watch("gender") ?? "prefer_not_to_say";
   const occupation = watch("occupation") ?? "";
+
+  React.useEffect(() => {
+    const subscription = watch(() => {
+      if (feedback.error) feedback.clearError();
+      if (successMessage) setSuccessMessage(null);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, feedback, successMessage]);
   const streetAddress = watch("addressLine") ?? "";
 
   React.useEffect(() => {
@@ -405,7 +413,6 @@ export function ProfileInfoTab({ profile }: ProfileInfoTabProps) {
                 feedback.clearError();
                 setSuccessMessage(null);
               }}
-              className="mt-5"
             />
 
             <div className="space-y-6">

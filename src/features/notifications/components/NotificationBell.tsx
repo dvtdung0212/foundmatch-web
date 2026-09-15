@@ -78,7 +78,11 @@ function getNotificationIcon(type: string) {
   }
 }
 
-export function NotificationBell() {
+export interface NotificationBellProps {
+  enabled?: boolean;
+}
+
+export function NotificationBell({ enabled = true }: NotificationBellProps = {}) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const {
@@ -87,7 +91,7 @@ export function NotificationBell() {
     isLoading,
     markAsRead,
     markAllAsRead,
-  } = useNotifications();
+  } = useNotifications({ enabled });
 
   const handleNotificationClick = async (item: NotificationItem) => {
     if (!item.isRead) {

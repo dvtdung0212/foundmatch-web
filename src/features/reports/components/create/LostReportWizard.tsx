@@ -128,6 +128,7 @@ export function LostReportWizard() {
 
   // Save draft
   const handleSaveDraft = () => {
+    if (submissionError) setSubmissionError(null);
     try {
       saveReportDraft("LOST", { ...formData, attributeAnswers, currentStep });
       setSaveDraftMessage("Đã lưu bản nháp thành công!");
@@ -138,6 +139,7 @@ export function LostReportWizard() {
   };
 
   const handleDiscardDraft = () => {
+    if (submissionError) setSubmissionError(null);
     deleteReportDraft("LOST");
     setHasRestoredDraft(false);
     setFormData({
@@ -225,6 +227,7 @@ export function LostReportWizard() {
   };
 
   const handleBack = () => {
+    if (submissionError) setSubmissionError(null);
     if (currentStep > 1) {
       setCurrentStep((prev) => prev - 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -644,7 +647,7 @@ export function LostReportWizard() {
             showRequestId={Boolean(submissionError?.requestId)}
             onClose={() => setSubmissionError(null)}
           />
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 w-full sm:w-auto">
               {currentStep > 1 && (
                 <Button variant="secondary" type="button" onClick={handleBack} className="gap-1.5 font-bold text-sm">

@@ -167,18 +167,20 @@ export function ProfileSecurityTab({
             variant={message?.type}
             message={message?.text}
             onClose={() => setMessage(null)}
-            className="mt-4"
           />
 
           {/* Form Fields: 2 Columns */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start pt-2">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
             {/* Cột 1: 3 Input Mật khẩu */}
             <div className="md:col-span-7 space-y-4">
               <Input
                 label="Mật khẩu hiện tại"
                 type="password"
                 value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
+                onChange={(e) => {
+                  setCurrentPassword(e.target.value);
+                  if (message) setMessage(null);
+                }}
                 placeholder="Nhập mật khẩu đang sử dụng"
                 required
               />
@@ -187,7 +189,10 @@ export function ProfileSecurityTab({
                 label="Mật khẩu mới"
                 type="password"
                 value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                onChange={(e) => {
+                  setNewPassword(e.target.value);
+                  if (message) setMessage(null);
+                }}
                 placeholder="Tối thiểu 12 ký tự"
                 required
               />
@@ -196,7 +201,10 @@ export function ProfileSecurityTab({
                 label="Nhập lại mật khẩu mới"
                 type="password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  if (message) setMessage(null);
+                }}
                 placeholder="Xác nhận mật khẩu mới"
                 required
               />

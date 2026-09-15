@@ -30,19 +30,14 @@ describe("AccountDeletionCard", () => {
       target: { value: "password123" },
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Xác nhận xóa" }));
-      await Promise.resolve();
-    });
-
-    expect(requestWebAccountDeletion).not.toHaveBeenCalled();
-    expect(
-      screen.getByText("Bạn cần xác nhận đã hiểu hậu quả trước khi tiếp tục."),
-    ).toBeInTheDocument();
+    const confirmButton = screen.getByRole("button", { name: "Xác nhận xóa" });
+    expect(confirmButton).toBeDisabled();
 
     fireEvent.click(screen.getByRole("checkbox"));
+    expect(confirmButton).toBeEnabled();
+
     await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Xác nhận xóa" }));
+      fireEvent.click(confirmButton);
       await Promise.resolve();
     });
 

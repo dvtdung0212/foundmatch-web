@@ -29,7 +29,7 @@ export function WorkspaceHeader({ profile }: WorkspaceHeaderProps) {
 
       {/* Right side */}
       <div className="flex items-center gap-3 sm:gap-4">
-        {profile && <NotificationBell />}
+        {profile && <NotificationBell enabled={Boolean(profile)} />}
         
         {profile && (
           <div className="border-l border-[#E5E7EB] pl-3 sm:pl-4 ml-1">

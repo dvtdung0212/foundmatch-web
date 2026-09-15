@@ -13,7 +13,8 @@ export interface OtpInputProps {
   autoFocus?: boolean;
   className?: string;
   disabled?: boolean;
-  error?: string;
+  error?: string | boolean;
+  hideErrorMessage?: boolean;
   id?: string;
   label?: string;
   length?: number;
@@ -26,6 +27,7 @@ export function OtpInput({
   className,
   disabled = false,
   error,
+  hideErrorMessage = false,
   id,
   label,
   length = 6,
@@ -34,7 +36,9 @@ export function OtpInput({
 }: OtpInputProps) {
   const generatedId = useId();
   const baseId = id ?? generatedId;
-  const errorId = error ? `${baseId}-error` : undefined;
+  const hasError = Boolean(error);
+  const errorMessage = typeof error === "string" ? error : undefined;
+  const errorId = errorMessage && !hideErrorMessage ? `${baseId}-error` : undefined;
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Split value into individual characters per slot
@@ -152,6 +156,7 @@ export function OtpInput({
               ref={(el) => {
                 inputRefs.current[index] = el;
               }}
+              aria-invalid={hasError ? "true" : undefined}
               aria-label={isFirst && label ? undefined : `Số thứ ${index + 1}`}
               autoComplete={isFirst ? "one-time-code" : "off"}
               autoFocus={autoFocus && isFirst}
@@ -159,7 +164,7 @@ export function OtpInput({
                 "h-12 w-11 sm:h-14 sm:w-13 text-center text-xl sm:text-2xl font-extrabold text-brand-light rounded-xl border border-brand-border bg-surface-page transition-all outline-none",
                 "focus:border-brand-plum focus:bg-surface-card focus:ring-2 focus:ring-primary/20",
                 digits[index] && "border-brand-plum border-2 bg-surface-card text-brand-light",
-                error && "border-brand-lost text-brand-lost focus:border-brand-lost focus:ring-destructive/20",
+                hasError && "border-brand-lost text-brand-lost focus:border-brand-lost focus:ring-destructive/20",
                 disabled && "cursor-not-allowed opacity-50 bg-surface-muted text-content-muted",
               )}
               disabled={disabled}
@@ -178,9 +183,9 @@ export function OtpInput({
         })}
       </div>
 
-      {error && (
+      {errorMessage && !hideErrorMessage && (
         <p className="text-xs font-semibold text-brand-lost" id={errorId}>
-          {error}
+          {errorMessage}
         </p>
       )}
     </div>

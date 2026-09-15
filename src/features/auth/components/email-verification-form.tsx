@@ -159,8 +159,8 @@ export function EmailVerificationForm({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-3 text-center">
+    <div className="w-full">
+      <div className="space-y-3 text-center mb-5">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-brand-plum">
           <MailCheck className="h-6 w-6" />
         </div>
@@ -182,10 +182,18 @@ export function EmailVerificationForm({
         variant="success"
         message={notice}
         onClose={() => setNotice(null)}
+        className="mb-5"
       />
       <FeedbackAlert
-        error={validation.fieldErrors.code ?? error}
+        error={
+          validation.fieldErrors.code ??
+          error ??
+          (locked
+            ? `Bạn đã nhập sai quá số lần cho phép. Có thể thử lại sau ${formatTime(verification?.lockedUntil)}.`
+            : null)
+        }
         onClose={() => setError(null)}
+        className="mb-5"
       />
 
       {!verification ? (
@@ -220,19 +228,16 @@ export function EmailVerificationForm({
             autoFocus
             disabled={locked || submitting}
             error={validation.fieldErrors.code ?? error ?? undefined}
+            hideErrorMessage
             label="Mã xác minh"
             length={6}
             onChange={(newCode) => {
               setCode(newCode);
               validation.clearFieldError("code");
+              if (error) setError(null);
             }}
             value={code}
           />
-          <p className="text-xs text-brand-muted" id="otp-help">
-            {locked
-              ? `Bạn đã nhập sai quá số lần cho phép. Có thể thử lại sau ${formatTime(verification?.lockedUntil)}.`
-              : `Còn ${verification?.attemptsRemaining ?? 0} lần nhập.`}
-          </p>
           <Button
             disabled={locked || submitting}
             fullWidth
@@ -255,7 +260,7 @@ export function EmailVerificationForm({
         </form>
       )}
 
-      <div className="text-center">
+      <div className="mt-5 text-center">
         <Link
           className="text-sm font-bold text-brand-plum hover:underline"
           href="/login"

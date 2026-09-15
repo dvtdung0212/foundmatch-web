@@ -52,7 +52,13 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
   const validation = useZodFormValidation(signInWithPasswordSchema);
 
   const completeLogin = () => {
-    if (onSuccess) onSuccess();
+    if (onSuccess) {
+      onSuccess();
+      router.refresh();
+      setLoading(false);
+      setDemoLoading(null);
+      return;
+    }
     router.replace(resolveLoginDestination(nextUrl));
     router.refresh();
   };
@@ -112,7 +118,6 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
           "Email, tên đăng nhập hoặc mật khẩu không chính xác.",
         ),
       );
-    } finally {
       setLoading(false);
     }
   };
@@ -128,7 +133,6 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
       setMessage(
         normalizeApiError(error, "Không thể đăng nhập tài khoản Demo."),
       );
-    } finally {
       setDemoLoading(null);
     }
   };
@@ -136,7 +140,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
   return (
     <div className="w-full">
       {/* Title & Subtitle */}
-      <div className="space-y-1.5 mb-6">
+      <div className="space-y-1.5 mb-5">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-heading">
           Đăng nhập
         </h2>
@@ -145,7 +149,11 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
         </p>
       </div>
 
-      <FeedbackAlert error={message} onClose={() => setMessage(null)} />
+      <FeedbackAlert
+        error={message}
+        onClose={() => setMessage(null)}
+        className="mb-5"
+      />
 
       {/* Main Form */}
       <form noValidate onSubmit={handleSubmit} className="space-y-4">
@@ -156,6 +164,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
           onChange={(e) => {
             setIdentifier(e.target.value);
             validation.clearFieldError("identifier");
+            if (message) setMessage(null);
           }}
           error={validation.fieldErrors.identifier}
           placeholder="Nhập email hoặc username của bạn"
@@ -176,6 +185,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
           onChange={(e) => {
             setPassword(e.target.value);
             validation.clearFieldError("password");
+            if (message) setMessage(null);
           }}
           error={validation.fieldErrors.password}
           placeholder="Nhập mật khẩu của bạn"
@@ -208,7 +218,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
           variant="primary"
           size="lg"
           fullWidth
-          disabled={loading}
+          disabled={loading || Boolean(demoLoading)}
           className="mt-2"
         >
           {loading ? (
@@ -223,7 +233,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
       </form>
 
       {/* Divider */}
-      <div className="relative flex items-center justify-center my-4">
+      <div className="relative flex items-center justify-center my-5">
         <div className="border-t border-brand-border w-full" />
         <span className="bg-white px-3 text-[11px] font-semibold text-brand-muted uppercase absolute">
           hoặc
@@ -254,7 +264,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
       </Button>
 
       {/* Demo Personas Switcher */}
-      <div className="pt-3 border-t border-brand-border space-y-2">
+      <div className="mt-5 pt-4 border-t border-brand-border space-y-2">
         <span className="text-[11px] font-bold uppercase tracking-wider text-brand-muted block">
           Đăng nhập nhanh Demo Personas
         </span>
@@ -263,7 +273,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
             <button
               key={persona.email}
               type="button"
-              disabled={!!demoLoading}
+              disabled={loading || Boolean(demoLoading)}
               onClick={() => handleDemoLogin(persona.email)}
               className="flex flex-col items-start p-2 rounded-xl border border-brand-border bg-brand-cream/60 hover:bg-brand-cream text-left transition-all text-xs"
             >
@@ -284,7 +294,7 @@ export function LoginForm({ nextUrl, onSuccess }: LoginFormProps) {
       </div>
 
       {/* Signup link */}
-      <div className="text-center text-xs text-brand-muted pt-2">
+      <div className="mt-5 text-center text-xs text-brand-muted">
         Chưa có tài khoản?{" "}
         <Link
           href="/signup"

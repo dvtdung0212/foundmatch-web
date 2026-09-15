@@ -132,8 +132,8 @@ export function AccountReactivationForm({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-3 text-center">
+    <div className="w-full">
+      <div className="space-y-3 text-center mb-5">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-brand-plum">
           <RotateCcw className="h-6 w-6" />
         </div>
@@ -155,10 +155,12 @@ export function AccountReactivationForm({
         variant="success"
         message={notice}
         onClose={() => setNotice(null)}
+        className="mb-5"
       />
       <FeedbackAlert
         error={validation.fieldErrors.code ?? error}
         onClose={() => setError(null)}
+        className="mb-5"
       />
 
       {context ? (
@@ -167,11 +169,13 @@ export function AccountReactivationForm({
             autoFocus
             disabled={submitting}
             error={validation.fieldErrors.code ?? error ?? undefined}
+            hideErrorMessage
             label="Mã khôi phục"
             length={6}
             onChange={(value) => {
               setCode(value);
               validation.clearFieldError("code");
+              if (error) setError(null);
             }}
             value={code}
           />
@@ -202,7 +206,7 @@ export function AccountReactivationForm({
         </p>
       )}
 
-      <div className="text-center">
+      <div className="mt-5 text-center">
         <Link
           className="text-sm font-bold text-brand-plum hover:underline"
           href="/login"
